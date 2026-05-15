@@ -46,19 +46,25 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; margin:10px; }}
-            input[type="checkbox"] {{ width:28px; height:28px; accent-color:#00f0ff; }}
-            .option {{ display:flex; align-items:center; gap:15px; padding:12px 0; border-bottom:1px solid #334155; }}
+            img.logo {{ width: 120px; border-radius: 50%; margin-bottom: 10px; }}
         </style>
     </head>
     <body>
         <div class="header">
+            <img src="https://i.imgur.com/YOUR_LOGO_LINK_HERE.jpg" class="logo" alt="Ticket Zick Logo">
             <h1>🎟️ Ticket Zick Dashboard</h1>
             
-            <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID_HERE&scope=bot+applications.commands&permissions=8" target="_blank">
+            <!-- Invite Button -->
+            <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                 <button class="create-btn" style="background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:20px; padding:18px 40px;">
                     ➕ Invite Ticket Zick to Your Server
                 </button>
             </a>
+            
+            <!-- Create Panel Button -->
+            <button class="create-btn" onclick="window.location='/create-panel'">
+                + Create New Ticket Panel
+            </button>
             
             {back_button}
         </div>
@@ -76,7 +82,7 @@ def dashboard():
         <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
         <div class="card"><h2>Panel</h2><p>Options for the message used to create tickets</p></div>
         <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
-        <div class="card"><h2>Dropdown Style</h2><p>Options for select menu</p></div>
+        <div class="card"><h2>Dropdown Style</h2><p>Select menu options</p></div>
         <div class="card"><h2>Thread Style</h2><p>Thread style tickets</p></div>
         <div class="card"><h2>Forms</h2><p>Form Options</p></div>
     </div>
@@ -91,9 +97,9 @@ def dashboard():
     """
     return base_template(content)
 
-# ====================== GENERAL ======================
 @app.route("/general", methods=["GET", "POST"])
 def general():
+    # (Your current General code - keeping it)
     if request.method == "POST":
         for key, value in request.form.items():
             if key == "support_roles":
