@@ -69,6 +69,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
+# === MAIN DASHBOARD ===
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -93,6 +94,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
+# === CREATE PANEL ===
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -100,70 +102,42 @@ def create_panel():
     <div class="card">
         <form method="POST" action="/save-panel">
             <label>1. Panel Name</label>
-            <p><small>This is the name members will see when choosing a ticket type.</small></p>
-            <input type="text" name="name" placeholder="e.g. Support, Bug Report, Appeal" required>
-
+            <input type="text" name="name" placeholder="e.g. Support, Bug Report" required>
+            
             <label>2. Emoji / Icon</label>
-            <p><small>Choose an icon for this ticket button</small></p>
             <select name="emoji" id="emoji-select" onchange="updatePreview()">
                 <option value="🎟️">🎟️ Ticket</option>
                 <option value="❓">❓ Question</option>
                 <option value="🚨">🚨 Report</option>
-                <option value="💰">💰 Donation</option>
-                <option value="🤝">🤝 Support</option>
-                <option value="🛠️">🛠️ Technical</option>
-                <option value="🎮">🎮 Gaming</option>
-                <option value="📝">📝 Application</option>
-                <option value="❤️">❤️ Help</option>
-                <option value="⚠️">⚠️ Urgent</option>
-                <option value="🔨">🔨 Ban Appeal</option>
-                <option value="💸">💸 Payment</option>
-                <option value="🎉">🎉 Event</option>
-                <option value="📢">📢 Announcement</option>
-                <option value="🕹️">🕹️ Gameplay</option>
-                <option value="📋">📋 Feedback</option>
-                <option value="🔒">🔒 Private</option>
-                <option value="🌟">🌟 VIP</option>
-                <option value="🐛">🐛 Bug Report</option>
-                <option value="🔥">🔥 Important</option>
-                <option value="💡">💡 Idea</option>
+                <!-- ... more options if you want ... -->
             </select>
 
             <label>3. Button Text</label>
-            <p><small>What should the button say?</small></p>
             <input type="text" name="button_text" id="button-text" value="Create Ticket" onkeyup="updatePreview()">
 
             <label>4. Button Color</label>
-            <p><small>Click a box to choose the button color</small></p>
             <div style="margin:10px 0;">
                 <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
                 <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
                 <span class="color-box" style="background:#ff00ff" onclick="setColor('#ff00ff')"></span>
                 <span class="color-box" style="background:#00ff88" onclick="setColor('#00ff88')"></span>
-                <span class="color-box" style="background:#ff8800" onclick="setColor('#ff8800')"></span>
-                <span class="color-box" style="background:#ffff00" onclick="setColor('#ffff00')"></span>
-                <span class="color-box" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
                 <span class="color-box" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
-                <span class="color-box" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
             </div>
 
             <label>5. Description</label>
-            <p><small>This text appears when someone opens the ticket.</small></p>
-            <input type="text" name="description" value="Our team will assist you shortly." id="desc-input" onkeyup="updatePreview()">
+            <input type="text" name="description" value="Our team will assist you shortly.">
 
             <label>6. Category ID</label>
-            <p><small>Right-click the category in your server → Copy ID</small></p>
             <input type="text" name="category_id" placeholder="123456789012345678" required>
 
             <label>7. Support Roles</label>
-            <p><small>Who can view and reply in these tickets? (comma separated)</small></p>
             <input type="text" name="support_roles" placeholder="Staff, Admin, Moderator">
 
             <button type="submit" style="margin-top:30px; width:100%;">Create This Ticket Panel</button>
         </form>
 
-        <h3 style="margin-top:30px;">Live Button Preview</h3>
-        <div id="preview" style="padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px; margin:15px 0;">
+        <h3>Live Button Preview</h3>
+        <div id="preview" style="padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px;">
             🎟️ Create Ticket
         </div>
     </div>
@@ -172,11 +146,10 @@ def create_panel():
         function updatePreview() {
             const emoji = document.getElementById('emoji-select').value || '🎟️';
             const text = document.getElementById('button-text').value || 'Create Ticket';
-            const preview = document.getElementById('preview');
-            preview.innerHTML = emoji + ' ' + text;
+            document.getElementById('preview').innerHTML = emoji + ' ' + text;
         }
         function setColor(color) {
-            document.querySelectorAll('.color-box').forEach(box => box.classList.remove('selected'));
+            document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
             updatePreview();
         }
@@ -185,23 +158,23 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
+# === SAVE NEW PANEL ===
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
-    name = request.form.get("name")
-    emoji = request.form.get("emoji")
-    description = request.form.get("description")
-    category_id = request.form.get("category_id")
-    support_roles = request.form.get("support_roles")
-    button_text = request.form.get("button_text")
-    button_color = request.form.get("button_color")
-    
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)""", 
-              (name, emoji, category_id, description, support_roles, button_text, button_color))
+                 VALUES (?, ?, ?, ?, ?, ?, ?)""", (
+        request.form.get("name"),
+        request.form.get("emoji"),
+        request.form.get("category_id"),
+        request.form.get("description"),
+        request.form.get("support_roles"),
+        request.form.get("button_text"),
+        request.form.get("button_color")
+    ))
     conn.commit()
     return redirect("/dashboard")
 
-# === EDIT & DELETE ===
+# === EDIT PANEL (Full form) ===
 @app.route("/edit-panel/<int:panel_id>")
 def edit_panel(panel_id):
     c.execute("SELECT * FROM panels WHERE id = ?", (panel_id,))
@@ -219,25 +192,56 @@ def edit_panel(panel_id):
             <label>2. Emoji / Icon</label>
             <select name="emoji" id="emoji-select" onchange="updatePreview()">
                 <option value="🎟️" {'selected' if panel[2]=='🎟️' else ''}>🎟️ Ticket</option>
-                <!-- Add other options if needed -->
+                <option value="❓" {'selected' if panel[2]=='❓' else ''}>❓ Question</option>
+                <option value="🚨" {'selected' if panel[2]=='🚨' else ''}>🚨 Report</option>
             </select>
 
             <label>3. Button Text</label>
-            <input type="text" name="button_text" id="button-text" value="{panel[6]}" onkeyup="updatePreview()">
+            <input type="text" name="button_text" id="button-text" value="{panel[6] or 'Create Ticket'}" onkeyup="updatePreview()">
 
             <label>4. Button Color</label>
             <div style="margin:10px 0;">
                 <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
                 <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
-                <!-- more colors -->
+                <span class="color-box" style="background:#ff00ff" onclick="setColor('#ff00ff')"></span>
+                <span class="color-box" style="background:#00ff88" onclick="setColor('#00ff88')"></span>
+                <span class="color-box" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
             </div>
+
+            <label>5. Description</label>
+            <input type="text" name="description" value="{panel[4] or 'Our team will assist you shortly.'}">
+
+            <label>6. Category ID</label>
+            <input type="text" name="category_id" value="{panel[3]}" required>
+
+            <label>7. Support Roles</label>
+            <input type="text" name="support_roles" value="{panel[5] or 'Staff, Admin'}">
 
             <button type="submit" style="margin-top:30px; width:100%;">Save Changes</button>
         </form>
+
+        <h3>Live Button Preview</h3>
+        <div id="preview" style="padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px;">
+            {panel[2] or '🎟️'} {panel[6] or 'Create Ticket'}
+        </div>
     </div>
+
+    <script>
+        function updatePreview() {{ 
+            const emoji = document.getElementById('emoji-select').value || '🎟️';
+            const text = document.getElementById('button-text').value || 'Create Ticket';
+            document.getElementById('preview').innerHTML = emoji + ' ' + text;
+        }}
+        function setColor(color) {{
+            document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            updatePreview();
+        }}
+    </script>
     """
     return base_template(content, show_back=True)
 
+# === UPDATE PANEL ===
 @app.route("/update-panel/<int:panel_id>", methods=["POST"])
 def update_panel(panel_id):
     c.execute("""UPDATE panels SET name=?, emoji=?, category_id=?, description=?, 
@@ -248,6 +252,7 @@ def update_panel(panel_id):
     conn.commit()
     return redirect("/dashboard")
 
+# === DELETE ===
 @app.route("/delete-panel/<int:panel_id>")
 def delete_panel(panel_id):
     c.execute("DELETE FROM panels WHERE id = ?", (panel_id,))
