@@ -6,6 +6,8 @@ app = Flask(__name__)
 
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
+
+# Create tables
 c.execute('''CREATE TABLE IF NOT EXISTS panels (
     id INTEGER PRIMARY KEY,
     name TEXT,
@@ -33,6 +35,7 @@ def base_template(content, title="Ticket Zick Dashboard"):
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
             .panel-list {{ margin-top:40px; }}
+            .nav a {{ color:#c026d3; text-decoration:none; }}
         </style>
     </head>
     <body>
@@ -46,19 +49,20 @@ def base_template(content, title="Ticket Zick Dashboard"):
     """
 
 @app.route("/")
-def home():
+@app.route("/dashboard")
+def dashboard():
     c.execute("SELECT * FROM panels ORDER BY id DESC")
     panels = c.fetchall()
     
     cards = """
     <div class="grid">
-        <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and other general items</p></div>
-        <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Options for the message used to create tickets</p></div>
-        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>General Ticket options</p></div>
-        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown Style</h2><p>Select menu options</p></div>
+        <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general settings</p></div>
+        <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Manage ticket panels</p></div>
+        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>Ticket options</p></div>
+        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown Style</h2><p>Select menu style</p></div>
         <div class="card" onclick="window.location='/forms'"><h2>Forms</h2><p>Form options</p></div>
         <div class="card" onclick="window.location='/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Server logging options</p></div>
+        <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Logging options</p></div>
         <div class="card" onclick="window.location='/automation'"><h2>Automation</h2><p>Automation options</p></div>
     </div>
     """
@@ -90,6 +94,7 @@ def create_panel():
             <select name="button_color">
                 <option value="#00f0ff">Cyan</option>
                 <option value="#c026d3">Purple</option>
+                <option value="#ff00ff">Magenta</option>
             </select><br><br>
             <button type="submit" class="create-btn">Create Panel</button>
         </form>
@@ -97,7 +102,6 @@ def create_panel():
 
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
-    # Save to database
     name = request.form.get("name")
     emoji = request.form.get("emoji")
     description = request.form.get("description")
@@ -110,7 +114,12 @@ def save_panel():
                  VALUES (?, ?, ?, ?, ?, ?, ?)""", 
               (name, emoji, category_id, description, support_roles, button_text, button_color))
     conn.commit()
-    return redirect("/")
+    return redirect("/dashboard")
+
+# Catch all unknown URLs
+@app.route("/<path:path>")
+def catch_all(path):
+    return redirect("/dashboard")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
