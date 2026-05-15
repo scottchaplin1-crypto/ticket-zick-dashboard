@@ -4,11 +4,16 @@ import os
 
 app = Flask(__name__)
 
+# For now we'll use a single config.db (we can make it per-guild later)
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
-
+c.execute('''CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT
+)''')
 c.execute('''CREATE TABLE IF NOT EXISTS panels (
     id INTEGER PRIMARY KEY,
+    guild_id TEXT,
     name TEXT,
     emoji TEXT DEFAULT '🎟️',
     category_id TEXT,
@@ -17,21 +22,10 @@ c.execute('''CREATE TABLE IF NOT EXISTS panels (
     button_text TEXT DEFAULT 'Create Ticket',
     button_color TEXT DEFAULT '#00f0ff'
 )''')
-
-c.execute('''CREATE TABLE IF NOT EXISTS settings (
-    key TEXT PRIMARY KEY,
-    value TEXT
-)''')
 conn.commit()
 
 def base_template(content, title="Ticket Zick Dashboard", show_back=False):
-    back_button = '''
-        <button onclick="window.location='/dashboard'" 
-                style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; border:none; border-radius:12px; cursor:pointer; font-size:16px;">
-            ← Back to Dashboard
-        </button>
-    ''' if show_back else ''
-
+    back = '<button onclick="window.location=\'/dashboard\'" style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; border:none; border-radius:12px; cursor:pointer;">← Back to Dashboard</button>' if show_back else ''
     return f"""
     <!DOCTYPE html>
     <html>
@@ -45,23 +39,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
-            
-            /* Better Checkboxes */
-            input[type="checkbox"] {{
-                width: 28px;
-                height: 28px;
-                accent-color: #00f0ff;
-                cursor: pointer;
-            }}
-            label {{ font-size: 17px; cursor: pointer; }}
-            .option {{ display: flex; align-items: center; gap: 15px; padding: 14px 0; border-bottom: 1px solid #334155; }}
-            .option:last-child {{ border-bottom: none; }}
+            input, select, button {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; }}
+            input, select {{ background:#16213e; color:white; }}
+            button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; }}
         </style>
     </head>
     <body>
         <div class="header">
             <h1>🎟️ Ticket Zick Dashboard</h1>
-            {back_button}
+            {back}
         </div>
         {content}
     </body>
@@ -103,7 +89,7 @@ def general():
     <div class="card">
         <form method="POST">
             <h2>Support Team Roles</h2>
-            <select name="support_roles" multiple size="8" style="height:200px; width:100%;">
+            <select name="support_roles" multiple size="8" style="height:200px;">
                 <option value="Staff">Staff</option>
                 <option value="Admin">Admin</option>
                 <option value="Owner">Owner</option>
@@ -112,23 +98,18 @@ def general():
             </select>
 
             <h2>Ticket Close Behaviour</h2>
-            <div class="option">
-                <input type="checkbox" name="close_ticket" {} id="c1">
-                <label for="c1">Close Ticket (keep channel)</label>
-            </div>
-            <div class="option">
-                <input type="checkbox" name="close_and_delete" {} id="c2">
-                <label for="c2">Close & Delete Ticket</label>
+            <div style="margin:15px 0">
+                <input type="checkbox" name="close_ticket" {}> Close Ticket (keep channel)<br><br>
+                <input type="checkbox" name="close_and_delete" {}> Close & Delete Ticket
             </div>
 
             <h2>Transcripts</h2>
-            <div class="option">
-                <input type="checkbox" name="save_transcript" {} id="t1">
-                <label for="t1">Save Transcript when ticket is closed/deleted</label>
+            <div style="margin:15px 0">
+                <input type="checkbox" name="save_transcript" {}> Save Transcript when closed<br><br>
+                <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID">
             </div>
-            <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID (optional)" style="margin-top:15px;">
 
-            <button type="submit" style="margin-top:30px; padding:16px; font-size:17px;">Save All Changes</button>
+            <button type="submit" style="margin-top:20px;">Save Settings</button>
         </form>
     </div>
     """.format(
