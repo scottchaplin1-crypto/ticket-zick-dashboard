@@ -6,16 +6,7 @@ app = Flask(__name__)
 
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS panels (
-    id INTEGER PRIMARY KEY,
-    name TEXT,
-    emoji TEXT DEFAULT '🎟️',
-    category_id TEXT,
-    description TEXT,
-    support_roles TEXT,
-    button_text TEXT DEFAULT 'Create Ticket',
-    button_color TEXT DEFAULT '#00f0ff'
-)''')
+c.execute('''CREATE TABLE IF NOT EXISTS panels (...)''')  # your existing table
 c.execute('''CREATE TABLE IF NOT EXISTS settings (
     key TEXT PRIMARY KEY,
     value TEXT
@@ -33,64 +24,68 @@ def base_template(content, title="Ticket Zick Dashboard"):
             h1 {{ color:#00f0ff; text-align:center; }}
             .header {{ text-align:center; margin-bottom:30px; }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:20px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
-            .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
-            .panel-list {{ margin-top:40px; }}
-            input, select, button {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; }}
-            input, select {{ background:#16213e; color:white; }}
+            input, select, button {{ padding:12px; margin:8px 0; border-radius:10px; }}
+            input, select {{ background:#16213e; color:white; width:100%; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; }}
+            
+            /* Better Toggle Switches */
+            .toggle-switch {{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #16213e;
+                padding: 12px 16px;
+                border-radius: 12px;
+                margin: 12px 0;
+            }}
+            .toggle-switch label {{ cursor: pointer; }}
+            input[type="checkbox"] {{
+                width: 50px;
+                height: 26px;
+                appearance: none;
+                background: #334155;
+                border-radius: 50px;
+                position: relative;
+                cursor: pointer;
+            }}
+            input[type="checkbox"]:checked {{
+                background: #00f0ff;
+            }}
+            input[type="checkbox"]::after {{
+                content: '';
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                width: 20px;
+                height: 20px;
+                background: white;
+                border-radius: 50%;
+                transition: 0.3s;
+            }}
+            input[type="checkbox"]:checked::after {{
+                left: 27px;
+            }}
         </style>
     </head>
     <body>
         <div class="header">
             <h1>🎟️ Ticket Zick Dashboard</h1>
-            <button class="create-btn" onclick="window.location='/create-panel'">+ Create New Ticket Panel</button>
+            <button class="create-btn" onclick="window.location='/dashboard'">← Back to Dashboard</button>
         </div>
         {content}
     </body>
     </html>
     """
 
-@app.route("/")
-@app.route("/dashboard")
-def dashboard():
-    c.execute("SELECT * FROM panels ORDER BY id DESC")
-    panels = c.fetchall()
-    
-    cards = """
-    <div class="grid">
-        <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
-        <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Options for ticket panels</p></div>
-        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
-        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown Style</h2><p>Select menu options</p></div>
-        <div class="card" onclick="window.location='/forms'"><h2>Forms</h2><p>Form options</p></div>
-        <div class="card" onclick="window.location='/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Logging options</p></div>
-        <div class="card" onclick="window.location='/automation'"><h2>Automation</h2><p>Automation options</p></div>
-    </div>
-    """
-
-    panel_list = '<div class="panel-list"><h2>Your Ticket Panels</h2>'
-    for p in panels:
-        panel_list += f"""
-        <div class="card" onclick="alert('Editing panel {p[1]} - coming soon')">
-            <h3>{p[2]} {p[1]}</h3>
-            <p>Category: {p[3]}</p>
-        </div>
-        """
-    panel_list += "</div>"
-
-    return base_template(cards + panel_list)
-
-# ====================== GENERAL ======================
 @app.route("/general", methods=["GET", "POST"])
 def general():
     if request.method == "POST":
         for key, value in request.form.items():
-            if key == "support_roles":
+            if key.startswith("support_roles"):
                 value = ",".join(request.form.getlist("support_roles"))
-            c.execute("REPLACE INTO settings (key, value) VALUES (?, ?)", (key, value))
+            c.execute("REPLACE INTO settings (key, value) VALUES (?, ?)", (key, str(value)))
         conn.commit()
         return redirect("/general")
 
@@ -102,94 +97,47 @@ def general():
     <div class="card">
         <form method="POST">
             <h2>Support Team Roles</h2>
-            <select name="support_roles" multiple size="8" style="height:200px;">
-                <option value="Staff">Staff</option>
+            <select name="support_roles" multiple size="8" style="height:180px;">
+                <option value="Staff" selected>Staff</option>
                 <option value="Admin">Admin</option>
                 <option value="Owner">Owner</option>
                 <option value="Moderator">Moderator</option>
                 <option value="Helper">Helper</option>
             </select>
-            <p><small>Hold CTRL to select multiple</small></p>
+            <p><small>Hold CTRL (or CMD) to select multiple roles</small></p>
 
             <h2>Ticket Close Behaviour</h2>
-            <label><input type="checkbox" name="close_ticket" {}> Close Ticket (keep channel)</label><br><br>
-            <label><input type="checkbox" name="close_and_delete" {}> Close & Delete Ticket</label>
+            <div class="toggle-switch">
+                <label>Close Ticket (keep channel)</label>
+                <input type="checkbox" name="close_ticket" {} >
+            </div>
+            <div class="toggle-switch">
+                <label>Close & Delete Ticket</label>
+                <input type="checkbox" name="close_and_delete" {} >
+            </div>
 
             <h2>Transcripts</h2>
-            <label><input type="checkbox" name="save_transcript" {}> Save Transcript when ticket is closed/deleted</label><br><br>
+            <div class="toggle-switch">
+                <label>Save Transcript when ticket is closed/deleted</label>
+                <input type="checkbox" name="save_transcript" {} >
+            </div>
             <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID (optional)">
 
-            <button type="submit" style="margin-top:20px;">Save Settings</button>
+            <button type="submit" style="margin-top:25px; padding:16px; font-size:17px;">Save All Changes</button>
         </form>
     </div>
     """.format(
-        'checked' if settings.get("close_ticket") else '',
-        'checked' if settings.get("close_and_delete") else '',
-        'checked' if settings.get("save_transcript") else '',
+        'checked' if settings.get("close_ticket") == "True" else '',
+        'checked' if settings.get("close_and_delete") == "True" else '',
+        'checked' if settings.get("save_transcript") == "True" else '',
         settings.get("transcript_channel", "")
     )
     return base_template(content, "General")
 
-# Other placeholder pages
-@app.route("/panel") 
-def panel(): 
-    return base_template("<h1>Panel Settings</h1><p>Coming soon...</p>", "Panel Settings")
-
-@app.route("/ticket")
-def ticket(): 
-    return base_template("<h1>Ticket Options</h1><p>Coming soon...</p>", "Ticket")
-
-@app.route("/dropdown")
-def dropdown(): 
-    return base_template("<h1>Dropdown Style</h1><p>Coming soon...</p>", "Dropdown")
-
-@app.route("/forms")
-def forms(): 
-    return base_template("<h1>Forms</h1><p>Coming soon...</p>", "Forms")
-
-@app.route("/transcripts")
-def transcripts(): 
-    return base_template("<h1>Transcripts</h1><p>Coming soon...</p>", "Transcripts")
-
-@app.route("/logging")
-def logging(): 
-    return base_template("<h1>Logging</h1><p>Coming soon...</p>", "Logging")
-
-@app.route("/automation")
-def automation(): 
-    return base_template("<h1>Automation</h1><p>Coming soon...</p>", "Automation")
-
-# Create / Save Panel
-@app.route("/create-panel")
-def create_panel():
-    return base_template("""
-        <h2>Create New Ticket Panel</h2>
-        <form method="POST" action="/save-panel">
-            <input type="text" name="name" placeholder="Panel Name" required><br><br>
-            <input type="text" name="emoji" placeholder="Emoji" value="🎟️"><br><br>
-            <input type="text" name="description" placeholder="Description" value="Click to open a ticket"><br><br>
-            <input type="text" name="category_id" placeholder="Category ID" required><br><br>
-            <input type="text" name="support_roles" placeholder="Support Roles"><br><br>
-            <button type="submit" class="create-btn">Create Panel</button>
-        </form>
-    """, "Create New Panel")
-
-@app.route("/save-panel", methods=["POST"])
-def save_panel():
-    name = request.form.get("name")
-    emoji = request.form.get("emoji")
-    description = request.form.get("description")
-    category_id = request.form.get("category_id")
-    support_roles = request.form.get("support_roles")
-    
-    c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles)
-                 VALUES (?, ?, ?, ?, ?)""", (name, emoji, category_id, description, support_roles))
-    conn.commit()
-    return redirect("/dashboard")
-
-@app.route("/<path:path>")
-def catch_all(path):
-    return redirect("/dashboard")
+# Keep your other routes (dashboard, create-panel, etc.)
+@app.route("/dashboard")
+def dashboard():
+    return base_template("<h1>Welcome to Dashboard</h1><p>Use the cards above or go to <a href='/general'>General</a></p>")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
