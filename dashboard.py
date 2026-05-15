@@ -4,16 +4,11 @@ import os
 
 app = Flask(__name__)
 
-# For now we'll use a single config.db (we can make it per-guild later)
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS settings (
-    key TEXT PRIMARY KEY,
-    value TEXT
-)''')
+
 c.execute('''CREATE TABLE IF NOT EXISTS panels (
     id INTEGER PRIMARY KEY,
-    guild_id TEXT,
     name TEXT,
     emoji TEXT DEFAULT '🎟️',
     category_id TEXT,
@@ -22,10 +17,21 @@ c.execute('''CREATE TABLE IF NOT EXISTS panels (
     button_text TEXT DEFAULT 'Create Ticket',
     button_color TEXT DEFAULT '#00f0ff'
 )''')
+
+c.execute('''CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT
+)''')
 conn.commit()
 
 def base_template(content, title="Ticket Zick Dashboard", show_back=False):
-    back = '<button onclick="window.location=\'/dashboard\'" style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; border:none; border-radius:12px; cursor:pointer;">← Back to Dashboard</button>' if show_back else ''
+    back_button = '''
+        <button onclick="window.location='/dashboard'" 
+                style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; border:none; border-radius:12px; cursor:pointer; font-size:16px;">
+            ← Back to Dashboard
+        </button>
+    ''' if show_back else ''
+
     return f"""
     <!DOCTYPE html>
     <html>
@@ -47,7 +53,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
     <body>
         <div class="header">
             <h1>🎟️ Ticket Zick Dashboard</h1>
-            {back}
+            
+            <!-- Invite Button -->
+            <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
+                <button class="create-btn" style="background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:20px; padding:18px 40px; margin-bottom:15px;">
+                    ➕ Invite Ticket Zick to Your Server
+                </button>
+            </a>
+            
+            {back_button}
         </div>
         {content}
     </body>
@@ -109,7 +123,7 @@ def general():
                 <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID">
             </div>
 
-            <button type="submit" style="margin-top:20px;">Save Settings</button>
+            <button type="submit" style="margin-top:25px;">Save All Changes</button>
         </form>
     </div>
     """.format(
@@ -119,6 +133,17 @@ def general():
         settings.get("transcript_channel", "")
     )
     return base_template(content, "General Settings", show_back=True)
+
+# Other pages
+@app.route("/panel")
+@app.route("/ticket")
+@app.route("/dropdown")
+@app.route("/forms")
+@app.route("/transcripts")
+@app.route("/logging")
+@app.route("/automation")
+def coming_soon():
+    return base_template("<h1>Coming Soon</h1><p>This section is being built...</p>", show_back=True)
 
 @app.route("/<path:path>")
 def catch_all(path):
