@@ -7,7 +7,6 @@ app = Flask(__name__)
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
 
-# Create tables
 c.execute('''CREATE TABLE IF NOT EXISTS panels (
     id INTEGER PRIMARY KEY,
     name TEXT,
@@ -39,10 +38,10 @@ def base_template(content, title="Ticket Zick Dashboard"):
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
+            .toggle-switch {{ display:flex; align-items:center; justify-content:space-between; background:#16213e; padding:14px 18px; border-radius:12px; margin:12px 0; }}
             input, select, button {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; }}
             input, select {{ background:#16213e; color:white; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; }}
-            .toggle-switch {{ display:flex; align-items:center; justify-content:space-between; background:#16213e; padding:14px 18px; border-radius:12px; margin:12px 0; }}
         </style>
     </head>
     <body>
@@ -65,26 +64,15 @@ def dashboard():
     <div class="grid">
         <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
         <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Manage your panels</p></div>
-        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>Ticket options</p></div>
-        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown</h2><p>Dropdown style</p></div>
+        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown</h2><p>Select menu options</p></div>
         <div class="card" onclick="window.location='/forms'"><h2>Forms</h2><p>Form options</p></div>
         <div class="card" onclick="window.location='/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
         <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Logging options</p></div>
         <div class="card" onclick="window.location='/automation'"><h2>Automation</h2><p>Automation options</p></div>
     </div>
     """
-
-    panel_list = '<div class="panel-list"><h2>Your Ticket Panels</h2>'
-    for p in panels:
-        panel_list += f"""
-        <div class="card">
-            <h3>{p[2]} {p[1]}</h3>
-            <p>Category: {p[3]}</p>
-        </div>
-        """
-    panel_list += "</div>"
-
-    return base_template(cards + panel_list)
+    return base_template(cards)
 
 # ====================== GENERAL ======================
 @app.route("/general", methods=["GET", "POST"])
@@ -141,15 +129,22 @@ def general():
     )
     return base_template(content, "General")
 
-# Other pages (placeholders)
-for route in ["/panel", "/ticket", "/dropdown", "/forms", "/transcripts", "/logging", "/automation"]:
-    @app.route(route)
-    def temp_page():
-        return base_template("<h1>Coming Soon</h1><p>This section is being built...</p>")
+# Placeholder pages
+@app.route("/panel")
+@app.route("/ticket")
+@app.route("/dropdown")
+@app.route("/forms")
+@app.route("/transcripts")
+@app.route("/logging")
+@app.route("/automation")
+def coming_soon():
+    page = request.path.strip("/")
+    title = page.replace("/", " ").title()
+    return base_template(f"<h1>{title}</h1><p>Coming soon...</p>", title)
 
 @app.route("/create-panel")
 def create_panel():
-    return base_template("<h2>Create New Panel</h2><p>Coming soon in full version...</p>")
+    return base_template("<h2>Create New Panel</h2><p>Full version coming soon...</p>")
 
 @app.route("/<path:path>")
 def catch_all(path):
