@@ -39,32 +39,29 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
         <title>{title}</title>
         <style>
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
-            h1 {{ color:#00f0ff; text-align:center; }}
-            .header {{ text-align:center; margin-bottom:30px; }}
-            .section-title {{ color:#c026d3; margin:40px 0 15px 0; font-size:22px; }}
+            h1 {{ color:#00f0ff; text-align:center; margin:10px 0; }}
+            .header {{ text-align:center; margin-bottom:35px; }}
+            .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }}
+            .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
+            .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
-            .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; margin:10px; }}
-            img.logo {{ width: 120px; border-radius: 50%; margin-bottom: 10px; }}
+            .section-title {{ color:#c026d3; margin:40px 0 15px 0; font-size:22px; }}
+            input[type="checkbox"] {{ width:28px; height:28px; accent-color:#00f0ff; }}
+            .option {{ display:flex; align-items:center; gap:15px; padding:12px 0; border-bottom:1px solid #334155; }}
         </style>
     </head>
     <body>
         <div class="header">
-            <img src="https://i.imgur.com/YOUR_LOGO_LINK_HERE.jpg" class="logo" alt="Ticket Zick Logo">
             <h1>🎟️ Ticket Zick Dashboard</h1>
             
-            <!-- Invite Button -->
-            <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
-                <button class="create-btn" style="background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:20px; padding:18px 40px;">
-                    ➕ Invite Ticket Zick to Your Server
-                </button>
-            </a>
-            
-            <!-- Create Panel Button -->
-            <button class="create-btn" onclick="window.location='/create-panel'">
-                + Create New Ticket Panel
-            </button>
+            <div class="header-buttons">
+                <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
+                    <button class="btn invite">➕ Invite Ticket Zick to Your Server</button>
+                </a>
+                <button class="btn" onclick="window.location='/create-panel'">+ Create New Ticket Panel</button>
+            </div>
             
             {back_button}
         </div>
@@ -99,7 +96,6 @@ def dashboard():
 
 @app.route("/general", methods=["GET", "POST"])
 def general():
-    # (Your current General code - keeping it)
     if request.method == "POST":
         for key, value in request.form.items():
             if key == "support_roles":
