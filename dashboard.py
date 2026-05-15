@@ -45,12 +45,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
-            .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:30px; border:1px solid #00f0ff33; max-width:700px; margin:auto; }}
             input, select, textarea {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:16px; font-size:18px; }}
             label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
             .preview {{ margin:20px 0; padding:20px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:20px; }}
+            .color-box {{ width:45px; height:45px; border-radius:8px; display:inline-block; margin:6px; cursor:pointer; border:3px solid transparent; }}
+            .color-box.selected {{ border-color:#ffffff; }}
         </style>
     </head>
     <body>
@@ -76,15 +77,6 @@ def dashboard():
     <div class="grid">
         <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
         <div class="card"><h2>Panel</h2><p>Options for the message used to create tickets</p></div>
-        <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
-        <div class="card"><h2>Dropdown Style</h2><p>Select menu options</p></div>
-    </div>
-
-    <div class="section-title">Advanced Settings</div>
-    <div class="grid">
-        <div class="card" onclick="window.location='/transcripts'"><h2>Transcript</h2><p>Options for saving transcripts</p></div>
-        <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
-        <div class="card"><h2>Automation</h2><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
@@ -125,32 +117,22 @@ def create_panel():
                 <option value="💡">💡 Idea</option>
             </select>
 
-            <label>3. Description</label>
-            <p><small>This text appears when someone opens the ticket.</small></p>
-            <input type="text" name="description" value="Our team will assist you shortly." id="desc-input" onkeyup="updatePreview()">
-
-            <label>4. Category ID</label>
-            <p><small>Right-click the category in your server → Copy ID</small></p>
-            <input type="text" name="category_id" placeholder="123456789012345678" required>
-
-            <label>5. Support Roles</label>
-            <p><small>Who can view and reply in these tickets? (comma separated)</small></p>
-            <input type="text" name="support_roles" placeholder="Staff, Admin, Moderator">
-
-            <label>6. Button Text</label>
+            <label>3. Button Text</label>
             <p><small>What should the button say?</small></p>
             <input type="text" name="button_text" id="button-text" value="Create Ticket" onkeyup="updatePreview()">
 
-            <label>7. Button Color</label>
-            <p><small>Choose the color of the button</small></p>
+            <label>4. Button Color</label>
+            <p><small>Click a box to choose the button color</small></p>
             <div style="margin:10px 0;">
-                <span onclick="setColor('#00f0ff')" style="background:#00f0ff;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;border:3px solid #fff;"></span>
-                <span onclick="setColor('#c026d3')" style="background:#c026d3;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
-                <span onclick="setColor('#ff00ff')" style="background:#ff00ff;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
-                <span onclick="setColor('#00ff88')" style="background:#00ff88;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
-                <span onclick="setColor('#ff8800')" style="background:#ff8800;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
+                <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
+                <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
+                <span class="color-box" style="background:#ff00ff" onclick="setColor('#ff00ff')"></span>
+                <span class="color-box" style="background:#00ff88" onclick="setColor('#00ff88')"></span>
+                <span class="color-box" style="background:#ff8800" onclick="setColor('#ff8800')"></span>
+                <span class="color-box" style="background:#ffff00" onclick="setColor('#ffff00')"></span>
+                <span class="color-box" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
             </div>
-            <select name="button_color" id="button-color" onchange="updatePreview()">
+            <select name="button_color" id="button-color" onchange="updatePreview()" style="margin-bottom:20px;">
                 <option value="#00f0ff">Cyan</option>
                 <option value="#c026d3">Purple</option>
                 <option value="#ff00ff">Magenta</option>
@@ -158,13 +140,25 @@ def create_panel():
                 <option value="#ff8800">Orange</option>
             </select>
 
-            <h3 style="margin-top:30px;">Live Button Preview</h3>
-            <div id="preview" style="padding:20px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:20px; margin:15px 0;">
-                🎟️ Create Ticket
-            </div>
+            <label>5. Description</label>
+            <p><small>This text appears when someone opens the ticket.</small></p>
+            <input type="text" name="description" value="Our team will assist you shortly." id="desc-input" onkeyup="updatePreview()">
+
+            <label>6. Category ID</label>
+            <p><small>Right-click the category in your server → Copy ID</small></p>
+            <input type="text" name="category_id" placeholder="123456789012345678" required>
+
+            <label>7. Support Roles</label>
+            <p><small>Who can view and reply in these tickets? (comma separated)</small></p>
+            <input type="text" name="support_roles" placeholder="Staff, Admin, Moderator">
 
             <button type="submit" style="margin-top:30px; width:100%;">Create This Ticket Panel</button>
         </form>
+
+        <h3 style="margin-top:30px;">Live Button Preview</h3>
+        <div id="preview" style="padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px; margin:15px 0;">
+            🎟️ Create Ticket
+        </div>
     </div>
 
     <script>
@@ -172,8 +166,13 @@ def create_panel():
             const emoji = document.getElementById('emoji-select').value || '🎟️';
             const text = document.getElementById('button-text').value || 'Create Ticket';
             const color = document.getElementById('button-color').value;
-            document.getElementById('preview').innerHTML = emoji + ' ' + text;
-            document.getElementById('preview').style.color = color;
+            const preview = document.getElementById('preview');
+            preview.innerHTML = emoji + ' ' + text;
+            preview.style.color = color;
+        }
+        function setColor(color) {
+            document.getElementById('button-color').value = color;
+            updatePreview();
         }
         setTimeout(updatePreview, 300);
     </script>
