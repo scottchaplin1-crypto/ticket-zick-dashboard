@@ -24,7 +24,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS settings (
 )''')
 conn.commit()
 
-def base_template(content, title="Ticket Zick Dashboard", show_back=False):
+def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     back_button = '''
         <button onclick="window.location='/dashboard'" 
                 style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; border:none; border-radius:12px; cursor:pointer; font-size:16px;">
@@ -65,6 +65,20 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
     </html>
     """
 
+@app.route("/")
+@app.route("/dashboard")
+def dashboard():
+    content = """
+    <div class="section-title">Panel Settings</div>
+    <div class="grid">
+        <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
+        <div class="card"><h2>Panel</h2><p>Options for the message used to create tickets</p></div>
+        <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
+        <div class="card"><h2>Dropdown Style</h2><p>Select menu options</p></div>
+    </div>
+    """
+    return base_template(content, show_back=False)
+
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -77,7 +91,7 @@ def create_panel():
 
             <label>2. Emoji / Icon</label>
             <p><small>Choose an icon for this ticket button</small></p>
-            <select name="emoji" style="height:180px;">
+            <select name="emoji" style="height:200px;">
                 <option value="🎟️">🎟️ Ticket</option>
                 <option value="❓">❓ Question</option>
                 <option value="🚨">🚨 Report</option>
@@ -96,7 +110,7 @@ def create_panel():
                 <option value="📋">📋 Feedback</option>
                 <option value="🔒">🔒 Private</option>
                 <option value="🌟">🌟 VIP</option>
-                <option value="🧩">🧩 Puzzle / Help</option>
+                <option value="🧩">🧩 Puzzle</option>
                 <option value="📞">📞 Contact</option>
                 <option value="🛡️">🛡️ Protection</option>
                 <option value="🎨">🎨 Creative</option>
@@ -105,6 +119,9 @@ def create_panel():
                 <option value="🎵">🎵 Music</option>
                 <option value="🏆">🏆 Competition</option>
                 <option value="🌍">🌍 General</option>
+                <option value="🐛">🐛 Bug Report</option>
+                <option value="🔥">🔥 Urgent</option>
+                <option value="💡">💡 Idea</option>
             </select>
 
             <label>3. Description</label>
