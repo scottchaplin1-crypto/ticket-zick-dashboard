@@ -27,7 +27,7 @@ conn.commit()
 def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     back_button = '''
         <button onclick="window.location='/dashboard'" 
-                style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; border:none; border-radius:12px; cursor:pointer; font-size:16px;">
+                style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:14px 28px; border:none; border-radius:12px; cursor:pointer; font-size:17px; margin-bottom:20px;">
             ← Back to Dashboard
         </button>
     ''' if show_back else ''
@@ -40,7 +40,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
         <style>
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
             h1 {{ color:#00f0ff; text-align:center; }}
-            .header {{ text-align:center; margin-bottom:35px; }}
+            .header {{ text-align:center; margin-bottom:30px; }}
             .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
@@ -50,9 +50,21 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             input, select, textarea {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:16px; font-size:18px; }}
             label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
-            .preview {{ margin:20px 0; padding:20px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:20px; }}
-            .color-box {{ width:48px; height:48px; border-radius:10px; display:inline-block; margin:6px; cursor:pointer; border:3px solid transparent; }}
-            .color-box.selected {{ border-color:#ffffff; box-shadow:0 0 0 3px #00f0ff; }}
+            .preview {{ margin:20px 0; padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px; }}
+            .color-box {{ 
+                width:50px; height:50px; border-radius:10px; display:inline-block; margin:6px; 
+                cursor:pointer; border:3px solid transparent; position:relative; 
+            }}
+            .color-box.selected::after {{
+                content: "✓";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-size: 26px;
+                font-weight: bold;
+            }}
         </style>
     </head>
     <body>
@@ -141,7 +153,6 @@ def create_panel():
                 <span class="color-box" style="background:#ff8800" onclick="setColor('#ff8800')"></span>
                 <span class="color-box" style="background:#ffff00" onclick="setColor('#ffff00')"></span>
                 <span class="color-box" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
-                <span class="color-box" style="background:#00ffcc" onclick="setColor('#00ffcc')"></span>
                 <span class="color-box" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
                 <span class="color-box" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
             </div>
@@ -171,13 +182,12 @@ def create_panel():
         function updatePreview() {
             const emoji = document.getElementById('emoji-select').value || '🎟️';
             const text = document.getElementById('button-text').value || 'Create Ticket';
-            const color = document.getElementById('button-color') ? document.getElementById('button-color').value : '#00f0ff';
             const preview = document.getElementById('preview');
             preview.innerHTML = emoji + ' ' + text;
-            preview.style.color = color;
         }
         function setColor(color) {
-            document.getElementById('button-color').value = color;
+            document.querySelectorAll('.color-box').forEach(box => box.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
             updatePreview();
         }
         setTimeout(updatePreview, 300);
