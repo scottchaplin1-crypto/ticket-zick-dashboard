@@ -44,10 +44,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:30px; border:1px solid #00f0ff33; max-width:700px; margin:auto; }}
+            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
+            .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             input, select, textarea {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:16px; font-size:18px; }}
             label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
+            .preview {{ margin:20px 0; padding:20px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:20px; }}
         </style>
     </head>
     <body>
@@ -76,6 +79,13 @@ def dashboard():
         <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
         <div class="card"><h2>Dropdown Style</h2><p>Select menu options</p></div>
     </div>
+
+    <div class="section-title">Advanced Settings</div>
+    <div class="grid">
+        <div class="card" onclick="window.location='/transcripts'"><h2>Transcript</h2><p>Options for saving transcripts</p></div>
+        <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
+        <div class="card"><h2>Automation</h2><p>Automation options</p></div>
+    </div>
     """
     return base_template(content, show_back=False)
 
@@ -91,7 +101,7 @@ def create_panel():
 
             <label>2. Emoji / Icon</label>
             <p><small>Choose an icon for this ticket button</small></p>
-            <select name="emoji" style="height:200px;">
+            <select name="emoji" id="emoji-select" onchange="updatePreview()">
                 <option value="🎟️">🎟️ Ticket</option>
                 <option value="❓">❓ Question</option>
                 <option value="🚨">🚨 Report</option>
@@ -100,8 +110,8 @@ def create_panel():
                 <option value="🛠️">🛠️ Technical</option>
                 <option value="🎮">🎮 Gaming</option>
                 <option value="📝">📝 Application</option>
-                <option value="❤️">❤️ Love / Help</option>
-                <option value="⚠️">⚠️ Warning</option>
+                <option value="❤️">❤️ Help</option>
+                <option value="⚠️">⚠️ Urgent</option>
                 <option value="🔨">🔨 Ban Appeal</option>
                 <option value="💸">💸 Payment</option>
                 <option value="🎉">🎉 Event</option>
@@ -110,23 +120,14 @@ def create_panel():
                 <option value="📋">📋 Feedback</option>
                 <option value="🔒">🔒 Private</option>
                 <option value="🌟">🌟 VIP</option>
-                <option value="🧩">🧩 Puzzle</option>
-                <option value="📞">📞 Contact</option>
-                <option value="🛡️">🛡️ Protection</option>
-                <option value="🎨">🎨 Creative</option>
-                <option value="📚">📚 Study</option>
-                <option value="🍕">🍕 Food</option>
-                <option value="🎵">🎵 Music</option>
-                <option value="🏆">🏆 Competition</option>
-                <option value="🌍">🌍 General</option>
                 <option value="🐛">🐛 Bug Report</option>
-                <option value="🔥">🔥 Urgent</option>
+                <option value="🔥">🔥 Important</option>
                 <option value="💡">💡 Idea</option>
             </select>
 
             <label>3. Description</label>
             <p><small>This text appears when someone opens the ticket.</small></p>
-            <input type="text" name="description" value="Our team will assist you shortly." style="width:100%;">
+            <input type="text" name="description" value="Our team will assist you shortly." id="desc-input" onkeyup="updatePreview()">
 
             <label>4. Category ID</label>
             <p><small>Right-click the category in your server → Copy ID</small></p>
@@ -138,11 +139,18 @@ def create_panel():
 
             <label>6. Button Text</label>
             <p><small>What should the button say?</small></p>
-            <input type="text" name="button_text" value="Create Ticket">
+            <input type="text" name="button_text" id="button-text" value="Create Ticket" onkeyup="updatePreview()">
 
             <label>7. Button Color</label>
             <p><small>Choose the color of the button</small></p>
-            <select name="button_color">
+            <div style="margin:10px 0;">
+                <span onclick="setColor('#00f0ff')" style="background:#00f0ff;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;border:3px solid #fff;"></span>
+                <span onclick="setColor('#c026d3')" style="background:#c026d3;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
+                <span onclick="setColor('#ff00ff')" style="background:#ff00ff;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
+                <span onclick="setColor('#00ff88')" style="background:#00ff88;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
+                <span onclick="setColor('#ff8800')" style="background:#ff8800;width:45px;height:45px;display:inline-block;border-radius:8px;cursor:pointer;margin:5px;"></span>
+            </div>
+            <select name="button_color" id="button-color" onchange="updatePreview()">
                 <option value="#00f0ff">Cyan</option>
                 <option value="#c026d3">Purple</option>
                 <option value="#ff00ff">Magenta</option>
@@ -150,9 +158,25 @@ def create_panel():
                 <option value="#ff8800">Orange</option>
             </select>
 
+            <h3 style="margin-top:30px;">Live Button Preview</h3>
+            <div id="preview" style="padding:20px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:20px; margin:15px 0;">
+                🎟️ Create Ticket
+            </div>
+
             <button type="submit" style="margin-top:30px; width:100%;">Create This Ticket Panel</button>
         </form>
     </div>
+
+    <script>
+        function updatePreview() {
+            const emoji = document.getElementById('emoji-select').value || '🎟️';
+            const text = document.getElementById('button-text').value || 'Create Ticket';
+            const color = document.getElementById('button-color').value;
+            document.getElementById('preview').innerHTML = emoji + ' ' + text;
+            document.getElementById('preview').style.color = color;
+        }
+        setTimeout(updatePreview, 300);
+    </script>
     """
     return base_template(content, show_back=True)
 
