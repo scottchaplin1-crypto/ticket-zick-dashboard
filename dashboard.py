@@ -6,8 +6,6 @@ app = Flask(__name__)
 
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
-
-# Create tables
 c.execute('''CREATE TABLE IF NOT EXISTS panels (
     id INTEGER PRIMARY KEY,
     name TEXT,
@@ -35,7 +33,6 @@ def base_template(content, title="Ticket Zick Dashboard"):
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
             .panel-list {{ margin-top:40px; }}
-            .nav a {{ color:#c026d3; text-decoration:none; }}
         </style>
     </head>
     <body>
@@ -58,8 +55,8 @@ def dashboard():
     <div class="grid">
         <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general settings</p></div>
         <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Manage ticket panels</p></div>
-        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>Ticket options</p></div>
-        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown Style</h2><p>Select menu style</p></div>
+        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown Style</h2><p>Select menu options</p></div>
         <div class="card" onclick="window.location='/forms'"><h2>Forms</h2><p>Form options</p></div>
         <div class="card" onclick="window.location='/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
         <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Logging options</p></div>
@@ -73,28 +70,61 @@ def dashboard():
         <div class="card" onclick="window.location='/edit-panel/{p[0]}'">
             <h3>{p[2]} {p[1]}</h3>
             <p>Category: {p[3]}</p>
-            <p>Button: {p[6]}</p>
         </div>
         """
     panel_list += "</div>"
 
     return base_template(cards + panel_list)
 
+# ==================== MENU PAGES ====================
+
+@app.route("/general")
+def general():
+    return base_template("<h1>General Settings</h1><p>Full page coming soon...</p>", "General")
+
+@app.route("/panel")
+def panel():
+    return base_template("<h1>Panel Settings</h1><p>Full page coming soon...</p>", "Panel Settings")
+
+@app.route("/ticket")
+def ticket():
+    return base_template("<h1>Ticket Options</h1><p>Full page coming soon...</p>", "Ticket")
+
+@app.route("/dropdown")
+def dropdown():
+    return base_template("<h1>Dropdown Style</h1><p>Full page coming soon...</p>", "Dropdown Style")
+
+@app.route("/forms")
+def forms():
+    return base_template("<h1>Forms</h1><p>Full page coming soon...</p>", "Forms")
+
+@app.route("/transcripts")
+def transcripts():
+    return base_template("<h1>Transcripts</h1><p>Full page coming soon...</p>", "Transcripts")
+
+@app.route("/logging")
+def logging():
+    return base_template("<h1>Logging</h1><p>Full page coming soon...</p>", "Logging")
+
+@app.route("/automation")
+def automation():
+    return base_template("<h1>Automation</h1><p>Full page coming soon...</p>", "Automation")
+
+# Create Panel
 @app.route("/create-panel")
 def create_panel():
     return base_template("""
         <h2>Create New Ticket Panel</h2>
         <form method="POST" action="/save-panel">
-            <input type="text" name="name" placeholder="Panel Name (e.g. Support)" required><br><br>
+            <input type="text" name="name" placeholder="Panel Name" required><br><br>
             <input type="text" name="emoji" placeholder="Emoji" value="🎟️"><br><br>
             <input type="text" name="description" placeholder="Description" value="Click to open a ticket"><br><br>
             <input type="text" name="category_id" placeholder="Category ID" required><br><br>
-            <input type="text" name="support_roles" placeholder="Support Roles (Staff,Admin)"><br><br>
+            <input type="text" name="support_roles" placeholder="Support Roles"><br><br>
             <input type="text" name="button_text" placeholder="Button Text" value="Create Ticket"><br><br>
             <select name="button_color">
                 <option value="#00f0ff">Cyan</option>
                 <option value="#c026d3">Purple</option>
-                <option value="#ff00ff">Magenta</option>
             </select><br><br>
             <button type="submit" class="create-btn">Create Panel</button>
         </form>
@@ -116,7 +146,6 @@ def save_panel():
     conn.commit()
     return redirect("/dashboard")
 
-# Catch all unknown URLs
 @app.route("/<path:path>")
 def catch_all(path):
     return redirect("/dashboard")
