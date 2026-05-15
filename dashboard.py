@@ -47,9 +47,8 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
-            .section-title {{ color:#c026d3; margin:40px 0 15px 0; font-size:22px; }}
-            input[type="checkbox"] {{ width:28px; height:28px; accent-color:#00f0ff; }}
-            .option {{ display:flex; align-items:center; gap:15px; padding:12px 0; border-bottom:1px solid #334155; }}
+            input, select, textarea {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; }}
+            button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; }}
         </style>
     </head>
     <body>
@@ -57,13 +56,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             <h1>🎟️ Ticket Zick Dashboard</h1>
             
             <div class="header-buttons">
+                <!-- Invite Button -->
                 <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                     <button class="btn invite">➕ Invite Ticket Zick to Your Server</button>
                 </a>
-                <button class="btn" onclick="window.location='/create-panel'">+ Create New Ticket Panel</button>
+                
+                <!-- Create Panel Button -->
+                <button class="btn" onclick="window.location='/create-panel'">
+                    + Create New Ticket Panel
+                </button>
             </div>
-            
-            {back_button}
         </div>
         {content}
     </body>
@@ -93,6 +95,45 @@ def dashboard():
     </div>
     """
     return base_template(content)
+
+@app.route("/create-panel")
+def create_panel():
+    content = """
+    <h1>Create New Ticket Panel</h1>
+    <div class="card">
+        <form method="POST" action="/save-panel">
+            <input type="text" name="name" placeholder="Panel Name (e.g. Support, Reports)" required><br><br>
+            <input type="text" name="emoji" placeholder="Emoji" value="🎟️"><br><br>
+            <input type="text" name="description" placeholder="Description" value="Click to open a ticket"><br><br>
+            <input type="text" name="category_id" placeholder="Category ID" required><br><br>
+            <input type="text" name="support_roles" placeholder="Support Roles (Staff,Admin,Mod)"><br><br>
+            <input type="text" name="button_text" placeholder="Button Text" value="Create Ticket"><br><br>
+            <select name="button_color">
+                <option value="#00f0ff">Cyan</option>
+                <option value="#c026d3">Purple</option>
+                <option value="#ff00ff">Magenta</option>
+            </select><br><br>
+            <button type="submit" style="padding:16px; font-size:18px;">Create Ticket Panel</button>
+        </form>
+    </div>
+    """
+    return base_template(content, show_back=True)
+
+@app.route("/save-panel", methods=["POST"])
+def save_panel():
+    name = request.form.get("name")
+    emoji = request.form.get("emoji")
+    description = request.form.get("description")
+    category_id = request.form.get("category_id")
+    support_roles = request.form.get("support_roles")
+    button_text = request.form.get("button_text")
+    button_color = request.form.get("button_color")
+    
+    c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)""", 
+              (name, emoji, category_id, description, support_roles, button_text, button_color))
+    conn.commit()
+    return redirect("/dashboard")
 
 @app.route("/general", methods=["GET", "POST"])
 def general():
