@@ -41,30 +41,24 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
             h1 {{ color:#00f0ff; text-align:center; }}
             .header {{ text-align:center; margin-bottom:30px; }}
+            .section-title {{ color:#c026d3; margin:40px 0 15px 0; font-size:22px; }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
-            .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; margin:8px; }}
-            input, select, button {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; }}
-            input, select {{ background:#16213e; color:white; }}
-            button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; }}
+            .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; margin:10px; }}
+            input[type="checkbox"] {{ width:28px; height:28px; accent-color:#00f0ff; }}
+            .option {{ display:flex; align-items:center; gap:15px; padding:12px 0; border-bottom:1px solid #334155; }}
         </style>
     </head>
     <body>
         <div class="header">
             <h1>🎟️ Ticket Zick Dashboard</h1>
             
-            <!-- Invite Button -->
             <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID_HERE&scope=bot+applications.commands&permissions=8" target="_blank">
                 <button class="create-btn" style="background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:20px; padding:18px 40px;">
                     ➕ Invite Ticket Zick to Your Server
                 </button>
             </a>
-            
-            <!-- Create Panel Button -->
-            <button class="create-btn" onclick="window.location='/create-panel'">
-                + Create New Ticket Panel
-            </button>
             
             {back_button}
         </div>
@@ -76,20 +70,28 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
-    cards = """
+    content = """
+    <div class="section-title">Panel Settings</div>
     <div class="grid">
         <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
-        <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Manage your panels</p></div>
-        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
-        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown</h2><p>Select menu options</p></div>
-        <div class="card" onclick="window.location='/forms'"><h2>Forms</h2><p>Form options</p></div>
-        <div class="card" onclick="window.location='/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Logging options</p></div>
-        <div class="card" onclick="window.location='/automation'"><h2>Automation</h2><p>Automation options</p></div>
+        <div class="card"><h2>Panel</h2><p>Options for the message used to create tickets</p></div>
+        <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
+        <div class="card"><h2>Dropdown Style</h2><p>Options for select menu</p></div>
+        <div class="card"><h2>Thread Style</h2><p>Thread style tickets</p></div>
+        <div class="card"><h2>Forms</h2><p>Form Options</p></div>
+    </div>
+
+    <div class="section-title">Advanced Settings</div>
+    <div class="grid">
+        <div class="card" onclick="window.location='/transcripts'"><h2>Transcript</h2><p>Options for saving transcripts</p></div>
+        <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
+        <div class="card"><h2>Automation</h2><p>Automation options</p></div>
+        <div class="card"><h2>Limits</h2><p>Limits and scheduling</p></div>
     </div>
     """
-    return base_template(cards, show_back=False)
+    return base_template(content)
 
+# ====================== GENERAL ======================
 @app.route("/general", methods=["GET", "POST"])
 def general():
     if request.method == "POST":
@@ -117,18 +119,23 @@ def general():
             </select>
 
             <h2>Ticket Close Behaviour</h2>
-            <div style="margin:15px 0">
-                <input type="checkbox" name="close_ticket" {}> Close Ticket (keep channel)<br><br>
-                <input type="checkbox" name="close_and_delete" {}> Close & Delete Ticket
+            <div class="option">
+                <input type="checkbox" name="close_ticket" {} id="c1">
+                <label for="c1">Close Ticket (keep channel)</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" name="close_and_delete" {} id="c2">
+                <label for="c2">Close & Delete Ticket</label>
             </div>
 
             <h2>Transcripts</h2>
-            <div style="margin:15px 0">
-                <input type="checkbox" name="save_transcript" {}> Save Transcript when closed<br><br>
-                <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID">
+            <div class="option">
+                <input type="checkbox" name="save_transcript" {} id="t1">
+                <label for="t1">Save Transcript when ticket is closed/deleted</label>
             </div>
+            <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID">
 
-            <button type="submit" style="margin-top:25px;">Save All Changes</button>
+            <button type="submit" style="margin-top:30px;">Save All Changes</button>
         </form>
     </div>
     """.format(
@@ -138,21 +145,6 @@ def general():
         settings.get("transcript_channel", "")
     )
     return base_template(content, "General Settings", show_back=True)
-
-# Placeholder pages
-@app.route("/panel")
-@app.route("/ticket")
-@app.route("/dropdown")
-@app.route("/forms")
-@app.route("/transcripts")
-@app.route("/logging")
-@app.route("/automation")
-def coming_soon():
-    return base_template("<h1>Coming Soon</h1><p>This section is being built...</p>", show_back=True)
-
-@app.route("/create-panel")
-def create_panel():
-    return base_template("<h2>Create New Panel</h2><p>Full version coming soon...</p>", show_back=True)
 
 @app.route("/<path:path>")
 def catch_all(path):
