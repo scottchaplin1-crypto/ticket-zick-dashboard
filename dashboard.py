@@ -44,7 +44,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
-            .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
+            .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; margin:8px; }}
             input, select, button {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; }}
             input, select {{ background:#16213e; color:white; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; }}
@@ -55,11 +55,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             <h1>🎟️ Ticket Zick Dashboard</h1>
             
             <!-- Invite Button -->
-            <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
-                <button class="create-btn" style="background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:20px; padding:18px 40px; margin-bottom:15px;">
+            <a href="https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID_HERE&scope=bot+applications.commands&permissions=8" target="_blank">
+                <button class="create-btn" style="background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:20px; padding:18px 40px;">
                     ➕ Invite Ticket Zick to Your Server
                 </button>
             </a>
+            
+            <!-- Create Panel Button -->
+            <button class="create-btn" onclick="window.location='/create-panel'">
+                + Create New Ticket Panel
+            </button>
             
             {back_button}
         </div>
@@ -134,7 +139,7 @@ def general():
     )
     return base_template(content, "General Settings", show_back=True)
 
-# Other pages
+# Placeholder pages
 @app.route("/panel")
 @app.route("/ticket")
 @app.route("/dropdown")
@@ -144,6 +149,10 @@ def general():
 @app.route("/automation")
 def coming_soon():
     return base_template("<h1>Coming Soon</h1><p>This section is being built...</p>", show_back=True)
+
+@app.route("/create-panel")
+def create_panel():
+    return base_template("<h2>Create New Panel</h2><p>Full version coming soon...</p>", show_back=True)
 
 @app.route("/<path:path>")
 def catch_all(path):
