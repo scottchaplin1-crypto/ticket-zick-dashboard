@@ -42,32 +42,19 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
             h1 {{ color:#00f0ff; text-align:center; }}
             .header {{ text-align:center; margin-bottom:30px; }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
+            .card:hover {{ transform:scale(1.05); border-color:#c026d3; }}
             .create-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; }}
             
-            /* Professional Checkboxes */
+            /* Better Checkboxes */
             input[type="checkbox"] {{
                 width: 28px;
                 height: 28px;
                 accent-color: #00f0ff;
                 cursor: pointer;
-                background: #334155;
-                border: 2px solid #64748b;
-                border-radius: 6px;
             }}
-            input[type="checkbox"]:checked {{
-                background: #00f0ff;
-                border-color: #00f0ff;
-            }}
-            label {{ font-size: 17px; cursor: pointer; user-select: none; }}
-            
-            .option {{ 
-                display: flex; 
-                align-items: center; 
-                gap: 15px; 
-                padding: 14px 0; 
-                border-bottom: 1px solid #334155; 
-            }}
+            label {{ font-size: 17px; cursor: pointer; }}
+            .option {{ display: flex; align-items: center; gap: 15px; padding: 14px 0; border-bottom: 1px solid #334155; }}
             .option:last-child {{ border-bottom: none; }}
         </style>
     </head>
@@ -84,11 +71,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=False):
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
-    # ... (your grid cards stay the same)
     cards = """
     <div class="grid">
         <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
-        <!-- other cards -->
+        <div class="card" onclick="window.location='/panel'"><h2>Panel Settings</h2><p>Manage your panels</p></div>
+        <div class="card" onclick="window.location='/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/dropdown'"><h2>Dropdown</h2><p>Select menu options</p></div>
+        <div class="card" onclick="window.location='/forms'"><h2>Forms</h2><p>Form options</p></div>
+        <div class="card" onclick="window.location='/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
+        <div class="card" onclick="window.location='/logging'"><h2>Logging</h2><p>Logging options</p></div>
+        <div class="card" onclick="window.location='/automation'"><h2>Automation</h2><p>Automation options</p></div>
     </div>
     """
     return base_template(cards, show_back=False)
@@ -121,20 +113,20 @@ def general():
 
             <h2>Ticket Close Behaviour</h2>
             <div class="option">
-                <input type="checkbox" name="close_ticket" {} id="close1">
-                <label for="close1">Close Ticket (keep channel)</label>
+                <input type="checkbox" name="close_ticket" {} id="c1">
+                <label for="c1">Close Ticket (keep channel)</label>
             </div>
             <div class="option">
-                <input type="checkbox" name="close_and_delete" {} id="close2">
-                <label for="close2">Close & Delete Ticket</label>
+                <input type="checkbox" name="close_and_delete" {} id="c2">
+                <label for="c2">Close & Delete Ticket</label>
             </div>
 
             <h2>Transcripts</h2>
             <div class="option">
-                <input type="checkbox" name="save_transcript" {} id="trans">
-                <label for="trans">Save Transcript when ticket is closed/deleted</label>
+                <input type="checkbox" name="save_transcript" {} id="t1">
+                <label for="t1">Save Transcript when ticket is closed/deleted</label>
             </div>
-            <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID (optional)" style="margin-top:10px;">
+            <input type="text" name="transcript_channel" value="{}" placeholder="Transcript Channel ID (optional)" style="margin-top:15px;">
 
             <button type="submit" style="margin-top:30px; padding:16px; font-size:17px;">Save All Changes</button>
         </form>
@@ -147,7 +139,6 @@ def general():
     )
     return base_template(content, "General Settings", show_back=True)
 
-# Keep other routes...
 @app.route("/<path:path>")
 def catch_all(path):
     return redirect("/dashboard")
