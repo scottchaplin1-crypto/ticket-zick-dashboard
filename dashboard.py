@@ -44,24 +44,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; max-width:700px; margin:auto; }}
+            .panel-item {{ background:#16213e; padding:15px; border-radius:12px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }}
             input, select {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
-            button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:16px; }}
+            button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:14px; }}
             label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
             .preview {{ margin:20px 0; padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px; }}
-            .color-box {{ 
-                width:50px; height:50px; border-radius:10px; display:inline-block; margin:6px; 
-                cursor:pointer; border:3px solid transparent; position:relative; 
-            }}
-            .color-box.selected::after {{
-                content: "✓";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: white;
-                font-size: 26px;
-                font-weight: bold;
-            }}
+            .color-box {{ width:50px; height:50px; border-radius:10px; display:inline-block; margin:6px; cursor:pointer; border:3px solid transparent; position:relative; }}
+            .color-box.selected::after {{ content:"✓"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:26px; }}
         </style>
     </head>
     <body>
@@ -89,7 +78,7 @@ def dashboard():
     panel_html = ""
     for p in panels:
         panel_html += f'''
-        <div style="background:#16213e; padding:15px; border-radius:12px; margin:10px 0; display:flex; justify-content:space-between; align-items:center;">
+        <div class="panel-item">
             <div><strong>{p[1]}</strong> {p[2]} {p[3]}</div>
             <div>
                 <button onclick="window.location='/edit-panel/{p[0]}'" style="background:#00f0ff; margin-right:8px;">Edit</button>
@@ -209,6 +198,59 @@ def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
                  VALUES (?, ?, ?, ?, ?, ?, ?)""", 
               (name, emoji, category_id, description, support_roles, button_text, button_color))
+    conn.commit()
+    return redirect("/dashboard")
+
+# === EDIT & DELETE ===
+@app.route("/edit-panel/<int:panel_id>")
+def edit_panel(panel_id):
+    c.execute("SELECT * FROM panels WHERE id = ?", (panel_id,))
+    panel = c.fetchone()
+    if not panel:
+        return redirect("/dashboard")
+
+    content = f"""
+    <h1>Edit Ticket Panel</h1>
+    <div class="card">
+        <form method="POST" action="/update-panel/{panel[0]}">
+            <label>1. Panel Name</label>
+            <input type="text" name="name" value="{panel[1]}" required>
+
+            <label>2. Emoji / Icon</label>
+            <select name="emoji" id="emoji-select" onchange="updatePreview()">
+                <option value="🎟️" {'selected' if panel[2]=='🎟️' else ''}>🎟️ Ticket</option>
+                <!-- Add other options if needed -->
+            </select>
+
+            <label>3. Button Text</label>
+            <input type="text" name="button_text" id="button-text" value="{panel[6]}" onkeyup="updatePreview()">
+
+            <label>4. Button Color</label>
+            <div style="margin:10px 0;">
+                <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
+                <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
+                <!-- more colors -->
+            </div>
+
+            <button type="submit" style="margin-top:30px; width:100%;">Save Changes</button>
+        </form>
+    </div>
+    """
+    return base_template(content, show_back=True)
+
+@app.route("/update-panel/<int:panel_id>", methods=["POST"])
+def update_panel(panel_id):
+    c.execute("""UPDATE panels SET name=?, emoji=?, category_id=?, description=?, 
+                 support_roles=?, button_text=?, button_color=? WHERE id=?""",
+              (request.form.get("name"), request.form.get("emoji"), request.form.get("category_id"),
+               request.form.get("description"), request.form.get("support_roles"),
+               request.form.get("button_text"), request.form.get("button_color"), panel_id))
+    conn.commit()
+    return redirect("/dashboard")
+
+@app.route("/delete-panel/<int:panel_id>")
+def delete_panel(panel_id):
+    c.execute("DELETE FROM panels WHERE id = ?", (panel_id,))
     conn.commit()
     return redirect("/dashboard")
 
