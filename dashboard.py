@@ -68,6 +68,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
+# Main Dashboard
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -92,6 +93,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
+# Create Panel
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -178,7 +180,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save, Edit, Update, Delete routes (kept the same as last working version)
+# Save New Panel
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -190,11 +192,14 @@ def save_panel():
     conn.commit()
     return redirect("/dashboard")
 
+# Edit Panel (with color pre-selected)
 @app.route("/edit-panel/<int:panel_id>")
 def edit_panel(panel_id):
     c.execute("SELECT * FROM panels WHERE id = ?", (panel_id,))
     panel = c.fetchone()
     if not panel: return redirect("/dashboard")
+
+    current_color = panel[7] or '#00f0ff'
 
     content = f"""
     <h1>Edit Ticket Panel</h1>
@@ -228,16 +233,16 @@ def edit_panel(panel_id):
 
             <label>4. Button Color</label>
             <div style="margin:10px 0;">
-                <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
-                <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
-                <span class="color-box" style="background:#ff00ff" onclick="setColor('#ff00ff')"></span>
-                <span class="color-box" style="background:#00ff88" onclick="setColor('#00ff88')"></span>
-                <span class="color-box" style="background:#ff8800" onclick="setColor('#ff8800')"></span>
-                <span class="color-box" style="background:#ffff00" onclick="setColor('#ffff00')"></span>
-                <span class="color-box" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
-                <span class="color-box" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
-                <span class="color-box" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
-                <span class="color-box" style="background:#00ffff" onclick="setColor('#00ffff')"></span>
+                <span class="color-box {'selected' if current_color == '#00f0ff' else ''}" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
+                <span class="color-box {'selected' if current_color == '#c026d3' else ''}" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
+                <span class="color-box {'selected' if current_color == '#ff00ff' else ''}" style="background:#ff00ff" onclick="setColor('#ff00ff')"></span>
+                <span class="color-box {'selected' if current_color == '#00ff88' else ''}" style="background:#00ff88" onclick="setColor('#00ff88')"></span>
+                <span class="color-box {'selected' if current_color == '#ff8800' else ''}" style="background:#ff8800" onclick="setColor('#ff8800')"></span>
+                <span class="color-box {'selected' if current_color == '#ffff00' else ''}" style="background:#ffff00" onclick="setColor('#ffff00')"></span>
+                <span class="color-box {'selected' if current_color == '#ff0088' else ''}" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
+                <span class="color-box {'selected' if current_color == '#ff4444' else ''}" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
+                <span class="color-box {'selected' if current_color == '#44ff44' else ''}" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
+                <span class="color-box {'selected' if current_color == '#00ffff' else ''}" style="background:#00ffff" onclick="setColor('#00ffff')"></span>
             </div>
 
             <label>5. Description</label>
