@@ -70,28 +70,28 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
+# ====================== MAIN DASHBOARD WITH DROPDOWN ======================
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
-    c.execute("SELECT id, name, emoji, button_text FROM panels ORDER BY id DESC")
+    c.execute("SELECT id, name, emoji FROM panels ORDER BY name")
     panels = c.fetchall()
 
-    panel_html = ""
-    for p in panels:
-        panel_html += f'''
-        <div class="panel-item">
-            <div><strong>{p[1]}</strong> {p[2]} {p[3]}</div>
-            <div>
-                <button onclick="window.location='/edit-panel/{p[0]}'" style="background:#00f0ff; margin-right:8px;">Edit</button>
-                <button onclick="if(confirm('Delete this panel?')) window.location='/delete-panel/{p[0]}'" style="background:#ff4444;">Delete</button>
-            </div>
-        </div>
-        '''
+    options = ''.join([f'<option value="{p[0]}">{p[1]} {p[2]}</option>' for p in panels])
 
     content = f"""
+    <div style="text-align:center; margin:30px 0;">
+        <label style="font-size:18px; color:#00f0ff;">Select Ticket Panel to Edit:</label><br><br>
+        <select onchange="if(this.value) window.location='/edit-panel/'+this.value" 
+                style="padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; width:80%; max-width:600px;">
+            <option value="">-- Choose a Panel --</option>
+            {options}
+        </select>
+    </div>
+
     <div class="section-title" style="text-align:center; margin:30px 0 15px; color:#00f0ff;">Panel Settings</div>
     <div class="grid">
-        <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
+        <div class="card"><h2>General</h2><p>Support team and general items</p></div>
         <div class="card"><h2>Panel</h2><p>Options for the message used to create tickets</p></div>
         <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
         <div class="card"><h2>Dropdown Style</h2><p>Select menu options</p></div>
@@ -104,9 +104,6 @@ def dashboard():
         <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
         <div class="card"><h2>Automation</h2><p>Automation options</p></div>
     </div>
-
-    <h2 style="text-align:center; color:#00f0ff; margin-top:50px;">Your Ticket Panels</h2>
-    {panel_html if panel_html else "<p style='text-align:center; font-size:18px;'>No panels yet. Create your first one!</p>"}
     """
     return base_template(content, show_back=False)
 
@@ -225,17 +222,6 @@ def edit_panel(panel_id):
                 <option value="🚨" {'selected' if panel[2]=='🚨' else ''}>🚨 Report</option>
                 <option value="💰" {'selected' if panel[2]=='💰' else ''}>💰 Donation</option>
                 <option value="🤝" {'selected' if panel[2]=='🤝' else ''}>🤝 Support</option>
-                <option value="🛠️" {'selected' if panel[2]=='🛠️' else ''}>🛠️ Technical</option>
-                <option value="🎮" {'selected' if panel[2]=='🎮' else ''}>🎮 Gaming</option>
-                <option value="📝" {'selected' if panel[2]=='📝' else ''}>📝 Application</option>
-                <option value="❤️" {'selected' if panel[2]=='❤️' else ''}>❤️ Help</option>
-                <option value="⚠️" {'selected' if panel[2]=='⚠️' else ''}>⚠️ Urgent</option>
-                <option value="🔨" {'selected' if panel[2]=='🔨' else ''}>🔨 Ban Appeal</option>
-                <option value="💸" {'selected' if panel[2]=='💸' else ''}>💸 Payment</option>
-                <option value="🎉" {'selected' if panel[2]=='🎉' else ''}>🎉 Event</option>
-                <option value="📢" {'selected' if panel[2]=='📢' else ''}>📢 Announcement</option>
-                <option value="🐛" {'selected' if panel[2]=='🐛' else ''}>🐛 Bug Report</option>
-                <option value="🔥" {'selected' if panel[2]=='🔥' else ''}>🔥 Important</option>
             </select>
 
             <label>3. Button Text</label>
@@ -253,7 +239,6 @@ def edit_panel(panel_id):
                 <span class="color-box {'selected' if current_color == '#ff0088' else ''}" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
                 <span class="color-box {'selected' if current_color == '#ff4444' else ''}" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
                 <span class="color-box {'selected' if current_color == '#44ff44' else ''}" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
-                <span class="color-box {'selected' if current_color == '#00ffff' else ''}" style="background:#00ffff" onclick="setColor('#00ffff')"></span>
             </div>
 
             <label>5. Description</label>
