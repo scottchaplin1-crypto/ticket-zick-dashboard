@@ -42,13 +42,12 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
-            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; max-width:700px; margin:auto; }}
             .panel-item {{ background:#16213e; padding:15px; border-radius:12px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }}
             input, select {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:14px; }}
             label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
-            .preview {{ margin:20px 0; padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px; border:2px solid #334155; }}
+            .preview {{ margin:20px 0; padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px; }}
             .color-box {{ width:48px; height:48px; border-radius:10px; display:inline-block; margin:6px; cursor:pointer; border:3px solid transparent; position:relative; }}
             .color-box.selected::after {{ content:"✓"; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:24px; font-weight:bold; }}
         </style>
@@ -69,7 +68,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# ====================== MAIN DASHBOARD ======================
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -94,7 +92,6 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== CREATE PANEL ======================
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -111,6 +108,22 @@ def create_panel():
                 <option value="🚨">🚨 Report</option>
                 <option value="💰">💰 Donation</option>
                 <option value="🤝">🤝 Support</option>
+                <option value="🛠️">🛠️ Technical</option>
+                <option value="🎮">🎮 Gaming</option>
+                <option value="📝">📝 Application</option>
+                <option value="❤️">❤️ Help</option>
+                <option value="⚠️">⚠️ Urgent</option>
+                <option value="🔨">🔨 Ban Appeal</option>
+                <option value="💸">💸 Payment</option>
+                <option value="🎉">🎉 Event</option>
+                <option value="📢">📢 Announcement</option>
+                <option value="🕹️">🕹️ Gameplay</option>
+                <option value="📋">📋 Feedback</option>
+                <option value="🔒">🔒 Private</option>
+                <option value="🌟">🌟 VIP</option>
+                <option value="🐛">🐛 Bug Report</option>
+                <option value="🔥">🔥 Important</option>
+                <option value="💡">💡 Idea</option>
             </select>
 
             <label>3. Button Text</label>
@@ -128,6 +141,7 @@ def create_panel():
                 <span class="color-box" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
                 <span class="color-box" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
                 <span class="color-box" style="background:#00ffff" onclick="setColor('#00ffff')"></span>
+                <span class="color-box" style="background:#ff00aa" onclick="setColor('#ff00aa')"></span>
             </div>
 
             <label>5. Description</label>
@@ -164,7 +178,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# ====================== SAVE / EDIT / DELETE ======================
+# Save, Edit, Update, Delete routes (kept the same as last working version)
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -194,6 +208,19 @@ def edit_panel(panel_id):
                 <option value="🎟️" {'selected' if panel[2]=='🎟️' else ''}>🎟️ Ticket</option>
                 <option value="❓" {'selected' if panel[2]=='❓' else ''}>❓ Question</option>
                 <option value="🚨" {'selected' if panel[2]=='🚨' else ''}>🚨 Report</option>
+                <option value="💰" {'selected' if panel[2]=='💰' else ''}>💰 Donation</option>
+                <option value="🤝" {'selected' if panel[2]=='🤝' else ''}>🤝 Support</option>
+                <option value="🛠️" {'selected' if panel[2]=='🛠️' else ''}>🛠️ Technical</option>
+                <option value="🎮" {'selected' if panel[2]=='🎮' else ''}>🎮 Gaming</option>
+                <option value="📝" {'selected' if panel[2]=='📝' else ''}>📝 Application</option>
+                <option value="❤️" {'selected' if panel[2]=='❤️' else ''}>❤️ Help</option>
+                <option value="⚠️" {'selected' if panel[2]=='⚠️' else ''}>⚠️ Urgent</option>
+                <option value="🔨" {'selected' if panel[2]=='🔨' else ''}>🔨 Ban Appeal</option>
+                <option value="💸" {'selected' if panel[2]=='💸' else ''}>💸 Payment</option>
+                <option value="🎉" {'selected' if panel[2]=='🎉' else ''}>🎉 Event</option>
+                <option value="📢" {'selected' if panel[2]=='📢' else ''}>📢 Announcement</option>
+                <option value="🐛" {'selected' if panel[2]=='🐛' else ''}>🐛 Bug Report</option>
+                <option value="🔥" {'selected' if panel[2]=='🔥' else ''}>🔥 Important</option>
             </select>
 
             <label>3. Button Text</label>
