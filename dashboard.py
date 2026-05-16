@@ -68,7 +68,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# Main Dashboard
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -93,7 +92,6 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# Create Panel
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -143,7 +141,6 @@ def create_panel():
                 <span class="color-box" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
                 <span class="color-box" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
                 <span class="color-box" style="background:#00ffff" onclick="setColor('#00ffff')"></span>
-                <span class="color-box" style="background:#ff00aa" onclick="setColor('#ff00aa')"></span>
             </div>
 
             <label>5. Description</label>
@@ -180,7 +177,6 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save New Panel
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -192,7 +188,6 @@ def save_panel():
     conn.commit()
     return redirect("/dashboard")
 
-# Edit Panel (with color pre-selected)
 @app.route("/edit-panel/<int:panel_id>")
 def edit_panel(panel_id):
     c.execute("SELECT * FROM panels WHERE id = ?", (panel_id,))
