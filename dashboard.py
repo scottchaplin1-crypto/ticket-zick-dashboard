@@ -42,7 +42,9 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; max-width:700px; margin:auto; }}
+            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
+            .card:hover {{ transform:scale(1.03); border-color:#c026d3; }}
             .panel-item {{ background:#16213e; padding:15px; border-radius:12px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }}
             input, select {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:14px; }}
@@ -87,11 +89,28 @@ def dashboard():
         '''
 
     content = f"""
-    <h2 style="text-align:center; color:#00f0ff;">Your Ticket Panels</h2>
+    <div class="section-title" style="text-align:center; margin:30px 0 15px; color:#00f0ff;">Panel Settings</div>
+    <div class="grid">
+        <div class="card" onclick="window.location='/general'"><h2>General</h2><p>Support team and general items</p></div>
+        <div class="card"><h2>Panel</h2><p>Options for the message used to create tickets</p></div>
+        <div class="card"><h2>Command Style</h2><p>Options for creating tickets using commands</p></div>
+        <div class="card"><h2>Dropdown Style</h2><p>Select menu options</p></div>
+    </div>
+
+    <div class="section-title" style="text-align:center; margin:40px 0 15px; color:#00f0ff;">Advanced Settings</div>
+    <div class="grid">
+        <div class="card"><h2>Forms</h2><p>Form options</p></div>
+        <div class="card"><h2>Transcripts</h2><p>Options for saving transcripts</p></div>
+        <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
+        <div class="card"><h2>Automation</h2><p>Automation options</p></div>
+    </div>
+
+    <h2 style="text-align:center; color:#00f0ff; margin-top:50px;">Your Ticket Panels</h2>
     {panel_html if panel_html else "<p style='text-align:center; font-size:18px;'>No panels yet. Create your first one!</p>"}
     """
     return base_template(content, show_back=False)
 
+# ====================== CREATE PANEL ======================
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -125,7 +144,6 @@ def create_panel():
             <input type="text" name="button_text" id="button-text" value="Create Ticket" onkeyup="updatePreview()">
 
             <label>4. Button Color</label>
-            <input type="hidden" name="button_color" id="selected-color" value="#00f0ff">
             <div style="margin:10px 0;">
                 <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
                 <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
@@ -166,7 +184,6 @@ def create_panel():
         function setColor(color) {
             document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
-            document.getElementById('selected-color').value = color;
             updatePreview();
         }
         setTimeout(updatePreview, 300);
@@ -174,7 +191,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save, Edit, Update, Delete routes (same as before)
+# ====================== SAVE / EDIT / DELETE ======================
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -208,6 +225,17 @@ def edit_panel(panel_id):
                 <option value="🚨" {'selected' if panel[2]=='🚨' else ''}>🚨 Report</option>
                 <option value="💰" {'selected' if panel[2]=='💰' else ''}>💰 Donation</option>
                 <option value="🤝" {'selected' if panel[2]=='🤝' else ''}>🤝 Support</option>
+                <option value="🛠️" {'selected' if panel[2]=='🛠️' else ''}>🛠️ Technical</option>
+                <option value="🎮" {'selected' if panel[2]=='🎮' else ''}>🎮 Gaming</option>
+                <option value="📝" {'selected' if panel[2]=='📝' else ''}>📝 Application</option>
+                <option value="❤️" {'selected' if panel[2]=='❤️' else ''}>❤️ Help</option>
+                <option value="⚠️" {'selected' if panel[2]=='⚠️' else ''}>⚠️ Urgent</option>
+                <option value="🔨" {'selected' if panel[2]=='🔨' else ''}>🔨 Ban Appeal</option>
+                <option value="💸" {'selected' if panel[2]=='💸' else ''}>💸 Payment</option>
+                <option value="🎉" {'selected' if panel[2]=='🎉' else ''}>🎉 Event</option>
+                <option value="📢" {'selected' if panel[2]=='📢' else ''}>📢 Announcement</option>
+                <option value="🐛" {'selected' if panel[2]=='🐛' else ''}>🐛 Bug Report</option>
+                <option value="🔥" {'selected' if panel[2]=='🔥' else ''}>🔥 Important</option>
             </select>
 
             <label>3. Button Text</label>
