@@ -117,19 +117,15 @@ def create_panel():
                 <option value="💸">💸 Payment</option>
                 <option value="🎉">🎉 Event</option>
                 <option value="📢">📢 Announcement</option>
-                <option value="🕹️">🕹️ Gameplay</option>
-                <option value="📋">📋 Feedback</option>
-                <option value="🔒">🔒 Private</option>
-                <option value="🌟">🌟 VIP</option>
                 <option value="🐛">🐛 Bug Report</option>
                 <option value="🔥">🔥 Important</option>
-                <option value="💡">💡 Idea</option>
             </select>
 
             <label>3. Button Text</label>
             <input type="text" name="button_text" id="button-text" value="Create Ticket" onkeyup="updatePreview()">
 
             <label>4. Button Color</label>
+            <input type="hidden" name="button_color" id="selected-color" value="#00f0ff">
             <div style="margin:10px 0;">
                 <span class="color-box" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
                 <span class="color-box" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
@@ -170,6 +166,7 @@ def create_panel():
         function setColor(color) {
             document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
+            document.getElementById('selected-color').value = color;
             updatePreview();
         }
         setTimeout(updatePreview, 300);
@@ -177,6 +174,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
+# Save, Edit, Update, Delete routes (same as before)
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -210,23 +208,13 @@ def edit_panel(panel_id):
                 <option value="🚨" {'selected' if panel[2]=='🚨' else ''}>🚨 Report</option>
                 <option value="💰" {'selected' if panel[2]=='💰' else ''}>💰 Donation</option>
                 <option value="🤝" {'selected' if panel[2]=='🤝' else ''}>🤝 Support</option>
-                <option value="🛠️" {'selected' if panel[2]=='🛠️' else ''}>🛠️ Technical</option>
-                <option value="🎮" {'selected' if panel[2]=='🎮' else ''}>🎮 Gaming</option>
-                <option value="📝" {'selected' if panel[2]=='📝' else ''}>📝 Application</option>
-                <option value="❤️" {'selected' if panel[2]=='❤️' else ''}>❤️ Help</option>
-                <option value="⚠️" {'selected' if panel[2]=='⚠️' else ''}>⚠️ Urgent</option>
-                <option value="🔨" {'selected' if panel[2]=='🔨' else ''}>🔨 Ban Appeal</option>
-                <option value="💸" {'selected' if panel[2]=='💸' else ''}>💸 Payment</option>
-                <option value="🎉" {'selected' if panel[2]=='🎉' else ''}>🎉 Event</option>
-                <option value="📢" {'selected' if panel[2]=='📢' else ''}>📢 Announcement</option>
-                <option value="🐛" {'selected' if panel[2]=='🐛' else ''}>🐛 Bug Report</option>
-                <option value="🔥" {'selected' if panel[2]=='🔥' else ''}>🔥 Important</option>
             </select>
 
             <label>3. Button Text</label>
             <input type="text" name="button_text" id="button-text" value="{panel[6] or 'Create Ticket'}" onkeyup="updatePreview()">
 
             <label>4. Button Color</label>
+            <input type="hidden" name="button_color" id="selected-color" value="{current_color}">
             <div style="margin:10px 0;">
                 <span class="color-box {'selected' if current_color == '#00f0ff' else ''}" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
                 <span class="color-box {'selected' if current_color == '#c026d3' else ''}" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
@@ -267,6 +255,7 @@ def edit_panel(panel_id):
         function setColor(color) {{
             document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
+            document.getElementById('selected-color').value = color;
             updatePreview();
         }}
     </script>
