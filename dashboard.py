@@ -47,10 +47,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; max-width:1300px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; text-align:center; }}
             .card:hover {{ transform:scale(1.04); border-color:#c026d3; }}
-            .setting-card {{ background:#16213e; padding:30px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
+            .setting-card {{ background:#16213e; padding:32px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
             input, select, textarea {{ 
                 background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; 
-                border-radius:10px; padding:14px; width:100%; font-size:16px; margin-top:8px; margin-bottom:18px;
+                border-radius:10px; padding:14px; width:100%; font-size:16px; margin-top:8px; margin-bottom:20px;
             }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
             label {{ display:block; margin:18px 0 8px; font-weight:600; color:#a0a0ff; }}
@@ -148,7 +148,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# ====================== GENERAL MENU (Fixed Spacing) ======================
+# ====================== GENERAL MENU (Clean Individual Sections) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -192,6 +192,10 @@ def settings_general():
             <label style="margin:0;">Mention Support Team when ticket opens</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
         </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
         <div class="row">
             <label style="margin:0;">Allow users to view their own ticket history</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
@@ -204,6 +208,10 @@ def settings_general():
             <label style="margin:0;">Delete ticket channel when closed</label>
             <input type="checkbox" class="toggle" onchange="markChanged()">
         </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
         <div class="row">
             <label style="margin:0;">Send transcript when ticket is closed</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
@@ -214,7 +222,7 @@ def settings_general():
     """
     return base_template(content)
 
-# Other menus (unchanged for now)
+# Other menus unchanged
 @app.route("/settings/category")
 def settings_category():
     content = """<h1>Category</h1><div class="setting-card"><label>Open Tickets Category ID</label><input type="text" placeholder="Category ID"></div><div class="setting-card"><label>Closed Tickets Category ID</label><input type="text" placeholder="Category ID"></div>"""
