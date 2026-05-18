@@ -54,7 +54,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .toggle {{ accent-color:#00f0ff; transform:scale(1.4); margin-right:15px; }}
             .row {{ display:flex; align-items:center; gap:15px; margin:12px 0; }}
             
-            /* Save Button */
             .save-btn {{ 
                 background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; 
                 font-size:17px; font-weight:bold; cursor:not-allowed; margin:30px auto; display:block;
@@ -63,7 +62,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
                 background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; 
             }}
             
-            /* Custom Modal */
             .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
             .modal-content {{ 
                 background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; 
@@ -89,7 +87,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
         {back_button}
         {content}
 
-        <!-- Unsaved Changes Modal -->
         <div id="unsavedModal" class="modal">
             <div class="modal-content">
                 <h2>You have unsaved changes</h2>
@@ -102,43 +99,42 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
         <script>
             let formChanged = false;
 
-            function markChanged() {
+            function markChanged() {{
                 formChanged = true;
                 const saveBtn = document.getElementById('saveBtn');
                 if (saveBtn) saveBtn.classList.add('active');
-            }
+            }}
 
-            function saveChanges() {
+            function saveChanges() {{
                 alert("✅ Changes saved successfully!");
                 formChanged = false;
                 const saveBtn = document.getElementById('saveBtn');
                 if (saveBtn) saveBtn.classList.remove('active');
-            }
+            }}
 
-            function handleBack() {
-                if (formChanged) {
+            function handleBack() {{
+                if (formChanged) {{
                     document.getElementById('unsavedModal').style.display = 'block';
-                } else {
+                }} else {{
                     window.location = '/dashboard';
-                }
-            }
+                }}
+            }}
 
-            function saveAndExit() {
+            function saveAndExit() {{
                 saveChanges();
                 window.location = '/dashboard';
-            }
+            }}
 
-            function discardAndExit() {
+            function discardAndExit() {{
                 window.location = '/dashboard';
-            }
+            }}
 
-            // Attach change listeners
-            document.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('input, textarea, select').forEach(el => {
+            document.addEventListener('DOMContentLoaded', () => {{
+                document.querySelectorAll('input, textarea, select').forEach(el => {{
                     el.addEventListener('change', markChanged);
                     el.addEventListener('input', markChanged);
-                });
-            });
+                }});
+            }});
         </script>
     </body>
     </html>
@@ -187,7 +183,7 @@ def settings_general():
     """
     return base_template(content)
 
-# Other menus (unchanged for now)
+# Other menus (unchanged)
 @app.route("/settings/category")
 def settings_category():
     content = """<h1>Category</h1><div class="setting-card"><label>Open Tickets Category ID</label><input type="text" placeholder="Category ID"></div><div class="setting-card"><label>Closed Tickets Category ID</label><input type="text" placeholder="Category ID"></div>"""
