@@ -169,6 +169,36 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
+# ====================== MAIN DASHBOARD ======================
+@app.route("/dashboard")
+def dashboard():
+    content = """
+    <h1 style="text-align:center; margin-bottom:40px;">🎟️ Ticket Zick Dashboard</h1>
+    
+    <div style="max-width:1200px; margin:auto;">
+        <h2 style="color:#c026d3; margin:30px 0 15px;">General Ticket Options</h2>
+        <div class="grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+            <div class="card" onclick="window.location='/settings/general'"><h3>General</h3></div>
+            <div class="card" onclick="window.location='/settings/category'"><h3>Category</h3></div>
+            <div class="card" onclick="window.location='/settings/ticket'"><h3>Ticket</h3></div>
+            <div class="card" onclick="window.location='/settings/panel'"><h3>Panel</h3></div>
+            <div class="card" onclick="window.location='/settings/buttons'"><h3>Buttons</h3></div>
+        </div>
+
+        <h2 style="color:#c026d3; margin:40px 0 15px;">Advanced Settings</h2>
+        <div class="grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+            <div class="card" onclick="window.location='/settings/commandstyle'"><h3>Command Style</h3></div>
+            <div class="card" onclick="window.location='/settings/dropdownstyle'"><h3>Dropdown Style</h3></div>
+            <div class="card" onclick="window.location='/settings/forms'"><h3>Forms</h3></div>
+            <div class="card" onclick="window.location='/settings/transcripts'"><h3>Transcripts</h3></div>
+            <div class="card" onclick="window.location='/settings/logging'"><h3>Logging</h3></div>
+            <div class="card" onclick="window.location='/settings/automation'"><h3>Automation</h3></div>
+        </div>
+    </div>
+    """
+    return base_template(content, show_back=False)
+
+# ====================== GENERAL MENU ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -241,6 +271,20 @@ def settings_general():
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
     """
     return base_template(content)
+
+# Add the other menu stubs so they don't 404
+@app.route("/settings/category") 
+@app.route("/settings/ticket")
+@app.route("/settings/panel")
+@app.route("/settings/buttons")
+@app.route("/settings/commandstyle")
+@app.route("/settings/dropdownstyle")
+@app.route("/settings/forms")
+@app.route("/settings/transcripts")
+@app.route("/settings/logging")
+@app.route("/settings/automation")
+def placeholder_page():
+    return base_template("<h1>Coming Soon</h1><p>This section is under development.</p>")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
