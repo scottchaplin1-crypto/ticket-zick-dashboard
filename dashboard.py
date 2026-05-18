@@ -64,7 +64,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
                 <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                     <button class="btn invite">Invite Ticket Zick</button>
                 </a>
-                <button class="add-btn" onclick="window.location='/create-panel'">+</button>
             </div>
         </div>
         {back_button}
@@ -90,7 +89,7 @@ def dashboard():
                 <option value="">-- Select a Panel to Edit --</option>
                 {options}
             </select>
-            <button class="add-btn" onclick="window.location='/create-panel'">+</button>
+            <button class="add-btn" onclick="window.location='/create-panel'" title="Create New Panel">+</button>
         </div>
     </div>
 
@@ -112,7 +111,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== CREATE PANEL ======================
+# ====================== CREATE / EDIT / SAVE ======================
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -192,6 +191,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
+# Save, Edit, Update, Delete routes
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
