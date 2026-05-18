@@ -39,29 +39,22 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
             h1, h2 {{ color:#00f0ff; }}
             .header {{ text-align:center; margin-bottom:30px; }}
-            .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }}
+            .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; }}
             .logo {{ height:80px; border-radius:16px; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ 
-                background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; 
-                cursor:pointer; transition:0.3s; text-align:center;
-            }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; text-align:center; }}
             .card:hover {{ transform:scale(1.04); border-color:#c026d3; }}
-            .setting-card {{ 
-                background:#16213e; padding:25px; border-radius:16px; margin:20px 0; 
-                border:1px solid #00f0ff33;
-            }}
+            .setting-card {{ background:#16213e; padding:25px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
             input, select, textarea {{ 
                 background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; 
                 border-radius:10px; padding:12px; width:100%; font-size:16px;
             }}
-            input:focus, select:focus, textarea:focus {{ 
-                border-color:#00f0ff; outline:none; box-shadow:0 0 0 3px rgba(0,240,255,0.2);
-            }}
+            input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
             label {{ display:block; margin:15px 0 8px; font-weight:600; color:#a0a0ff; }}
+            .toggle {{ accent-color:#00f0ff; }}
         </style>
     </head>
     <body>
@@ -105,7 +98,7 @@ def dashboard():
     <h2 style="text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
     <div class="grid">
         <div class="card" onclick="window.location='/settings/general'"><h2>General</h2><p>Support team and general items</p></div>
-        <div class="card" onclick="window.location='/settings/category'"><h2>Category</h2><p>Category options for opened/closed tickets</p></div>
+        <div class="card" onclick="window.location='/settings/category'"><h2>Category</h2><p>Category options</p></div>
         <div class="card" onclick="window.location='/settings/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
         <div class="card" onclick="window.location='/settings/buttons'"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
     </div>
@@ -120,21 +113,21 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== FULL SUB MENUS ======================
+# ====================== FULL MENUS ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
     <h1>General</h1>
     <div class="setting-card">
-        <label>Support Team Roles (who can view & respond to tickets)</label>
-        <input type="text" value="Admin, Staff, Moderator" placeholder="Comma separated roles">
+        <label>Support Team Roles</label>
+        <input type="text" value="Admin, Staff, Moderator" placeholder="Comma separated">
     </div>
     <div class="setting-card">
-        <label><input type="checkbox" checked> Allow users to claim tickets</label>
+        <label><input type="checkbox" class="toggle" checked> Enable Ticket Claiming</label>
     </div>
     <div class="setting-card">
-        <label>Default Ticket Prefix</label>
-        <input type="text" value="ticket-" style="width:100%;">
+        <label>Default Ticket Name Format</label>
+        <input type="text" value="ticket-{username}">
     </div>
     """
     return base_template(content)
@@ -145,11 +138,11 @@ def settings_category():
     <h1>Category</h1>
     <div class="setting-card">
         <label>Open Tickets Category ID</label>
-        <input type="text" placeholder="123456789012345678">
+        <input type="text" placeholder="Paste Category ID">
     </div>
     <div class="setting-card">
         <label>Closed Tickets Category ID</label>
-        <input type="text" placeholder="123456789012345678">
+        <input type="text" placeholder="Paste Category ID">
     </div>
     """
     return base_template(content)
@@ -159,11 +152,11 @@ def settings_ticket():
     content = """
     <h1>Ticket</h1>
     <div class="setting-card">
-        <label>Welcome Message in Ticket</label>
-        <textarea style="height:120px;">👋 Welcome to your ticket! {user} Staff will be here soon.</textarea>
+        <label>Welcome Message</label>
+        <textarea style="height:130px;">👋 {user} Welcome to your ticket! Staff will be here soon.</textarea>
     </div>
     <div class="setting-card">
-        <label>Auto-close after inactivity (hours)</label>
+        <label>Auto Close After Inactivity (hours)</label>
         <input type="number" value="48">
     </div>
     """
@@ -180,10 +173,10 @@ def settings_buttons():
     <div class="setting-card">
         <label>Button Color</label>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <div style="background:#00f0ff;width:50px;height:50px;border-radius:10px;cursor:pointer;border:3px solid #00f0ff;"></div>
-            <div style="background:#c026d3;width:50px;height:50px;border-radius:10px;cursor:pointer;"></div>
-            <div style="background:#ff0088;width:50px;height:50px;border-radius:10px;cursor:pointer;"></div>
-            <div style="background:#00ff88;width:50px;height:50px;border-radius:10px;cursor:pointer;"></div>
+            <div style="background:#00f0ff; width:55px; height:55px; border-radius:12px; cursor:pointer; border:3px solid #fff;"></div>
+            <div style="background:#c026d3; width:55px; height:55px; border-radius:12px; cursor:pointer;"></div>
+            <div style="background:#ff0088; width:55px; height:55px; border-radius:12px; cursor:pointer;"></div>
+            <div style="background:#00ff88; width:55px; height:55px; border-radius:12px; cursor:pointer;"></div>
         </div>
     </div>
     """
@@ -191,7 +184,16 @@ def settings_buttons():
 
 @app.route("/settings/forms")
 def settings_forms():
-    content = "<h1>Forms</h1><div class='setting-card'><p>Custom form fields for opening tickets (Modal support)</p></div>"
+    content = """
+    <h1>Forms</h1>
+    <div class="setting-card">
+        <label><input type="checkbox" class="toggle" checked> Enable Custom Forms</label>
+    </div>
+    <div class="setting-card">
+        <label>Form Fields</label>
+        <p style="color:#888;">(You can add questions like Reason, Priority, etc.)</p>
+    </div>
+    """
     return base_template(content)
 
 @app.route("/settings/transcripts")
@@ -199,7 +201,7 @@ def settings_transcripts():
     content = """
     <h1>Transcripts</h1>
     <div class="setting-card">
-        <label><input type="checkbox" checked> Save transcripts when ticket closes</label>
+        <label><input type="checkbox" class="toggle" checked> Save Transcripts</label>
     </div>
     <div class="setting-card">
         <label>Transcript Log Channel ID</label>
@@ -217,8 +219,9 @@ def settings_logging():
         <input type="text" placeholder="Channel ID">
     </div>
     <div class="setting-card">
-        <label><input type="checkbox" checked> Log when tickets are created</label><br>
-        <label><input type="checkbox" checked> Log when tickets are closed</label>
+        <label><input type="checkbox" class="toggle" checked> Log Ticket Created</label><br>
+        <label><input type="checkbox" class="toggle" checked> Log Ticket Closed</label><br>
+        <label><input type="checkbox" class="toggle"> Log Ticket Claimed</label>
     </div>
     """
     return base_template(content)
@@ -228,10 +231,13 @@ def settings_automation():
     content = """
     <h1>Automation</h1>
     <div class="setting-card">
-        <label><input type="checkbox"> Auto close inactive tickets</label>
+        <label><input type="checkbox" class="toggle"> Auto Close Inactive Tickets</label>
     </div>
     <div class="setting-card">
-        <label><input type="checkbox"> Send welcome DM to user</label>
+        <label><input type="checkbox" class="toggle"> Send Welcome DM to User</label>
+    </div>
+    <div class="setting-card">
+        <label><input type="checkbox" class="toggle"> Add Reaction Buttons</label>
     </div>
     """
     return base_template(content)
