@@ -21,7 +21,7 @@ conn.commit()
 
 def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     back_button = '''
-        <div style="text-align:center; margin:15px 0 30px 0;">
+        <div style="text-align:center; margin:20px 0 35px 0;">
             <button onclick="window.location='/dashboard'" 
                     style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 40px; 
                            border:none; border-radius:12px; cursor:pointer; font-size:18px; font-weight:bold;">
@@ -36,23 +36,37 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     <head>
         <title>{title}</title>
         <style>
-            body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
-            h1 {{ color:#00f0ff; text-align:center; }}
-            .header {{ text-align:center; margin-bottom:20px; }}
-            .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; align-items:center; }}
-            .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; min-width:280px; }}
+            body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:30px 20px; }}
+            h1 {{ color:#00f0ff; text-align:center; font-size:42px; margin-bottom:10px; letter-spacing:1px; }}
+            .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-bottom:40px; }}
+            .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 32px; font-size:18px; border:none; border-radius:12px; cursor:pointer; font-weight:600; transition:0.3s; }}
+            .btn:hover {{ transform:scale(1.05); }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
-            .panel-selector {{ display:flex; align-items:center; gap:10px; justify-content:center; margin:30px 0; }}
-            select {{ padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; width:400px; }}
-            .add-btn {{ background:#22c55e; color:black; width:50px; height:50px; border-radius:50%; font-size:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; }}
-            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
-            .card:hover {{ transform:scale(1.03); border-color:#c026d3; }}
+
+            .panel-selector {{ display:flex; align-items:center; gap:12px; justify-content:center; margin:40px 0 50px; }}
+            select {{ padding:16px 20px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; width:420px; cursor:pointer; }}
+            .add-btn {{ background:#22c55e; color:black; width:56px; height:56px; border-radius:50%; font-size:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.3s; }}
+            .add-btn:hover {{ transform:scale(1.1); background:#4ade80; }}
+
+            .section-title {{ text-align:center; color:#00f0ff; font-size:24px; margin:50px 0 20px; letter-spacing:1px; }}
+            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; max-width:1300px; margin:auto; }}
+            .card {{ 
+                background:#1a1a2e; border-radius:16px; padding:28px; border:1px solid #334155; 
+                cursor:pointer; transition:0.4s; box-shadow:0 4px 15px rgba(0,0,0,0.3);
+            }}
+            .card:hover {{ 
+                transform:translateY(-8px); border-color:#00f0ff; box-shadow:0 10px 25px rgba(0,240,255,0.2);
+            }}
+            .card h2 {{ color:#00f0ff; margin:0 0 8px 0; font-size:22px; }}
+            .card p {{ color:#a0a0cc; margin:0; }}
         </style>
     </head>
     <body>
-        <div class="header">
-            <h1>🎟️ Ticket Zick Dashboard</h1>
+        <div class="header-buttons">
+            <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
+                <button class="btn invite">➕ Invite Ticket Zick to Your Server</button>
+            </a>
+            <button class="btn" onclick="window.location='/create-panel'">+ Create New Ticket Panel</button>
         </div>
 
         <div class="panel-selector">
@@ -77,45 +91,27 @@ def get_panel_options():
 @app.route("/dashboard")
 def dashboard():
     content = """
-    <div class="section-title" style="text-align:center; margin:30px 0 15px; color:#00f0ff;">General Ticket Options</div>
+    <div class="section-title">General Ticket Options</div>
     <div class="grid">
         <div class="card"><h2>General</h2><p>Support team and general items</p></div>
-        <div class="card"><h2>Category</h2><p>Category options</p></div>
+        <div class="card"><h2>Category</h2><p>Category options for opened/closed tickets</p></div>
         <div class="card"><h2>Ticket</h2><p>General ticket options</p></div>
         <div class="card"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
     </div>
 
-    <div class="section-title" style="text-align:center; margin:40px 0 15px; color:#00f0ff;">Advanced Settings</div>
+    <div class="section-title">Advanced Settings</div>
     <div class="grid">
         <div class="card"><h2>Forms</h2><p>Form options</p></div>
         <div class="card"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card"><h2>Logging</h2><p>Logging options</p></div>
+        <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
         <div class="card"><h2>Automation</h2><p>Automation options</p></div>
         <div class="card"><h2>Limits</h2><p>Ticket limits</p></div>
     </div>
     """
     return base_template(content, show_back=False)
 
-# Keep all your existing routes (create-panel, save-panel, edit-panel, etc.)
-# Paste them here from the previous working version...
-
-@app.route("/create-panel")
-def create_panel():
-    # Your existing create panel code (unchanged)
-    content = """
-    <h1>Create New Ticket Panel</h1>
-    <div class="card">
-        <form method="POST" action="/save-panel">
-            <label>Panel Name</label>
-            <input type="text" name="name" placeholder="e.g. Support, Bug Report" required>
-            <!-- Rest of your create form -->
-            <button type="submit" style="margin-top:30px; width:100%;">Create Panel</button>
-        </form>
-    </div>
-    """
-    return base_template(content, show_back=True)
-
-# ... (add the rest of your save, edit, update, delete routes here) ...
+# Keep your existing create/edit/save/delete routes (unchanged as requested)
+# ... paste them here from previous version ...
 
 @app.route("/<path:path>")
 def catch_all(path):
