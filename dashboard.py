@@ -130,8 +130,7 @@ def dashboard():
     content = """
     <div class="panel-area">
         <select class="panel-selector" onchange="if(this.value) window.location = '/edit-panel/' + this.value">
-            <option value="">-- Select a Panel to Edit --</option>
-            <option value="1" selected>Main Support Panel</option>
+            <option value="" selected>-- Select a Panel to Edit --</option>
         </select>
         <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
     </div>
@@ -157,7 +156,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU (RESTORED TO YOUR PREFERRED VERSION) ======================
+# ====================== GENERAL MENU (Natural sentences) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
