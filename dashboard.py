@@ -64,6 +64,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
                 <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                     <button class="btn invite">Invite Ticket Zick</button>
                 </a>
+                <button class="add-btn" onclick="window.location='/create-panel'">+</button>
             </div>
         </div>
         {back_button}
@@ -191,7 +192,6 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save, Edit, Update, Delete routes (unchanged)
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -268,4 +268,36 @@ def edit_panel(panel_id):
             const text = document.getElementById('button-text').value || 'Create Ticket';
             document.getElementById('preview').innerHTML = emoji + ' ' + text;
         }}
-        function set
+        function setColor(color) {{
+            document.querySelectorAll('.color-box').forEach(b => b.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            document.getElementById('selected-color').value = color;
+            updatePreview();
+        }}
+    </script>
+    """
+    return base_template(content, show_back=True)
+
+@app.route("/update-panel/<int:panel_id>", methods=["POST"])
+def update_panel(panel_id):
+    c.execute("""UPDATE panels SET name=?, emoji=?, category_id=?, description=?, 
+                 support_roles=?, button_text=?, button_color=? WHERE id=?""",
+              (request.form.get("name"), request.form.get("emoji"), request.form.get("category_id"),
+               request.form.get("description"), request.form.get("support_roles"),
+               request.form.get("button_text"), request.form.get("button_color"), panel_id))
+    conn.commit()
+    return redirect("/dashboard")
+
+@app.route("/delete-panel/<int:panel_id>")
+def delete_panel(panel_id):
+    c.execute("DELETE FROM panels WHERE id = ?", (panel_id,))
+    conn.commit()
+    return redirect("/dashboard")
+
+@app.route("/<path:path>")
+def catch_all(path):
+    return redirect("/dashboard")
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
