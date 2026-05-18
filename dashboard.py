@@ -56,20 +56,22 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 12px 0;
-                min-height: 52px;
+                margin: 16px 0;
+                padding: 8px 0;
+                min-height: 48px;
             }}
             .toggle-row label {{
-                flex: 1;
+                flex: 1 1 auto;
                 font-size: 17px;
                 color: #a0a0ff;
                 font-weight: 600;
-                line-height: 1.4;
-                padding-right: 20px;
+                line-height: 1.45;
+                padding-right: 30px;
+                word-wrap: break-word;
             }}
             .toggle {{ 
                 accent-color: #00f0ff; 
-                transform: scale(1.6); 
+                transform: scale(1.65); 
                 cursor: pointer;
                 flex-shrink: 0;
             }}
