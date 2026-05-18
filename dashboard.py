@@ -47,12 +47,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; max-width:1300px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; text-align:center; }}
             .card:hover {{ transform:scale(1.04); border-color:#c026d3; }}
-            .setting-card {{ background:#16213e; padding:25px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
-            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px; width:100%; font-size:16px; margin-top:8px; margin-bottom:16px; }}
+            .setting-card {{ background:#16213e; padding:30px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
+            input, select, textarea {{ 
+                background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; 
+                border-radius:10px; padding:14px; width:100%; font-size:16px; margin-top:8px; margin-bottom:18px;
+            }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
             label {{ display:block; margin:18px 0 8px; font-weight:600; color:#a0a0ff; }}
             .toggle {{ accent-color:#00f0ff; transform:scale(1.4); margin-right:12px; }}
-            .row {{ display:flex; align-items:center; gap:12px; margin:12px 0; }}
+            .row {{ display:flex; align-items:center; justify-content:space-between; margin:18px 0; }}
             
             .save-btn {{ background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; font-size:17px; font-weight:bold; cursor:not-allowed; margin:40px auto; display:block; }}
             .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
@@ -145,52 +148,12 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# ====================== MAIN DASHBOARD ======================
-@app.route("/")
-@app.route("/dashboard")
-def dashboard():
-    c.execute("SELECT id, name, emoji FROM panels ORDER BY name")
-    panels = c.fetchall()
-    options = ''.join([f'<option value="{p[0]}">{p[1]} {p[2]}</option>' for p in panels])
-
-    content = f"""
-    <div style="text-align:center; margin:30px 0 40px;">
-        <div style="display:flex; justify-content:center; gap:12px; align-items:center; max-width:650px; margin:auto;">
-            <select onchange="if(this.value) window.location='/edit-panel/'+this.value" 
-                    style="padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; flex:1;">
-                <option value="">-- Select a Panel to Edit --</option>
-                {options}
-            </select>
-            <button class="add-btn" onclick="window.location='/create-panel'" title="Create New Panel">+</button>
-        </div>
-    </div>
-
-    <h2 style="text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
-    <div class="grid">
-        <div class="card" onclick="window.location='/settings/general'"><h2>General</h2><p>Support team and general items</p></div>
-        <div class="card" onclick="window.location='/settings/category'"><h2>Category</h2><p>Category options</p></div>
-        <div class="card" onclick="window.location='/settings/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
-        <div class="card" onclick="window.location='/settings/panel'"><h2>Panel</h2><p>Panel specific settings</p></div>
-        <div class="card" onclick="window.location='/settings/buttons'"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
-    </div>
-
-    <h2 style="text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
-    <div class="grid">
-        <div class="card" onclick="window.location='/settings/commandstyle'"><h2>Command Style</h2><p>Slash command style</p></div>
-        <div class="card" onclick="window.location='/settings/dropdownstyle'"><h2>Dropdown Style</h2><p>Dropdown panel style</p></div>
-        <div class="card" onclick="window.location='/settings/forms'"><h2>Forms</h2><p>Custom forms</p></div>
-        <div class="card" onclick="window.location='/settings/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card" onclick="window.location='/settings/logging'"><h2>Logging</h2><p>Server logging</p></div>
-        <div class="card" onclick="window.location='/settings/automation'"><h2>Automation</h2><p>Automation options</p></div>
-    </div>
-    """
-    return base_template(content, show_back=False)
-
-# ====================== MENUS WITH SAVE SYSTEM ======================
+# ====================== GENERAL MENU (Fixed Spacing) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
     <h1>General</h1>
+    
     <div class="setting-card">
         <h2>Support Team</h2>
         <label>Support Team Roles</label>
@@ -200,8 +163,8 @@ def settings_general():
     <div class="setting-card">
         <h2>Ticket Claiming</h2>
         <div class="row">
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
             <label style="margin:0; font-size:17px;">Enable Ticket Claiming</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
         </div>
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
@@ -225,27 +188,82 @@ def settings_general():
 
     <div class="setting-card">
         <h2>Permissions</h2>
-        <div class="row"><input type="checkbox" class="toggle" checked onchange="markChanged()"><label style="margin:0;">Mention Support Team when ticket opens</label></div>
-        <div class="row"><input type="checkbox" class="toggle" checked onchange="markChanged()"><label style="margin:0;">Allow users to view their own ticket history</label></div>
+        <div class="row">
+            <label style="margin:0;">Mention Support Team when ticket opens</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+        <div class="row">
+            <label style="margin:0;">Allow users to view their own ticket history</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
     </div>
 
     <div class="setting-card">
         <h2>Other Options</h2>
-        <div class="row"><input type="checkbox" class="toggle" onchange="markChanged()"><label style="margin:0;">Delete ticket channel when closed</label></div>
-        <div class="row"><input type="checkbox" class="toggle" checked onchange="markChanged()"><label style="margin:0;">Send transcript when ticket is closed</label></div>
+        <div class="row">
+            <label style="margin:0;">Delete ticket channel when closed</label>
+            <input type="checkbox" class="toggle" onchange="markChanged()">
+        </div>
+        <div class="row">
+            <label style="margin:0;">Send transcript when ticket is closed</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
     </div>
 
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
     """
     return base_template(content)
 
-# Add the same save system to other menus later as we improve them
+# Other menus (unchanged for now)
 @app.route("/settings/category")
 def settings_category():
-    content = """<h1>Category</h1><div class="setting-card"><label>Open Tickets Category ID</label><input type="text" placeholder="Category ID" onchange="markChanged()"></div><div class="setting-card"><label>Closed Tickets Category ID</label><input type="text" placeholder="Category ID" onchange="markChanged()"></div>"""
+    content = """<h1>Category</h1><div class="setting-card"><label>Open Tickets Category ID</label><input type="text" placeholder="Category ID"></div><div class="setting-card"><label>Closed Tickets Category ID</label><input type="text" placeholder="Category ID"></div>"""
     return base_template(content)
 
-# ... (other menus can be expanded later)
+@app.route("/settings/ticket")
+def settings_ticket():
+    content = """<h1>Ticket</h1><div class="setting-card"><label>Welcome Message</label><textarea style="height:120px;">👋 Welcome to your ticket! Staff will be with you shortly.</textarea></div><div class="setting-card"><label>Auto Close After (hours)</label><input type="number" value="48"></div>"""
+    return base_template(content)
+
+@app.route("/settings/panel")
+def settings_panel():
+    content = """<h1>Panel</h1><div class="setting-card"><label>Panel Name</label><input type="text" value="Support"></div><div class="setting-card"><label>Panel Description</label><input type="text" value="Click to open a ticket"></div>"""
+    return base_template(content)
+
+@app.route("/settings/buttons")
+def settings_buttons():
+    content = """<h1>Buttons</h1><div class="setting-card"><label>Button Text</label><input type="text" value="Create Ticket"></div><div class="setting-card"><label>Button Color</label><div style="display:flex; gap:15px; flex-wrap:wrap;"><div style="background:#00f0ff;width:60px;height:60px;border-radius:12px;cursor:pointer;border:3px solid white;"></div><div style="background:#c026d3;width:60px;height:60px;border-radius:12px;cursor:pointer;"></div><div style="background:#ff0088;width:60px;height:60px;border-radius:12px;cursor:pointer;"></div></div></div>"""
+    return base_template(content)
+
+@app.route("/settings/commandstyle")
+def settings_commandstyle():
+    content = """<h1>Command Style</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Slash Commands</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/dropdownstyle")
+def settings_dropdownstyle():
+    content = """<h1>Dropdown Style</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Use Dropdown Menu</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/forms")
+def settings_forms():
+    content = """<h1>Forms</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Custom Forms</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/transcripts")
+def settings_transcripts():
+    content = """<h1>Transcripts</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Save Transcripts</label></div><div class="setting-card"><label>Transcript Channel ID</label><input type="text"></div>"""
+    return base_template(content)
+
+@app.route("/settings/logging")
+def settings_logging():
+    content = """<h1>Logging</h1><div class="setting-card"><label>Log Channel ID</label><input type="text"></div><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Log Ticket Events</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/automation")
+def settings_automation():
+    content = """<h1>Automation</h1><div class="setting-card"><label><input type="checkbox" class="toggle"> Auto Close Inactive Tickets</label></div><div class="setting-card"><label><input type="checkbox" class="toggle"> Send Welcome DM</label></div>"""
+    return base_template(content)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
