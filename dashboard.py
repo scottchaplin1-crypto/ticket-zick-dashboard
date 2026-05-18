@@ -60,14 +60,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 min-height: 52px;
             }}
             .toggle-row label {{
-                flex: 1;
+                flex: 1 1 auto;
                 font-size: 17px;
                 color: #a0a0ff;
                 font-weight: 600;
-                line-height: 1.4;
-                padding-right: 40px;
+                line-height: 1.45;
+                padding-right: 50px;
                 white-space: normal;
                 word-break: normal;
+                overflow-wrap: anywhere;
             }}
             .toggle {{ 
                 accent-color: #00f0ff; 
