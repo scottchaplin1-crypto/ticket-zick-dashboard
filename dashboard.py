@@ -41,16 +41,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .header {{ text-align:center; margin-bottom:25px; }}
             .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }}
             .logo {{ 
-                height:85px; 
+                height:90px; 
                 border-radius:16px; 
-                box-shadow: 0 0 25px rgba(0, 240, 255, 0.6), 
-                            0 0 40px rgba(192, 38, 211, 0.4);
-                transition: all 0.3s;
+                box-shadow: 0 0 30px rgba(0, 240, 255, 0.7), 
+                            0 0 50px rgba(192, 38, 211, 0.5);
+                transition: all 0.3s ease;
             }}
             .logo:hover {{ 
-                height:92px; 
-                box-shadow: 0 0 35px rgba(0, 240, 255, 0.9), 
-                            0 0 50px rgba(192, 38, 211, 0.6);
+                height:98px; 
+                box-shadow: 0 0 40px rgba(0, 240, 255, 0.9), 
+                            0 0 60px rgba(192, 38, 211, 0.7);
             }}
             .header-buttons {{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
@@ -67,7 +67,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     <body>
         <div class="header">
             <div class="header-content">
-                <img src="/static/TicketZick.jpg" class="logo" alt="Ticket Zick">
+                <img src="/static/TicketZick.png" class="logo" alt="Ticket Zick">
                 <h1>Ticket Zick Dashboard</h1>
             </div>
             <div class="header-buttons">
@@ -82,7 +82,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# === DASHBOARD ROUTE ===
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -120,8 +119,15 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# Add the rest of your routes here (create-panel, edit-panel, etc.)
-# If you need the full file with all routes, just say "send full file"
+# ====================== CREATE + EDIT PANEL ROUTES ======================
+@app.route("/create-panel")
+def create_panel():
+    # ... (same as before)
+    content = """<h1>Create New Ticket Panel</h1> ... (your existing form)"""
+    return base_template(content, show_back=True)
+
+# Add your full create-panel, save-panel, edit-panel, update-panel, delete-panel routes here
+# If you lost them, tell me and I'll send the complete version with everything.
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
