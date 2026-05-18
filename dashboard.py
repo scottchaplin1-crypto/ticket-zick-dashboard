@@ -39,8 +39,19 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
             h1 {{ color:#00f0ff; text-align:center; margin:0; }}
             .header {{ text-align:center; margin-bottom:25px; }}
-            .header-content {{ display:flex; align-items:center; justify-content:center; gap:15px; flex-wrap:wrap; }}
-            .logo {{ height:60px; border-radius:12px; }}
+            .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }}
+            .logo {{ 
+                height:85px; 
+                border-radius:16px; 
+                box-shadow: 0 0 25px rgba(0, 240, 255, 0.6), 
+                            0 0 40px rgba(192, 38, 211, 0.4);
+                transition: all 0.3s;
+            }}
+            .logo:hover {{ 
+                height:92px; 
+                box-shadow: 0 0 35px rgba(0, 240, 255, 0.9), 
+                            0 0 50px rgba(192, 38, 211, 0.6);
+            }}
             .header-buttons {{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
@@ -109,8 +120,8 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# (Keep your existing create-panel, edit-panel, save, update, delete routes here)
-# If you want me to send the full file with all routes, just say "send full file"
+# Add the rest of your routes here (create-panel, edit-panel, etc.)
+# If you need the full file with all routes, just say "send full file"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
