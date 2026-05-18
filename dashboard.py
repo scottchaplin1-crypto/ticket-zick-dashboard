@@ -82,7 +82,6 @@ def dashboard():
 
     content = f"""
     <div style="text-align:center; margin:30px 0;">
-        <label style="font-size:18px; color:#00f0ff;">Select Ticket Panel to Edit:</label><br><br>
         <div style="display:flex; justify-content:center; gap:10px; align-items:center; max-width:600px; margin:auto;">
             <select onchange="if(this.value) window.location='/edit-panel/'+this.value" 
                     style="padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; flex:1;">
@@ -111,7 +110,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== CREATE / EDIT / SAVE ======================
+# ====================== CREATE PANEL ======================
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -191,7 +190,6 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save, Edit, Update, Delete routes
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
