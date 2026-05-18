@@ -37,12 +37,14 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
         <title>{title}</title>
         <style>
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
-            h1 {{ color:#00f0ff; text-align:center; }}
-            .header {{ text-align:center; margin-bottom:20px; }}
-            .header-buttons {{ display:flex; justify-content:center; gap:15px; flex-wrap:wrap; align-items:center; }}
-            .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:14px 28px; font-size:17px; border:none; border-radius:12px; cursor:pointer; }}
-            .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); font-size:16px; padding:12px 24px; }}
-            .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:50px; height:50px; border-radius:50%; font-size:28px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }}
+            h1 {{ color:#00f0ff; text-align:center; margin:0; }}
+            .header {{ text-align:center; margin-bottom:25px; }}
+            .header-content {{ display:flex; align-items:center; justify-content:center; gap:15px; flex-wrap:wrap; }}
+            .logo {{ font-size:42px; }}
+            .header-buttons {{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }}
+            .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
+            .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
+            .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(0,240,255,0.3); }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.03); border-color:#c026d3; }}
@@ -54,7 +56,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </head>
     <body>
         <div class="header">
-            <h1>🎟️ Ticket Zick Dashboard</h1>
+            <div class="header-content">
+                <span class="logo">🎟️</span>
+                <h1>Ticket Zick Dashboard</h1>
+            </div>
             <div class="header-buttons">
                 <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                     <button class="btn invite">Invite Ticket Zick</button>
@@ -100,17 +105,13 @@ def dashboard():
         <div class="card"><h2>Transcripts</h2><p>Transcript settings</p></div>
         <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
         <div class="card"><h2>Automation</h2><p>Automation options</p></div>
-        <div class="card"><h2>Limits</h2><p>Ticket limits</p></div>
     </div>
     """
     return base_template(content, show_back=False)
 
-# Keep your existing create-panel, save-panel, edit-panel, etc. routes unchanged
-# (They are already working well from previous versions)
-
+# ====================== CREATE / EDIT / SAVE / DELETE ======================
 @app.route("/create-panel")
 def create_panel():
-    # Your existing create panel code (unchanged)
     content = """
     <h1>Create New Ticket Panel</h1>
     <div class="card">
@@ -188,7 +189,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save, Edit, Update, Delete routes (kept unchanged)
+# Save, Edit, Update, Delete (keep your existing ones)
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -202,8 +203,8 @@ def save_panel():
 
 @app.route("/edit-panel/<int:panel_id>")
 def edit_panel(panel_id):
-    # Your current edit panel code (unchanged)
-    pass  # Keep your existing edit_panel function here
+    # Your current working edit code here
+    pass  # Keep your existing edit_panel function
 
 @app.route("/update-panel/<int:panel_id>", methods=["POST"])
 def update_panel(panel_id):
