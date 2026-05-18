@@ -46,22 +46,18 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .setting-card {{ background:#16213e; padding:32px 40px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 18px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
-            label {{ display:block; margin:14px 0 8px; font-weight:600; color:#a0a0ff; font-size:17px; }}
+            label {{ 
+                display:block; 
+                margin:14px 0 8px; 
+                font-weight:600; 
+                color:#a0a0ff; 
+                font-size:17px;
+            }}
             .toggle {{ 
                 accent-color:#00f0ff; 
                 transform:scale(1.5); 
-                cursor:pointer;
-            }}
-            .toggle:focus {{ outline: none; box-shadow: none; }}
-            .row {{ 
-                display:flex; 
-                align-items:center; 
-                gap:20px; 
-                margin:18px 0; 
-            }}
-            .row label {{ 
-                margin:0; 
-                flex:1; 
+                float:right;
+                margin-top:4px;
             }}
             .save-btn {{ 
                 background:#334155; 
@@ -142,7 +138,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
     </html>
     """
 
-# Main Dashboard
+# ====================== MAIN DASHBOARD ======================
 @app.route("/dashboard")
 def dashboard():
     content = """
@@ -174,7 +170,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# General Menu
+# ====================== GENERAL MENU (Aggressive fix - no flex constraint) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -188,10 +184,10 @@ def settings_general():
 
     <div class="setting-card">
         <h2>Ticket Claiming</h2>
-        <div class="row">
-            <label>Enable Ticket Claiming</label>
+        <label style="display:flex; align-items:center; gap:12px; font-size:17px;">
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
+            Enable Ticket Claiming
+        </label>
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
 
@@ -214,34 +210,34 @@ def settings_general():
 
     <div class="setting-card">
         <h2>Permissions</h2>
-        <div class="row">
-            <label>Mention Support Team when ticket opens</label>
+        <label style="display:flex; align-items:center; gap:12px; font-size:17px;">
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
+            Mention Support Team when ticket opens
+        </label>
     </div>
 
     <div class="setting-card">
         <h2>Permissions</h2>
-        <div class="row">
-            <label>Allow users to view their own ticket history</label>
+        <label style="display:flex; align-items:center; gap:12px; font-size:17px;">
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
+            Allow users to view their own ticket history
+        </label>
     </div>
 
     <div class="setting-card">
         <h2>Other Options</h2>
-        <div class="row">
-            <label>Delete ticket channel when closed</label>
+        <label style="display:flex; align-items:center; gap:12px; font-size:17px;">
             <input type="checkbox" class="toggle" onchange="markChanged()">
-        </div>
+            Delete ticket channel when closed
+        </label>
     </div>
 
     <div class="setting-card">
         <h2>Other Options</h2>
-        <div class="row">
-            <label>Send transcript when ticket is closed</label>
+        <label style="display:flex; align-items:center; gap:12px; font-size:17px;">
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
+            Send transcript when ticket is closed
+        </label>
     </div>
 
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
