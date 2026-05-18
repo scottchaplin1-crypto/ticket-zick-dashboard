@@ -60,21 +60,25 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 min-height: 52px;
             }}
             .toggle-row label {{
-                flex: 1 1 auto;
+                flex: 1;
                 font-size: 17px;
                 color: #a0a0ff;
                 font-weight: 600;
-                line-height: 1.45;
-                padding-right: 50px;
+                line-height: 1.5;
+                padding-right: 60px;
                 white-space: normal;
                 word-break: normal;
-                overflow-wrap: anywhere;
+                overflow-wrap: break-word;
+            }}
+            .toggle-container {{
+                flex-shrink: 0;
+                width: 60px;
+                text-align: right;
             }}
             .toggle {{ 
                 accent-color: #00f0ff; 
                 transform: scale(1.7); 
                 cursor: pointer;
-                flex-shrink: 0;
             }}
 
             input, select, textarea {{ 
@@ -219,7 +223,9 @@ def settings_general():
         <h2>Ticket Claiming</h2>
         <div class="toggle-row">
             <label>Enable Ticket Claiming</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            <div class="toggle-container">
+                <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            </div>
         </div>
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
@@ -245,7 +251,9 @@ def settings_general():
         <h2>Permissions</h2>
         <div class="toggle-row">
             <label>Mention Support Team when ticket opens</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            <div class="toggle-container">
+                <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            </div>
         </div>
     </div>
 
@@ -253,7 +261,9 @@ def settings_general():
         <h2>Permissions</h2>
         <div class="toggle-row">
             <label>Allow users to view their own ticket history</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            <div class="toggle-container">
+                <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            </div>
         </div>
     </div>
 
@@ -261,7 +271,9 @@ def settings_general():
         <h2>Other Options</h2>
         <div class="toggle-row">
             <label>Delete ticket channel when closed</label>
-            <input type="checkbox" class="toggle" onchange="markChanged()">
+            <div class="toggle-container">
+                <input type="checkbox" class="toggle" onchange="markChanged()">
+            </div>
         </div>
     </div>
 
@@ -269,7 +281,9 @@ def settings_general():
         <h2>Other Options</h2>
         <div class="toggle-row">
             <label>Send transcript when ticket is closed</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            <div class="toggle-container">
+                <input type="checkbox" class="toggle" checked onchange="markChanged()">
+            </div>
         </div>
     </div>
 
