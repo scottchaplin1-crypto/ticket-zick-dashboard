@@ -45,12 +45,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ 
-                background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; 
-                cursor:pointer; transition:0.3s; text-align:center;
-            }}
+            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; text-align:center; }}
             .card:hover {{ transform:scale(1.04); border-color:#c026d3; }}
             .card h2 {{ margin:0 0 10px 0; color:#00f0ff; }}
+            .setting-card {{ background:#16213e; padding:20px; border-radius:12px; margin:15px 0; }}
         </style>
     </head>
     <body>
@@ -109,46 +107,97 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== SETTINGS PAGES ======================
+# ====================== SETTINGS PAGES (with real options) ======================
 @app.route("/settings/general")
 def settings_general():
-    content = "<h1>General Settings</h1><p>Support team roles, permissions, etc. (coming soon)</p>"
+    content = """
+    <h1>General Settings</h1>
+    <div class="setting-card">
+        <h2>Support Team Roles</h2>
+        <p>Roles that can see and respond to tickets</p>
+        <input type="text" placeholder="Admin, Staff, Moderator" style="width:100%; padding:12px;">
+    </div>
+    <div class="setting-card">
+        <h2>Ticket Claiming</h2>
+        <label><input type="checkbox" checked> Enable ticket claiming</label>
+    </div>
+    <div class="setting-card">
+        <h2>Default Ticket Name</h2>
+        <input type="text" value="ticket-{user}" style="width:100%; padding:12px;">
+    </div>
+    """
     return base_template(content)
 
 @app.route("/settings/category")
 def settings_category():
-    content = "<h1>Category Settings</h1><p>Opened and Closed ticket categories.</p>"
+    content = """
+    <h1>Category Settings</h1>
+    <div class="setting-card">
+        <h2>Open Tickets Category</h2>
+        <input type="text" placeholder="Category ID" style="width:100%; padding:12px;">
+    </div>
+    <div class="setting-card">
+        <h2>Closed Tickets Category</h2>
+        <input type="text" placeholder="Category ID" style="width:100%; padding:12px;">
+    </div>
+    """
     return base_template(content)
 
 @app.route("/settings/ticket")
 def settings_ticket():
-    content = "<h1>Ticket Settings</h1><p>Welcome message, ticket naming, etc.</p>"
+    content = """
+    <h1>Ticket Settings</h1>
+    <div class="setting-card">
+        <h2>Welcome Message</h2>
+        <textarea style="width:100%; height:100px;">👋 Welcome to your ticket! Staff will be here soon.</textarea>
+    </div>
+    <div class="setting-card">
+        <h2>Auto Close After Inactivity</h2>
+        <input type="number" value="48" style="width:100%; padding:12px;"> hours
+    </div>
+    """
     return base_template(content)
 
 @app.route("/settings/buttons")
 def settings_buttons():
-    content = "<h1>Buttons Settings</h1><p>Button appearance and behaviour.</p>"
+    content = """
+    <h1>Buttons Settings</h1>
+    <div class="setting-card">
+        <h2>Button Text</h2>
+        <input type="text" value="Create Ticket" style="width:100%; padding:12px;">
+    </div>
+    <div class="setting-card">
+        <h2>Button Color</h2>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <div style="background:#00f0ff; width:50px; height:50px; border-radius:8px; cursor:pointer;"></div>
+            <div style="background:#c026d3; width:50px; height:50px; border-radius:8px; cursor:pointer;"></div>
+            <div style="background:#ff0088; width:50px; height:50px; border-radius:8px; cursor:pointer;"></div>
+        </div>
+    </div>
+    """
     return base_template(content)
 
 @app.route("/settings/forms")
 def settings_forms():
-    content = "<h1>Forms</h1><p>Custom modal forms for opening tickets.</p>"
+    content = "<h1>Forms</h1><p>Custom modal forms for opening tickets (coming next).</p>"
     return base_template(content)
 
 @app.route("/settings/transcripts")
 def settings_transcripts():
-    content = "<h1>Transcripts</h1><p>Transcript saving and logging options.</p>"
+    content = "<h1>Transcripts</h1><p>Save transcripts to channel, HTML format, etc.</p>"
     return base_template(content)
 
 @app.route("/settings/logging")
 def settings_logging():
-    content = "<h1>Logging</h1><p>Log channel and events.</p>"
+    content = "<h1>Logging</h1><p>Log channel for ticket events.</p>"
     return base_template(content)
 
 @app.route("/settings/automation")
 def settings_automation():
-    content = "<h1>Automation</h1><p>Auto-close, DMs, reactions, etc.</p>"
+    content = "<h1>Automation</h1><p>Auto close, reactions, welcome DMs, etc.</p>"
     return base_template(content)
+
+# Keep your existing create-panel / edit-panel routes here if you want them
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
