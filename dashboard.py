@@ -43,39 +43,25 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .panel-area {{ display:flex; justify-content:center; align-items:center; gap:12px; margin:30px 0; }}
             .panel-selector {{ 
                 background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; 
-                border-radius:12px; font-size:17px; width:360px;
+                border-radius:12px; font-size:17px; width:380px;
             }}
             .add-btn {{ 
                 background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; 
-                border-radius:50%; font-size:28px; border:none; cursor:pointer; display:flex; 
-                align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(0,240,255,0.3);
+                border-radius:50%; font-size:28px; border:none; cursor:pointer; box-shadow:0 4px 15px rgba(0,240,255,0.3);
             }}
-            .setting-card {{ background:#16213e; padding:40px 45px; border-radius:16px; margin:22px 0; border:1px solid #00f0ff22; }}
-            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:14px 20px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
-            input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
-            label {{ display:block; margin:18px 0 8px; font-weight:600; color:#a0a0ff; }}
-            .toggle {{ accent-color:#00f0ff; transform:scale(1.6); }}
-            .row {{ display: flex; align-items: center; gap: 16px; margin: 22px 0; }}
-            .row label {{ margin: 0; font-size: 17px; flex: 1; }}
-            .save-btn {{ background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; font-size:17px; font-weight:bold; cursor:not-allowed; margin:40px auto; display:block; }}
-            .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
-            .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
-            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
-            .modal button {{ padding:14px 32px; margin:10px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; }}
-            .tooltip {{ position:relative; display:inline-block; margin-left:8px; cursor:help; color:#00f0ff; }}
-            .tooltip .tooltiptext {{ visibility:hidden; background:#16213e; color:#e0e0ff; text-align:left; border-radius:8px; padding:12px; position:absolute; z-index:1; bottom:125%; left:50%; transform:translateX(-50%); width:280px; box-shadow:0 0 15px rgba(0,240,255,0.3); }}
-            .tooltip:hover .tooltiptext {{ visibility:visible; }}
             .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; max-width: 1150px; margin: 30px auto; }}
             .card {{ 
                 background: linear-gradient(145deg, #16213e, #0f1629); 
-                border-radius:16px; padding:32px 20px; text-align:center; 
+                border-radius:16px; padding:28px 20px; text-align:center; 
                 border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; 
-                font-size:18px; font-weight:600; box-shadow:0 4px 15px rgba(0,0,0,0.4);
+                box-shadow:0 4px 15px rgba(0,0,0,0.4);
             }}
             .card:hover {{ 
                 transform:scale(1.06); border-color:#c026d3; 
                 box-shadow:0 0 25px rgba(192,38,211,0.5); 
             }}
+            .card h3 {{ margin:0 0 8px 0; color:#00f0ff; }}
+            .card p {{ margin:0; color:#888; font-size:14px; }}
         </style>
     </head>
     <body>
@@ -89,16 +75,8 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
-        <div id="unsavedModal" class="modal">
-            <div class="modal-content">
-                <h2>You have unsaved changes</h2>
-                <p style="margin:20px 0 30px;">What would you like to do?</p>
-                <button onclick="saveAndExit()" style="background:#00ff88; color:black;">Save and Return</button>
-                <button onclick="discardAndExit()" style="background:#ff4444; color:white;">Discard Changes</button>
-                <button onclick="closeModal()" style="background:#334155; color:white;">Cancel (Stay Here)</button>
-            </div>
-        </div>
-
+        <!-- Modal and Toast -->
+        <div id="unsavedModal" class="modal">...</div>
         <div id="toast" style="visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:2000;">
             ✅ Changes Saved!
         </div>
@@ -123,7 +101,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
     </html>
     """
 
-# ====================== MAIN DASHBOARD ======================
+# ====================== MAIN DASHBOARD (Your preferred style) ======================
 @app.route("/dashboard")
 def dashboard():
     content = """
@@ -134,31 +112,31 @@ def dashboard():
             <option value="2">Donation Panel</option>
             <option value="3">Report Panel</option>
         </select>
-        <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
+        <button class="add-btn" onclick="alert('New Panel Creator - Coming very soon!')" title="Create New Panel">+</button>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
     <div class="grid">
-        <div class="card" onclick="window.location='/settings/general'">General</div>
-        <div class="card" onclick="window.location='/settings/category'">Category</div>
-        <div class="card" onclick="window.location='/settings/ticket'">Ticket</div>
-        <div class="card" onclick="window.location='/settings/panel'">Panel</div>
-        <div class="card" onclick="window.location='/settings/buttons'">Buttons</div>
+        <div class="card" onclick="window.location='/settings/general'"><h3>General</h3><p>Support team and general items</p></div>
+        <div class="card" onclick="window.location='/settings/category'"><h3>Category</h3><p>Category options for opened/closed tickets</p></div>
+        <div class="card" onclick="window.location='/settings/ticket'"><h3>Ticket</h3><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/settings/panel'"><h3>Panel</h3><p>Panel and button setup</p></div>
+        <div class="card" onclick="window.location='/settings/buttons'"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
     <div class="grid">
-        <div class="card" onclick="window.location='/settings/commandstyle'">Command Style</div>
-        <div class="card" onclick="window.location='/settings/dropdownstyle'">Dropdown Style</div>
-        <div class="card" onclick="window.location='/settings/forms'">Forms</div>
-        <div class="card" onclick="window.location='/settings/transcripts'">Transcripts</div>
-        <div class="card" onclick="window.location='/settings/logging'">Logging</div>
-        <div class="card" onclick="window.location='/settings/automation'">Automation</div>
+        <div class="card" onclick="window.location='/settings/commandstyle'"><h3>Command Style</h3><p>Slash command settings</p></div>
+        <div class="card" onclick="window.location='/settings/dropdownstyle'"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
+        <div class="card" onclick="window.location='/settings/forms'"><h3>Forms</h3><p>Form options</p></div>
+        <div class="card" onclick="window.location='/settings/transcripts'"><h3>Transcripts</h3><p>Transcript settings</p></div>
+        <div class="card" onclick="window.location='/settings/logging'"><h3>Logging</h3><p>Server logging options</p></div>
+        <div class="card" onclick="window.location='/settings/automation'"><h3>Automation</h3><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU (LOCKED) ======================
+# General menu (locked - unchanged)
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -186,7 +164,7 @@ def settings_general():
     """
     return base_template(content, show_back=True, current_panel="Main Support Panel")
 
-# Placeholders for other menus
+# Other menus
 @app.route("/settings/category")
 @app.route("/settings/ticket")
 @app.route("/settings/panel")
@@ -198,7 +176,7 @@ def settings_general():
 @app.route("/settings/logging")
 @app.route("/settings/automation")
 def placeholder_page():
-    return base_template("<h1 style='text-align:center; margin-top:80px;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section will be built in the same style as General.</p>")
+    return base_template("<h1 style='text-align:center; margin-top:80px;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section will be built exactly like General.</p>")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
