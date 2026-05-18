@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, render_template_string
 import sqlite3
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 conn = sqlite3.connect("config.db", check_same_thread=False)
 c = conn.cursor()
@@ -48,7 +48,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
             .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
             .card:hover {{ transform:scale(1.03); border-color:#c026d3; }}
-            .panel-item {{ background:#16213e; padding:15px; border-radius:12px; margin:10px 0; display:flex; justify-content:space-between; align-items:center; }}
             input, select {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
             button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:14px; }}
             label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
@@ -57,7 +56,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     <body>
         <div class="header">
             <div class="header-content">
-                <img src="/TicketZick.jpg" class="logo" alt="Ticket Zick" onerror="this.style.display='none';">
+                <img src="/static/TicketZick.jpg" class="logo" alt="Ticket Zick">
                 <h1>Ticket Zick Dashboard</h1>
             </div>
             <div class="header-buttons">
@@ -72,15 +71,12 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# Rest of your routes (dashboard, create-panel, edit-panel, etc.) remain the same as before
-# (I'm keeping this short — paste your existing working code for those routes below this point)
-
+# === DASHBOARD ROUTE ===
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
     c.execute("SELECT id, name, emoji FROM panels ORDER BY name")
     panels = c.fetchall()
-
     options = ''.join([f'<option value="{p[0]}">{p[1]} {p[2]}</option>' for p in panels])
 
     content = f"""
@@ -95,7 +91,7 @@ def dashboard():
         </div>
     </div>
 
-    <div class="section-title" style="text-align:center; margin:30px 0 15px; color:#00f0ff;">General Ticket Options</div>
+    <div style="text-align:center; margin:30px 0 15px; color:#00f0ff; font-size:22px;">General Ticket Options</div>
     <div class="grid">
         <div class="card"><h2>General</h2><p>Support team and general items</p></div>
         <div class="card"><h2>Category</h2><p>Category options for opened/closed tickets</p></div>
@@ -103,7 +99,7 @@ def dashboard():
         <div class="card"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
     </div>
 
-    <div class="section-title" style="text-align:center; margin:40px 0 15px; color:#00f0ff;">Advanced Settings</div>
+    <div style="text-align:center; margin:40px 0 15px; color:#00f0ff; font-size:22px;">Advanced Settings</div>
     <div class="grid">
         <div class="card"><h2>Forms</h2><p>Form options</p></div>
         <div class="card"><h2>Transcripts</h2><p>Transcript settings</p></div>
@@ -113,8 +109,8 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# Add your existing create-panel, save-panel, edit-panel, update-panel, delete-panel routes here
-# (They are already working well)
+# (Keep your existing create-panel, edit-panel, save, update, delete routes here)
+# If you want me to send the full file with all routes, just say "send full file"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
