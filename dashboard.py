@@ -106,6 +106,22 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .tooltip {{ position:relative; display:inline-block; margin-left:8px; cursor:help; color:#00f0ff; }}
             .tooltip .tooltiptext {{ visibility:hidden; background:#16213e; color:#e0e0ff; text-align:left; border-radius:8px; padding:12px; position:absolute; z-index:1; bottom:125%; left:50%; transform:translateX(-50%); width:280px; box-shadow:0 0 15px rgba(0,240,255,0.3); }}
             .tooltip:hover .tooltiptext {{ visibility:visible; }}
+            /* Dashboard Card Styles */
+            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; max-width:1200px; margin:30px auto; }}
+            .card {{ 
+                background:#16213e; 
+                border-radius:16px; 
+                padding:30px 20px; 
+                text-align:center; 
+                border:1px solid #00f0ff33; 
+                cursor:pointer; 
+                transition:0.3s; 
+            }}
+            .card:hover {{ 
+                transform:scale(1.05); 
+                border-color:#c026d3; 
+                box-shadow:0 0 20px rgba(192,38,211,0.3); 
+            }}
         </style>
     </head>
     <body>
@@ -169,15 +185,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# ====================== MAIN DASHBOARD ======================
+# ====================== MAIN DASHBOARD (Fixed) ======================
 @app.route("/dashboard")
 def dashboard():
     content = """
-    <h1 style="text-align:center; margin-bottom:40px;">🎟️ Ticket Zick Dashboard</h1>
+    <h1 style="text-align:center; margin-bottom:10px; color:#00f0ff;">Ticket Zick Dashboard</h1>
     
     <div style="max-width:1200px; margin:auto;">
-        <h2 style="color:#c026d3; margin:30px 0 15px;">General Ticket Options</h2>
-        <div class="grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+        <h2 style="color:#c026d3; margin:40px 0 15px; text-align:center;">General Ticket Options</h2>
+        <div class="grid">
             <div class="card" onclick="window.location='/settings/general'"><h3>General</h3></div>
             <div class="card" onclick="window.location='/settings/category'"><h3>Category</h3></div>
             <div class="card" onclick="window.location='/settings/ticket'"><h3>Ticket</h3></div>
@@ -185,8 +201,8 @@ def dashboard():
             <div class="card" onclick="window.location='/settings/buttons'"><h3>Buttons</h3></div>
         </div>
 
-        <h2 style="color:#c026d3; margin:40px 0 15px;">Advanced Settings</h2>
-        <div class="grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+        <h2 style="color:#c026d3; margin:50px 0 15px; text-align:center;">Advanced Settings</h2>
+        <div class="grid">
             <div class="card" onclick="window.location='/settings/commandstyle'"><h3>Command Style</h3></div>
             <div class="card" onclick="window.location='/settings/dropdownstyle'"><h3>Dropdown Style</h3></div>
             <div class="card" onclick="window.location='/settings/forms'"><h3>Forms</h3></div>
@@ -198,7 +214,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU ======================
+# ====================== GENERAL MENU (LOCKED - DO NOT CHANGE) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -272,8 +288,8 @@ def settings_general():
     """
     return base_template(content)
 
-# Add the other menu stubs so they don't 404
-@app.route("/settings/category") 
+# Placeholder pages (will match General style later)
+@app.route("/settings/category")
 @app.route("/settings/ticket")
 @app.route("/settings/panel")
 @app.route("/settings/buttons")
@@ -284,7 +300,7 @@ def settings_general():
 @app.route("/settings/logging")
 @app.route("/settings/automation")
 def placeholder_page():
-    return base_template("<h1>Coming Soon</h1><p>This section is under development.</p>")
+    return base_template("<h1 style='text-align:center;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section is under development.</p>")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
