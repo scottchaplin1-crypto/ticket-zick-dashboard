@@ -40,7 +40,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             h1 {{ color:#00f0ff; text-align:center; margin:0; }}
             .header {{ text-align:center; margin-bottom:25px; }}
             .header-content {{ display:flex; align-items:center; justify-content:center; gap:15px; flex-wrap:wrap; }}
-            .logo {{ font-size:42px; }}
+            .logo {{ height:60px; border-radius:12px; }}
             .header-buttons {{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
@@ -57,14 +57,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     <body>
         <div class="header">
             <div class="header-content">
-                <span class="logo">🎟️</span>
+                <img src="TicketZick.jpg" class="logo" alt="Ticket Zick">
                 <h1>Ticket Zick Dashboard</h1>
             </div>
             <div class="header-buttons">
                 <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                     <button class="btn invite">Invite Ticket Zick</button>
                 </a>
-                <button class="add-btn" onclick="window.location='/create-panel'">+</button>
             </div>
         </div>
         {back_button}
@@ -84,11 +83,14 @@ def dashboard():
     content = f"""
     <div style="text-align:center; margin:30px 0;">
         <label style="font-size:18px; color:#00f0ff;">Select Ticket Panel to Edit:</label><br><br>
-        <select onchange="if(this.value) window.location='/edit-panel/'+this.value" 
-                style="padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; width:80%; max-width:600px;">
-            <option value="">-- Select a Panel to Edit --</option>
-            {options}
-        </select>
+        <div style="display:flex; justify-content:center; gap:10px; align-items:center; max-width:600px; margin:auto;">
+            <select onchange="if(this.value) window.location='/edit-panel/'+this.value" 
+                    style="padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; flex:1;">
+                <option value="">-- Select a Panel to Edit --</option>
+                {options}
+            </select>
+            <button class="add-btn" onclick="window.location='/create-panel'">+</button>
+        </div>
     </div>
 
     <div class="section-title" style="text-align:center; margin:30px 0 15px; color:#00f0ff;">General Ticket Options</div>
@@ -109,7 +111,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== CREATE / EDIT / SAVE / DELETE ======================
+# ====================== CREATE PANEL ======================
 @app.route("/create-panel")
 def create_panel():
     content = """
@@ -189,7 +191,7 @@ def create_panel():
     """
     return base_template(content, show_back=True)
 
-# Save, Edit, Update, Delete (keep your existing ones)
+# Save, Edit, Update, Delete routes (unchanged)
 @app.route("/save-panel", methods=["POST"])
 def save_panel():
     c.execute("""INSERT INTO panels (name, emoji, category_id, description, support_roles, button_text, button_color)
@@ -203,29 +205,67 @@ def save_panel():
 
 @app.route("/edit-panel/<int:panel_id>")
 def edit_panel(panel_id):
-    # Your current working edit code here
-    pass  # Keep your existing edit_panel function
+    c.execute("SELECT * FROM panels WHERE id = ?", (panel_id,))
+    panel = c.fetchone()
+    if not panel: return redirect("/dashboard")
 
-@app.route("/update-panel/<int:panel_id>", methods=["POST"])
-def update_panel(panel_id):
-    c.execute("""UPDATE panels SET name=?, emoji=?, category_id=?, description=?, 
-                 support_roles=?, button_text=?, button_color=? WHERE id=?""",
-              (request.form.get("name"), request.form.get("emoji"), request.form.get("category_id"),
-               request.form.get("description"), request.form.get("support_roles"),
-               request.form.get("button_text"), request.form.get("button_color"), panel_id))
-    conn.commit()
-    return redirect("/dashboard")
+    current_color = panel[7] or '#00f0ff'
 
-@app.route("/delete-panel/<int:panel_id>")
-def delete_panel(panel_id):
-    c.execute("DELETE FROM panels WHERE id = ?", (panel_id,))
-    conn.commit()
-    return redirect("/dashboard")
+    content = f"""
+    <h1>Edit Ticket Panel</h1>
+    <div class="card">
+        <form method="POST" action="/update-panel/{panel[0]}">
+            <label>1. Panel Name</label>
+            <input type="text" name="name" value="{panel[1]}" required>
 
-@app.route("/<path:path>")
-def catch_all(path):
-    return redirect("/dashboard")
+            <label>2. Emoji / Icon</label>
+            <select name="emoji" id="emoji-select" onchange="updatePreview()">
+                <option value="🎟️" {'selected' if panel[2]=='🎟️' else ''}>🎟️ Ticket</option>
+                <option value="❓" {'selected' if panel[2]=='❓' else ''}>❓ Question</option>
+                <option value="🚨" {'selected' if panel[2]=='🚨' else ''}>🚨 Report</option>
+                <option value="💰" {'selected' if panel[2]=='💰' else ''}>💰 Donation</option>
+                <option value="🤝" {'selected' if panel[2]=='🤝' else ''}>🤝 Support</option>
+            </select>
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+            <label>3. Button Text</label>
+            <input type="text" name="button_text" id="button-text" value="{panel[6] or 'Create Ticket'}" onkeyup="updatePreview()">
+
+            <label>4. Button Color</label>
+            <input type="hidden" name="button_color" id="selected-color" value="{current_color}">
+            <div style="margin:10px 0;">
+                <span class="color-box {'selected' if current_color == '#00f0ff' else ''}" style="background:#00f0ff" onclick="setColor('#00f0ff')"></span>
+                <span class="color-box {'selected' if current_color == '#c026d3' else ''}" style="background:#c026d3" onclick="setColor('#c026d3')"></span>
+                <span class="color-box {'selected' if current_color == '#ff00ff' else ''}" style="background:#ff00ff" onclick="setColor('#ff00ff')"></span>
+                <span class="color-box {'selected' if current_color == '#00ff88' else ''}" style="background:#00ff88" onclick="setColor('#00ff88')"></span>
+                <span class="color-box {'selected' if current_color == '#ff8800' else ''}" style="background:#ff8800" onclick="setColor('#ff8800')"></span>
+                <span class="color-box {'selected' if current_color == '#ffff00' else ''}" style="background:#ffff00" onclick="setColor('#ffff00')"></span>
+                <span class="color-box {'selected' if current_color == '#ff0088' else ''}" style="background:#ff0088" onclick="setColor('#ff0088')"></span>
+                <span class="color-box {'selected' if current_color == '#ff4444' else ''}" style="background:#ff4444" onclick="setColor('#ff4444')"></span>
+                <span class="color-box {'selected' if current_color == '#44ff44' else ''}" style="background:#44ff44" onclick="setColor('#44ff44')"></span>
+            </div>
+
+            <label>5. Description</label>
+            <input type="text" name="description" value="{panel[4] or ''}">
+
+            <label>6. Category ID</label>
+            <input type="text" name="category_id" value="{panel[3]}" required>
+
+            <label>7. Support Roles</label>
+            <input type="text" name="support_roles" value="{panel[5] or ''}" placeholder="Staff, Admin, Moderator">
+
+            <button type="submit" style="margin-top:30px; width:100%;">Save Changes</button>
+        </form>
+
+        <h3>Live Button Preview</h3>
+        <div id="preview" style="padding:25px; background:#0f0f1a; border-radius:12px; text-align:center; font-size:22px;">
+            {panel[2] or '🎟️'} {panel[6] or 'Create Ticket'}
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {{
+            const emoji = document.getElementById('emoji-select').value || '🎟️';
+            const text = document.getElementById('button-text').value || 'Create Ticket';
+            document.getElementById('preview').innerHTML = emoji + ' ' + text;
+        }}
+        function set
