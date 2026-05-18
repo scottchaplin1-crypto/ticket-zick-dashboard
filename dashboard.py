@@ -132,8 +132,6 @@ def dashboard():
         <select class="panel-selector" onchange="if(this.value) window.location = '/edit-panel/' + this.value">
             <option value="">-- Select a Panel to Edit --</option>
             <option value="1" selected>Main Support Panel</option>
-            <option value="2">Donation Panel</option>
-            <option value="3">Report Panel</option>
         </select>
         <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
     </div>
@@ -159,7 +157,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU (RESTORED TO EXACT PREVIOUS GOOD VERSION) ======================
+# ====================== GENERAL MENU (RESTORED TO YOUR PREFERRED VERSION) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -233,7 +231,7 @@ def settings_general():
     """
     return base_template(content, show_back=True, current_panel="Main Support Panel")
 
-# Other menus (placeholders)
+# Other menus
 @app.route("/settings/category")
 @app.route("/settings/ticket")
 @app.route("/settings/panel")
