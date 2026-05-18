@@ -49,6 +49,21 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; 
                 border-radius:50%; font-size:28px; border:none; cursor:pointer; box-shadow:0 4px 15px rgba(0,240,255,0.3);
             }}
+            .setting-card {{ background:#16213e; padding:40px 45px; border-radius:16px; margin:22px 0; border:1px solid #00f0ff22; }}
+            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:14px 20px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
+            input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
+            label {{ display:block; margin:18px 0 8px; font-weight:600; color:#a0a0ff; }}
+            .toggle {{ accent-color:#00f0ff; transform:scale(1.6); }}
+            .row {{ display: flex; align-items: center; gap: 16px; margin: 22px 0; }}
+            .row label {{ margin: 0; font-size: 17px; flex: 1; }}
+            .save-btn {{ background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; font-size:17px; font-weight:bold; cursor:not-allowed; margin:40px auto; display:block; }}
+            .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
+            .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
+            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
+            .modal button {{ padding:14px 32px; margin:10px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; }}
+            .tooltip {{ position:relative; display:inline-block; margin-left:8px; cursor:help; color:#00f0ff; }}
+            .tooltip .tooltiptext {{ visibility:hidden; background:#16213e; color:#e0e0ff; text-align:left; border-radius:8px; padding:12px; position:absolute; z-index:1; bottom:125%; left:50%; transform:translateX(-50%); width:280px; box-shadow:0 0 15px rgba(0,240,255,0.3); }}
+            .tooltip:hover .tooltiptext {{ visibility:visible; }}
             .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; max-width: 1150px; margin: 30px auto; }}
             .card {{ 
                 background: linear-gradient(145deg, #16213e, #0f1629); 
@@ -75,8 +90,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
-        <!-- Modal and Toast -->
-        <div id="unsavedModal" class="modal">...</div>
+        <div id="unsavedModal" class="modal">
+            <div class="modal-content">
+                <h2>You have unsaved changes</h2>
+                <p style="margin:20px 0 30px;">What would you like to do?</p>
+                <button onclick="saveAndExit()" style="background:#00ff88; color:black;">Save and Return</button>
+                <button onclick="discardAndExit()" style="background:#ff4444; color:white;">Discard Changes</button>
+                <button onclick="closeModal()" style="background:#334155; color:white;">Cancel (Stay Here)</button>
+            </div>
+        </div>
+
         <div id="toast" style="visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:2000;">
             ✅ Changes Saved!
         </div>
@@ -101,7 +124,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
     </html>
     """
 
-# ====================== MAIN DASHBOARD (Your preferred style) ======================
+# ====================== MAIN DASHBOARD ======================
 @app.route("/dashboard")
 def dashboard():
     content = """
@@ -112,7 +135,7 @@ def dashboard():
             <option value="2">Donation Panel</option>
             <option value="3">Report Panel</option>
         </select>
-        <button class="add-btn" onclick="alert('New Panel Creator - Coming very soon!')" title="Create New Panel">+</button>
+        <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
@@ -136,35 +159,81 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# General menu (locked - unchanged)
+# ====================== GENERAL MENU (RESTORED TO EXACT PREVIOUS GOOD VERSION) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
     <h1>General</h1>
+    
     <div class="setting-card">
         <h2>Support Team</h2>
         <label>Support Team Roles</label>
         <input type="text" value="Admin, Staff, Moderator, Helper" placeholder="Comma separated roles" onchange="markChanged()">
     </div>
+
     <div class="setting-card">
         <h2>Ticket Claiming</h2>
-        <div class="row"><label>Enable Ticket Claiming</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        <div class="row">
+            <label>Enable Ticket Claiming</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
+
     <div class="setting-card">
         <h2>Default Ticket Name</h2>
-        <label>Ticket Channel Name Format <span class="tooltip">ℹ️<span class="tooltiptext">Available placeholders:<br>• {user}<br>• {mention}<br>• {server}<br>• {ticket}<br>• {username}</span></span></label>
+        <label>Ticket Channel Name Format 
+            <span class="tooltip">ℹ️
+                <span class="tooltiptext">
+                    Available placeholders:<br>
+                    • {user} → User's name<br>
+                    • {mention} → @User mention<br>
+                    • {server} → Server name<br>
+                    • {ticket} → Ticket number<br>
+                    • {username} → Full username
+                </span>
+            </span>
+        </label>
         <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
     </div>
-    <div class="setting-card"><h2>Permissions</h2><div class="row"><label>Mention Support Team when ticket opens</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div></div>
-    <div class="setting-card"><h2>Permissions</h2><div class="row"><label>Allow users to view their own ticket history</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div></div>
-    <div class="setting-card"><h2>Other Options</h2><div class="row"><label>Delete ticket channel when closed</label><input type="checkbox" class="toggle" onchange="markChanged()"></div></div>
-    <div class="setting-card"><h2>Other Options</h2><div class="row"><label>Send transcript when ticket is closed</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div></div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="row">
+            <label>Mention Support Team when ticket opens</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="row">
+            <label>Allow users to view their own ticket history</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="row">
+            <label>Delete ticket channel when closed</label>
+            <input type="checkbox" class="toggle" onchange="markChanged()">
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="row">
+            <label>Send transcript when ticket is closed</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+    </div>
+
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
     """
     return base_template(content, show_back=True, current_panel="Main Support Panel")
 
-# Other menus
+# Other menus (placeholders)
 @app.route("/settings/category")
 @app.route("/settings/ticket")
 @app.route("/settings/panel")
