@@ -46,20 +46,18 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .setting-card {{ background:#16213e; padding:32px 40px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 18px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
-            label {{ 
-                display:block; 
-                margin:14px 0 8px; 
-                font-weight:600; 
-                color:#a0a0ff; 
-                font-size:17px;
-                line-height:1.4;
+            label {{ display:block; margin:14px 0 8px; font-weight:600; color:#a0a0ff; font-size:17px; }}
+            .toggle {{ 
+                accent-color:#00f0ff; 
+                transform:scale(1.5); 
+                cursor:pointer;
             }}
-            .toggle {{ accent-color:#00f0ff; transform:scale(1.5); }}
+            .toggle:focus {{ outline: none; box-shadow: none; }}
             .row {{ 
                 display:flex; 
                 align-items:center; 
                 gap:20px; 
-                margin:20px 0; 
+                margin:18px 0; 
             }}
             .row label {{ 
                 margin:0; 
@@ -144,7 +142,39 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
     </html>
     """
 
-# ====================== GENERAL MENU (Fixed stacking + clean layout) ======================
+# Main Dashboard
+@app.route("/dashboard")
+def dashboard():
+    content = """
+    <div class="panel-area">
+        <select class="panel-selector" onchange="if(this.value) window.location = '/edit-panel/' + this.value">
+            <option value="" selected>-- Select a Panel to Edit --</option>
+        </select>
+        <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
+    </div>
+
+    <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
+    <div class="grid">
+        <div class="card" onclick="window.location='/settings/general'"><h3>General</h3><p>Support team and general items</p></div>
+        <div class="card" onclick="window.location='/settings/category'"><h3>Category</h3><p>Category options for opened/closed tickets</p></div>
+        <div class="card" onclick="window.location='/settings/ticket'"><h3>Ticket</h3><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/settings/panel'"><h3>Panel</h3><p>Panel and button setup</p></div>
+        <div class="card" onclick="window.location='/settings/buttons'"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
+    </div>
+
+    <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
+    <div class="grid">
+        <div class="card" onclick="window.location='/settings/commandstyle'"><h3>Command Style</h3><p>Slash command settings</p></div>
+        <div class="card" onclick="window.location='/settings/dropdownstyle'"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
+        <div class="card" onclick="window.location='/settings/forms'"><h3>Forms</h3><p>Form options</p></div>
+        <div class="card" onclick="window.location='/settings/transcripts'"><h3>Transcripts</h3><p>Transcript settings</p></div>
+        <div class="card" onclick="window.location='/settings/logging'"><h3>Logging</h3><p>Server logging options</p></div>
+        <div class="card" onclick="window.location='/settings/automation'"><h3>Automation</h3><p>Automation options</p></div>
+    </div>
+    """
+    return base_template(content, show_back=False)
+
+# General Menu
 @app.route("/settings/general")
 def settings_general():
     content = """
