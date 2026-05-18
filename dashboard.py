@@ -18,7 +18,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS panels (
 )''')
 conn.commit()
 
-def base_template(content, title="Ticket Zick Dashboard", show_back=True, current_panel="Main Support Panel"):
+def base_template(content, title="Ticket Zick Dashboard", show_back=True, current_panel=None):
     back_button = '''
         <div style="text-align:center; margin:25px 0;">
             <button onclick="handleBack()" style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:14px 36px; border:none; border-radius:12px; cursor:pointer; font-size:17px; font-weight:bold;">
@@ -27,7 +27,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         </div>
     ''' if show_back else ''
 
-    panel_header = f'<h2 style="color:#c026d3; text-align:center; margin:20px 0 30px;">Editing: <span style="color:#00f0ff;">{current_panel}</span></h2>' if not show_back else ''
+    panel_header = f'<h2 style="color:#c026d3; text-align:center; margin:20px 0 30px;">Editing: <span style="color:#00f0ff;">{current_panel}</span></h2>' if show_back and current_panel else ''
 
     return f"""
     <!DOCTYPE html>
@@ -42,7 +42,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .logo {{ height:90px; border-radius:16px; }}
             .panel-selector {{ 
                 background:#16213e; border:2px solid #00f0ff33; color:#e0e0ff; padding:14px 20px; 
-                border-radius:12px; font-size:17px; width:320px; margin:20px auto; display:block;
+                border-radius:12px; font-size:17px; width:340px; margin:20px auto; display:block;
             }}
             .setting-card {{ background:#16213e; padding:40px 45px; border-radius:16px; margin:22px 0; border:1px solid #00f0ff22; }}
             input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:14px 20px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
@@ -83,7 +83,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
-        <div id="unsavedModal" class="modal"> ... (same modal as before) </div>
+        <div id="unsavedModal" class="modal">
+            <div class="modal-content">
+                <h2>You have unsaved changes</h2>
+                <p style="margin:20px 0 30px;">What would you like to do?</p>
+                <button onclick="saveAndExit()" style="background:#00ff88; color:black;">Save and Return</button>
+                <button onclick="discardAndExit()" style="background:#ff4444; color:white;">Discard Changes</button>
+                <button onclick="closeModal()" style="background:#334155; color:white;">Cancel (Stay Here)</button>
+            </div>
+        </div>
+
         <div id="toast" style="visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:2000;">
             ✅ Changes Saved!
         </div>
@@ -140,13 +149,81 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# General remains locked
+# ====================== GENERAL MENU (LOCKED - EXACTLY AS YOU LIKED IT) ======================
 @app.route("/settings/general")
 def settings_general():
-    content = """[Same General code as before - unchanged]"""
-    return base_template(content, current_panel="Main Support Panel")
+    content = """
+    <h1>General</h1>
+    
+    <div class="setting-card">
+        <h2>Support Team</h2>
+        <label>Support Team Roles</label>
+        <input type="text" value="Admin, Staff, Moderator, Helper" placeholder="Comma separated roles" onchange="markChanged()">
+    </div>
 
-# Placeholders
+    <div class="setting-card">
+        <h2>Ticket Claiming</h2>
+        <div class="row">
+            <label>Enable Ticket Claiming</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+        <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
+    </div>
+
+    <div class="setting-card">
+        <h2>Default Ticket Name</h2>
+        <label>Ticket Channel Name Format 
+            <span class="tooltip">ℹ️
+                <span class="tooltiptext">
+                    Available placeholders:<br>
+                    • {user} → User's name<br>
+                    • {mention} → @User mention<br>
+                    • {server} → Server name<br>
+                    • {ticket} → Ticket number<br>
+                    • {username} → Full username
+                </span>
+            </span>
+        </label>
+        <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="row">
+            <label>Mention Support Team when ticket opens</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="row">
+            <label>Allow users to view their own ticket history</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="row">
+            <label>Delete ticket channel when closed</label>
+            <input type="checkbox" class="toggle" onchange="markChanged()">
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="row">
+            <label>Send transcript when ticket is closed</label>
+            <input type="checkbox" class="toggle" checked onchange="markChanged()">
+        </div>
+    </div>
+
+    <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
+    """
+    return base_template(content, show_back=True, current_panel="Main Support Panel")
+
+# Other menu placeholders
 @app.route("/settings/category")
 @app.route("/settings/ticket")
 @app.route("/settings/panel")
@@ -158,7 +235,7 @@ def settings_general():
 @app.route("/settings/logging")
 @app.route("/settings/automation")
 def placeholder_page():
-    return base_template("<h1 style='text-align:center; margin-top:80px;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section will match General style.</p>")
+    return base_template("<h1 style='text-align:center; margin-top:80px;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section will be built exactly like General.</p>")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
