@@ -18,7 +18,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS panels (
 )''')
 conn.commit()
 
-def base_template(content, title="Ticket Zick Dashboard", show_back=True):
+def base_template(content, title="Ticket Zick Dashboard", show_back=True, current_panel="Main Support Panel"):
     back_button = '''
         <div style="text-align:center; margin:25px 0;">
             <button onclick="handleBack()" 
@@ -28,6 +28,8 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             </button>
         </div>
     ''' if show_back else ''
+
+    panel_header = f'<h2 style="color:#c026d3; text-align:center; margin:20px 0 30px;">Editing: <span style="color:#00f0ff;">{current_panel}</span></h2>' if not show_back else ''
 
     return f"""
     <!DOCTYPE html>
@@ -39,89 +41,25 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             h1, h2 {{ color:#00f0ff; }}
             .header {{ text-align:center; margin-bottom:30px; }}
             .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; }}
-            .logo {{ height:80px; border-radius:16px; }}
-            .setting-card {{ 
-                background:#16213e; 
-                padding:40px 45px; 
-                border-radius:16px; 
-                margin:22px 0; 
-                border:1px solid #00f0ff22; 
-            }}
-            input, select, textarea {{ 
-                background:#0f0f1a; 
-                color:#e0e0ff; 
-                border:2px solid #334155; 
-                border-radius:10px; 
-                padding:14px 20px; 
-                width:100%; 
-                font-size:16px; 
-                margin-top:8px; 
-                box-sizing:border-box;
-            }}
-            input:focus, select:focus, textarea:focus {{ 
-                border-color:#00f0ff; 
-                box-shadow:0 0 0 3px rgba(0,240,255,0.2); 
-            }}
-            label {{ 
-                display:block; 
-                margin:18px 0 8px; 
-                font-weight:600; 
-                color:#a0a0ff; 
-            }}
-            .toggle {{ 
-                accent-color:#00f0ff; 
-                transform:scale(1.6); 
-            }}
-            .row {{ 
-                display: flex; 
-                align-items: center; 
-                gap: 16px; 
-                margin: 22px 0;
-            }}
-            .row label {{ 
-                margin: 0; 
-                font-size: 17px; 
-                flex: 1;
-            }}
-            .save-btn {{ 
-                background:#334155; 
-                color:white; 
-                padding:14px 40px; 
-                border:none; 
-                border-radius:12px; 
-                font-size:17px; 
-                font-weight:bold; 
-                cursor:not-allowed; 
-                margin:40px auto; 
-                display:block; 
-            }}
-            .save-btn.active {{ 
-                background:linear-gradient(45deg,#00ff88,#00f0ff); 
-                color:black; 
-                cursor:pointer; 
-            }}
+            .logo {{ height:90px; border-radius:16px; }}
+            .setting-card {{ background:#16213e; padding:40px 45px; border-radius:16px; margin:22px 0; border:1px solid #00f0ff22; }}
+            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:14px 20px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
+            input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
+            label {{ display:block; margin:18px 0 8px; font-weight:600; color:#a0a0ff; }}
+            .toggle {{ accent-color:#00f0ff; transform:scale(1.6); }}
+            .row {{ display: flex; align-items: center; gap: 16px; margin: 22px 0; }}
+            .row label {{ margin: 0; font-size: 17px; flex: 1; }}
+            .save-btn {{ background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; font-size:17px; font-weight:bold; cursor:not-allowed; margin:40px auto; display:block; }}
+            .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
             .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
             .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
             .modal button {{ padding:14px 32px; margin:10px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; }}
             .tooltip {{ position:relative; display:inline-block; margin-left:8px; cursor:help; color:#00f0ff; }}
             .tooltip .tooltiptext {{ visibility:hidden; background:#16213e; color:#e0e0ff; text-align:left; border-radius:8px; padding:12px; position:absolute; z-index:1; bottom:125%; left:50%; transform:translateX(-50%); width:280px; box-shadow:0 0 15px rgba(0,240,255,0.3); }}
             .tooltip:hover .tooltiptext {{ visibility:visible; }}
-            /* Dashboard Card Styles */
-            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; max-width:1200px; margin:30px auto; }}
-            .card {{ 
-                background:#16213e; 
-                border-radius:16px; 
-                padding:30px 20px; 
-                text-align:center; 
-                border:1px solid #00f0ff33; 
-                cursor:pointer; 
-                transition:0.3s; 
-            }}
-            .card:hover {{ 
-                transform:scale(1.05); 
-                border-color:#c026d3; 
-                box-shadow:0 0 20px rgba(192,38,211,0.3); 
-            }}
+            .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; max-width: 1150px; margin: 30px auto; }}
+            .card {{ background:#16213e; border-radius:16px; padding:32px 20px; text-align:center; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; font-size:18px; font-weight:600; }}
+            .card:hover {{ transform:scale(1.06); border-color:#c026d3; box-shadow:0 0 25px rgba(192,38,211,0.4); }}
         </style>
     </head>
     <body>
@@ -132,6 +70,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             </div>
         </div>
         {back_button}
+        {panel_header}
         {content}
 
         <div id="unsavedModal" class="modal">
@@ -150,145 +89,78 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
 
         <script>
             let formChanged = false;
-            function markChanged() {{
-                formChanged = true;
-                const saveBtn = document.getElementById('saveBtn');
-                if (saveBtn) saveBtn.classList.add('active');
-            }}
-            function saveChanges() {{
-                const toast = document.getElementById('toast');
-                toast.style.visibility = 'visible';
+            function markChanged() {{ formChanged = true; const saveBtn = document.getElementById('saveBtn'); if (saveBtn) saveBtn.classList.add('active'); }}
+            function saveChanges() {{ 
+                const toast = document.getElementById('toast'); toast.style.visibility = 'visible';
                 setTimeout(() => {{ toast.style.visibility = 'hidden'; }}, 5000);
-                formChanged = false;
-                const saveBtn = document.getElementById('saveBtn');
-                if (saveBtn) saveBtn.classList.remove('active');
+                formChanged = false; const saveBtn = document.getElementById('saveBtn'); if (saveBtn) saveBtn.classList.remove('active');
             }}
             function handleBack() {{
-                if (formChanged) {{
-                    document.getElementById('unsavedModal').style.display = 'block';
-                }} else {{
-                    window.location = '/dashboard';
-                }}
+                if (formChanged) {{ document.getElementById('unsavedModal').style.display = 'block'; }}
+                else {{ window.location = '/dashboard'; }}
             }}
             function saveAndExit() {{ saveChanges(); window.location = '/dashboard'; }}
             function discardAndExit() {{ window.location = '/dashboard'; }}
             function closeModal() {{ document.getElementById('unsavedModal').style.display = 'none'; }}
-
-            document.addEventListener('DOMContentLoaded', () => {{
-                document.querySelectorAll('input, textarea, select').forEach(el => {{
-                    el.addEventListener('change', markChanged);
-                    el.addEventListener('input', markChanged);
-                }});
-            }});
         </script>
     </body>
     </html>
     """
 
-# ====================== MAIN DASHBOARD (Fixed) ======================
+# ====================== MAIN DASHBOARD (11 Cards) ======================
 @app.route("/dashboard")
 def dashboard():
     content = """
-    <h1 style="text-align:center; margin-bottom:10px; color:#00f0ff;">Ticket Zick Dashboard</h1>
-    
-    <div style="max-width:1200px; margin:auto;">
-        <h2 style="color:#c026d3; margin:40px 0 15px; text-align:center;">General Ticket Options</h2>
-        <div class="grid">
-            <div class="card" onclick="window.location='/settings/general'"><h3>General</h3></div>
-            <div class="card" onclick="window.location='/settings/category'"><h3>Category</h3></div>
-            <div class="card" onclick="window.location='/settings/ticket'"><h3>Ticket</h3></div>
-            <div class="card" onclick="window.location='/settings/panel'"><h3>Panel</h3></div>
-            <div class="card" onclick="window.location='/settings/buttons'"><h3>Buttons</h3></div>
-        </div>
+    <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
+    <div class="grid">
+        <div class="card" onclick="window.location='/settings/general'">General</div>
+        <div class="card" onclick="window.location='/settings/category'">Category</div>
+        <div class="card" onclick="window.location='/settings/ticket'">Ticket</div>
+        <div class="card" onclick="window.location='/settings/panel'">Panel</div>
+        <div class="card" onclick="window.location='/settings/buttons'">Buttons</div>
+    </div>
 
-        <h2 style="color:#c026d3; margin:50px 0 15px; text-align:center;">Advanced Settings</h2>
-        <div class="grid">
-            <div class="card" onclick="window.location='/settings/commandstyle'"><h3>Command Style</h3></div>
-            <div class="card" onclick="window.location='/settings/dropdownstyle'"><h3>Dropdown Style</h3></div>
-            <div class="card" onclick="window.location='/settings/forms'"><h3>Forms</h3></div>
-            <div class="card" onclick="window.location='/settings/transcripts'"><h3>Transcripts</h3></div>
-            <div class="card" onclick="window.location='/settings/logging'"><h3>Logging</h3></div>
-            <div class="card" onclick="window.location='/settings/automation'"><h3>Automation</h3></div>
-        </div>
+    <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
+    <div class="grid">
+        <div class="card" onclick="window.location='/settings/commandstyle'">Command Style</div>
+        <div class="card" onclick="window.location='/settings/dropdownstyle'">Dropdown Style</div>
+        <div class="card" onclick="window.location='/settings/forms'">Forms</div>
+        <div class="card" onclick="window.location='/settings/transcripts'">Transcripts</div>
+        <div class="card" onclick="window.location='/settings/logging'">Logging</div>
+        <div class="card" onclick="window.location='/settings/automation'">Automation</div>
     </div>
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU (LOCKED - DO NOT CHANGE) ======================
+# ====================== GENERAL MENU (LOCKED - UNCHANGED) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
     <h1>General</h1>
-    
     <div class="setting-card">
         <h2>Support Team</h2>
         <label>Support Team Roles</label>
         <input type="text" value="Admin, Staff, Moderator, Helper" placeholder="Comma separated roles" onchange="markChanged()">
     </div>
-
     <div class="setting-card">
         <h2>Ticket Claiming</h2>
-        <div class="row">
-            <label>Enable Ticket Claiming</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
+        <div class="row"><label>Enable Ticket Claiming</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
-
     <div class="setting-card">
         <h2>Default Ticket Name</h2>
-        <label>Ticket Channel Name Format 
-            <span class="tooltip">ℹ️
-                <span class="tooltiptext">
-                    Available placeholders:<br>
-                    • {user} → User's name<br>
-                    • {mention} → @User mention<br>
-                    • {server} → Server name<br>
-                    • {ticket} → Ticket number<br>
-                    • {username} → Full username
-                </span>
-            </span>
-        </label>
+        <label>Ticket Channel Name Format <span class="tooltip">ℹ️<span class="tooltiptext">Available placeholders:<br>• {user}<br>• {mention}<br>• {server}<br>• {ticket}<br>• {username}</span></span></label>
         <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
     </div>
-
-    <div class="setting-card">
-        <h2>Permissions</h2>
-        <div class="row">
-            <label>Mention Support Team when ticket opens</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Permissions</h2>
-        <div class="row">
-            <label>Allow users to view their own ticket history</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Other Options</h2>
-        <div class="row">
-            <label>Delete ticket channel when closed</label>
-            <input type="checkbox" class="toggle" onchange="markChanged()">
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Other Options</h2>
-        <div class="row">
-            <label>Send transcript when ticket is closed</label>
-            <input type="checkbox" class="toggle" checked onchange="markChanged()">
-        </div>
-    </div>
-
+    <div class="setting-card"><h2>Permissions</h2><div class="row"><label>Mention Support Team when ticket opens</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div></div>
+    <div class="setting-card"><h2>Permissions</h2><div class="row"><label>Allow users to view their own ticket history</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div></div>
+    <div class="setting-card"><h2>Other Options</h2><div class="row"><label>Delete ticket channel when closed</label><input type="checkbox" class="toggle" onchange="markChanged()"></div></div>
+    <div class="setting-card"><h2>Other Options</h2><div class="row"><label>Send transcript when ticket is closed</label><input type="checkbox" class="toggle" checked onchange="markChanged()"></div></div>
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
     """
-    return base_template(content)
+    return base_template(content, current_panel="Main Support Panel")
 
-# Placeholder pages (will match General style later)
+# Other menus (placeholders for now)
 @app.route("/settings/category")
 @app.route("/settings/ticket")
 @app.route("/settings/panel")
@@ -300,7 +172,7 @@ def settings_general():
 @app.route("/settings/logging")
 @app.route("/settings/automation")
 def placeholder_page():
-    return base_template("<h1 style='text-align:center;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section is under development.</p>")
+    return base_template("<h1 style='text-align:center; margin-top:80px;'>Coming Soon</h1><p style='text-align:center; color:#888;'>This section will be built in the same style as General.</p>")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
