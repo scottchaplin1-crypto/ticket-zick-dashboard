@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template_string
 import sqlite3
+import os
 
 app = Flask(__name__, static_folder='static')
 
@@ -108,49 +109,46 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== PLACEHOLDER SETTINGS PAGES ======================
+# ====================== SETTINGS PAGES ======================
 @app.route("/settings/general")
 def settings_general():
-    content = "<h1>General Settings</h1><p>Support team roles, ticket claiming, etc. will go here.</p>"
+    content = "<h1>General Settings</h1><p>Support team roles, permissions, etc. (coming soon)</p>"
     return base_template(content)
 
 @app.route("/settings/category")
 def settings_category():
-    content = "<h1>Category Settings</h1><p>Opened / Closed category configuration.</p>"
+    content = "<h1>Category Settings</h1><p>Opened and Closed ticket categories.</p>"
     return base_template(content)
 
 @app.route("/settings/ticket")
 def settings_ticket():
-    content = "<h1>Ticket Settings</h1><p>Default ticket name, welcome message, etc.</p>"
+    content = "<h1>Ticket Settings</h1><p>Welcome message, ticket naming, etc.</p>"
     return base_template(content)
 
 @app.route("/settings/buttons")
 def settings_buttons():
-    content = "<h1>Buttons & Appearance</h1><p>Button text, colours, emojis — this will link to your panel editor later.</p>"
+    content = "<h1>Buttons Settings</h1><p>Button appearance and behaviour.</p>"
     return base_template(content)
 
 @app.route("/settings/forms")
 def settings_forms():
-    content = "<h1>Forms</h1><p>Custom form fields for ticket creation.</p>"
+    content = "<h1>Forms</h1><p>Custom modal forms for opening tickets.</p>"
     return base_template(content)
 
 @app.route("/settings/transcripts")
 def settings_transcripts():
-    content = "<h1>Transcripts</h1><p>Transcript saving, channel, format.</p>"
+    content = "<h1>Transcripts</h1><p>Transcript saving and logging options.</p>"
     return base_template(content)
 
 @app.route("/settings/logging")
 def settings_logging():
-    content = "<h1>Logging</h1><p>Log channel and events to track.</p>"
+    content = "<h1>Logging</h1><p>Log channel and events.</p>"
     return base_template(content)
 
 @app.route("/settings/automation")
 def settings_automation():
-    content = "<h1>Automation</h1><p>Auto close, auto delete, welcome DMs, etc.</p>"
+    content = "<h1>Automation</h1><p>Auto-close, DMs, reactions, etc.</p>"
     return base_template(content)
-
-# Keep your existing /create-panel, /edit-panel, /save-panel etc. routes below
-# (If they are missing, let me know and I'll send the full version with everything)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
