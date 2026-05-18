@@ -19,9 +19,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS panels (
 )''')
 conn.commit()
 
-def base_template(content, title="Ticket Zick Dashboard", show_back=True, current_panel=None):
-    panel_header = f'<h2 style="text-align:center; color:#00f0ff; margin:10px 0 30px 0;">Editing: {current_panel}</h2>' if current_panel else ''
-
+def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     back_button = '''
         <div style="text-align:center; margin:25px 0;">
             <button onclick="handleBack()" 
@@ -52,8 +50,8 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .setting-card {{ background:#16213e; padding:25px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
             input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px; width:100%; font-size:16px; }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
-            label {{ display:block; margin:15px 0 8px; font-weight:600; color:#a0a0ff; }}
-            .toggle {{ accent-color:#00f0ff; transform:scale(1.3); margin-right:12px; }}
+            label {{ display:block; margin:12px 0 8px; font-weight:600; color:#a0a0ff; }}
+            .toggle {{ accent-color:#00f0ff; transform:scale(1.4); margin-right:15px; }}
             .row {{ display:flex; align-items:center; gap:12px; margin:12px 0; }}
         </style>
     </head>
@@ -69,7 +67,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 </a>
             </div>
         </div>
-        {panel_header}
         {back_button}
         {content}
     </body>
@@ -117,7 +114,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU (with panel context) ======================
+# ====================== GENERAL MENU (Fixed Layout) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
@@ -174,15 +171,58 @@ def settings_general():
         }
     </script>
     """
-    return base_template(content, current_panel="Support Panel")  # This will be dynamic later
+    return base_template(content)
 
-# Other menus (basic for now)
+# Other menus unchanged (for now)
 @app.route("/settings/category")
 def settings_category():
     content = """<h1>Category</h1><div class="setting-card"><label>Open Tickets Category ID</label><input type="text" placeholder="Category ID"></div><div class="setting-card"><label>Closed Tickets Category ID</label><input type="text" placeholder="Category ID"></div>"""
-    return base_template(content, current_panel="Support Panel")
+    return base_template(content)
 
-# ... (other menus remain the same for now)
+@app.route("/settings/ticket")
+def settings_ticket():
+    content = """<h1>Ticket</h1><div class="setting-card"><label>Welcome Message</label><textarea style="height:120px;">👋 Welcome to your ticket! Staff will be with you shortly.</textarea></div><div class="setting-card"><label>Auto Close After (hours)</label><input type="number" value="48"></div>"""
+    return base_template(content)
+
+@app.route("/settings/panel")
+def settings_panel():
+    content = """<h1>Panel</h1><div class="setting-card"><label>Panel Name</label><input type="text" value="Support"></div><div class="setting-card"><label>Panel Description</label><input type="text" value="Click to open a ticket"></div>"""
+    return base_template(content)
+
+@app.route("/settings/buttons")
+def settings_buttons():
+    content = """<h1>Buttons</h1><div class="setting-card"><label>Button Text</label><input type="text" value="Create Ticket"></div><div class="setting-card"><label>Button Color</label><div style="display:flex; gap:15px; flex-wrap:wrap;"><div style="background:#00f0ff;width:60px;height:60px;border-radius:12px;cursor:pointer;border:3px solid white;"></div><div style="background:#c026d3;width:60px;height:60px;border-radius:12px;cursor:pointer;"></div><div style="background:#ff0088;width:60px;height:60px;border-radius:12px;cursor:pointer;"></div></div></div>"""
+    return base_template(content)
+
+@app.route("/settings/commandstyle")
+def settings_commandstyle():
+    content = """<h1>Command Style</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Slash Commands</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/dropdownstyle")
+def settings_dropdownstyle():
+    content = """<h1>Dropdown Style</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Use Dropdown Menu</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/forms")
+def settings_forms():
+    content = """<h1>Forms</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Custom Forms</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/transcripts")
+def settings_transcripts():
+    content = """<h1>Transcripts</h1><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Save Transcripts</label></div><div class="setting-card"><label>Transcript Channel ID</label><input type="text"></div>"""
+    return base_template(content)
+
+@app.route("/settings/logging")
+def settings_logging():
+    content = """<h1>Logging</h1><div class="setting-card"><label>Log Channel ID</label><input type="text"></div><div class="setting-card"><label><input type="checkbox" class="toggle" checked> Log Ticket Events</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/automation")
+def settings_automation():
+    content = """<h1>Automation</h1><div class="setting-card"><label><input type="checkbox" class="toggle"> Auto Close Inactive Tickets</label></div><div class="setting-card"><label><input type="checkbox" class="toggle"> Send Welcome DM</label></div>"""
+    return base_template(content)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
