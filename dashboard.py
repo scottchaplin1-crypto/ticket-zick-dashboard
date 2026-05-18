@@ -70,14 +70,18 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             }}
             .toggle {{ 
                 accent-color:#00f0ff; 
-                transform:scale(1.5); 
-                margin-right:15px;
+                transform:scale(1.6); 
             }}
             .row {{ 
-                display:flex; 
-                align-items:center; 
-                margin:22px 0; 
-                gap:18px;
+                display: flex; 
+                align-items: center; 
+                gap: 16px; 
+                margin: 22px 0;
+            }}
+            .row label {{ 
+                margin: 0; 
+                font-size: 17px; 
+                flex: 1;
             }}
             .save-btn {{ 
                 background:#334155; 
@@ -114,7 +118,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
         {back_button}
         {content}
 
-        <!-- Modal and Toast (unchanged) -->
         <div id="unsavedModal" class="modal">
             <div class="modal-content">
                 <h2>You have unsaved changes</h2>
@@ -180,7 +183,7 @@ def settings_general():
     <div class="setting-card">
         <h2>Ticket Claiming</h2>
         <div class="row">
-            <label style="margin:0; font-size:17px;">Enable Ticket Claiming</label>
+            <label>Enable Ticket Claiming</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
         </div>
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
@@ -206,7 +209,7 @@ def settings_general():
     <div class="setting-card">
         <h2>Permissions</h2>
         <div class="row">
-            <label style="margin:0;">Mention Support Team when ticket opens</label>
+            <label>Mention Support Team when ticket opens</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
         </div>
     </div>
@@ -214,7 +217,7 @@ def settings_general():
     <div class="setting-card">
         <h2>Permissions</h2>
         <div class="row">
-            <label style="margin:0;">Allow users to view their own ticket history</label>
+            <label>Allow users to view their own ticket history</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
         </div>
     </div>
@@ -222,7 +225,7 @@ def settings_general():
     <div class="setting-card">
         <h2>Other Options</h2>
         <div class="row">
-            <label style="margin:0;">Delete ticket channel when closed</label>
+            <label>Delete ticket channel when closed</label>
             <input type="checkbox" class="toggle" onchange="markChanged()">
         </div>
     </div>
@@ -230,7 +233,7 @@ def settings_general():
     <div class="setting-card">
         <h2>Other Options</h2>
         <div class="row">
-            <label style="margin:0;">Send transcript when ticket is closed</label>
+            <label>Send transcript when ticket is closed</label>
             <input type="checkbox" class="toggle" checked onchange="markChanged()">
         </div>
     </div>
@@ -238,8 +241,6 @@ def settings_general():
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
     """
     return base_template(content)
-
-# Keep your other routes the same (category, ticket, etc.) - I can add them if needed
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
