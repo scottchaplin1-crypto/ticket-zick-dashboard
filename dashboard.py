@@ -43,24 +43,41 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .panel-area {{ display:flex; justify-content:center; align-items:center; gap:12px; margin:30px 0; }}
             .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; width:380px; }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
-            .setting-card {{ background:#16213e; padding:28px 35px; border-radius:16px; margin:16px 0; border:1px solid #00f0ff22; }}
-            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 16px; width:100%; font-size:16px; margin-top:6px; box-sizing:border-box; }}
+            .setting-card {{ background:#16213e; padding:32px 40px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
+            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 18px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
-            label {{ display:block; margin:14px 0 6px; font-weight:600; color:#a0a0ff; }}
+            label {{ 
+                display:block; 
+                margin:14px 0 8px; 
+                font-weight:600; 
+                color:#a0a0ff; 
+                font-size:17px;
+            }}
             .toggle {{ accent-color:#00f0ff; transform:scale(1.5); }}
-            .row {{ display:flex; align-items:center; gap:18px; margin:18px 0; }}
-            .row label {{ margin:0; font-size:17px; flex:1; }}
+            .row {{ 
+                display:flex; 
+                align-items:center; 
+                gap:20px; 
+                margin:20px 0; 
+            }}
+            .row label {{ 
+                margin:0; 
+                flex:1; 
+                white-space: normal;
+            }}
             .save-btn {{ 
-                background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; 
-                font-size:17px; font-weight:bold; cursor:not-allowed; margin:30px auto; display:block; 
+                background:#334155; 
+                color:white; 
+                padding:14px 40px; 
+                border:none; 
+                border-radius:12px; 
+                font-size:17px; 
+                font-weight:bold; 
+                cursor:not-allowed; 
+                margin:40px auto; 
+                display:block; 
             }}
             .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
-            .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
-            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
-            .modal button {{ padding:14px 32px; margin:10px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; }}
-            .tooltip {{ position:relative; display:inline-block; margin-left:8px; cursor:help; color:#00f0ff; }}
-            .tooltip .tooltiptext {{ visibility:hidden; background:#16213e; color:#e0e0ff; text-align:left; border-radius:8px; padding:12px; position:absolute; z-index:1; bottom:125%; left:50%; transform:translateX(-50%); width:280px; box-shadow:0 0 15px rgba(0,240,255,0.3); }}
-            .tooltip:hover .tooltiptext {{ visibility:visible; }}
             .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; max-width: 1150px; margin: 30px auto; }}
             .card {{ background: linear-gradient(145deg, #16213e, #0f1629); border-radius:16px; padding:28px 20px; text-align:center; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.4); }}
             .card:hover {{ transform:scale(1.06); border-color:#c026d3; box-shadow:0 0 25px rgba(192,38,211,0.5); }}
@@ -121,7 +138,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
     </html>
     """
 
-# Main Dashboard
+# Main Dashboard (unchanged)
 @app.route("/dashboard")
 def dashboard():
     content = """
@@ -153,7 +170,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# ====================== GENERAL MENU (Clean & Compact) ======================
+# ====================== GENERAL MENU (Fixed stacking) ======================
 @app.route("/settings/general")
 def settings_general():
     content = """
