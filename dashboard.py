@@ -51,6 +51,29 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 margin:18px 0; 
                 border:1px solid #00f0ff22; 
             }}
+            
+            .toggle-row {{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 0;
+                min-height: 52px;
+            }}
+            .toggle-row label {{
+                flex: 1;
+                font-size: 17px;
+                color: #a0a0ff;
+                font-weight: 600;
+                line-height: 1.4;
+                padding-right: 20px;
+            }}
+            .toggle {{ 
+                accent-color: #00f0ff; 
+                transform: scale(1.6); 
+                cursor: pointer;
+                flex-shrink: 0;
+            }}
+
             input, select, textarea {{ 
                 background:#0f0f1a; 
                 color:#e0e0ff; 
@@ -63,26 +86,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 box-sizing:border-box; 
             }}
             input:focus, select:focus, textarea:focus {{ border-color:#00f0ff; box-shadow:0 0 0 3px rgba(0,240,255,0.2); }}
-            
-            .toggle-row {{
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin: 18px 0;
-                font-size: 17px;
-            }}
-            .toggle-row label {{
-                flex: 1;
-                color: #a0a0ff;
-                font-weight: 600;
-                cursor: pointer;
-            }}
-            .toggle {{ 
-                accent-color:#00f0ff; 
-                transform:scale(1.6); 
-                cursor:pointer;
-                margin-left: 20px;
-            }}
             
             .save-btn {{ 
                 background:#334155; 
