@@ -44,8 +44,11 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
-            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; text-align:center; }}
+            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:20px; max-width:1300px; margin:auto; }}
+            .card {{ 
+                background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; 
+                cursor:pointer; transition:0.3s; text-align:center;
+            }}
             .card:hover {{ transform:scale(1.04); border-color:#c026d3; }}
             .setting-card {{ background:#16213e; padding:25px; border-radius:16px; margin:20px 0; border:1px solid #00f0ff33; }}
             input, select, textarea {{ 
@@ -75,7 +78,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
-# Main Dashboard
+# ====================== MAIN DASHBOARD (10 Menus) ======================
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -100,146 +103,102 @@ def dashboard():
         <div class="card" onclick="window.location='/settings/general'"><h2>General</h2><p>Support team and general items</p></div>
         <div class="card" onclick="window.location='/settings/category'"><h2>Category</h2><p>Category options</p></div>
         <div class="card" onclick="window.location='/settings/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/settings/panel'"><h2>Panel</h2><p>Panel specific settings</p></div>
         <div class="card" onclick="window.location='/settings/buttons'"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
     </div>
 
     <h2 style="text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
     <div class="grid">
-        <div class="card" onclick="window.location='/settings/forms'"><h2>Forms</h2><p>Form options</p></div>
+        <div class="card" onclick="window.location='/settings/commandstyle'"><h2>Command Style</h2><p>Slash command style</p></div>
+        <div class="card" onclick="window.location='/settings/dropdownstyle'"><h2>Dropdown Style</h2><p>Dropdown panel style</p></div>
+        <div class="card" onclick="window.location='/settings/forms'"><h2>Forms</h2><p>Custom forms</p></div>
         <div class="card" onclick="window.location='/settings/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card" onclick="window.location='/settings/logging'"><h2>Logging</h2><p>Server logging options</p></div>
+        <div class="card" onclick="window.location='/settings/logging'"><h2>Logging</h2><p>Server logging</p></div>
         <div class="card" onclick="window.location='/settings/automation'"><h2>Automation</h2><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
 
-# ====================== FULL MENUS ======================
+# ====================== 10 DETAILED MENUS ======================
 @app.route("/settings/general")
 def settings_general():
-    content = """
-    <h1>General</h1>
-    <div class="setting-card">
-        <label>Support Team Roles</label>
-        <input type="text" value="Admin, Staff, Moderator" placeholder="Comma separated">
-    </div>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle" checked> Enable Ticket Claiming</label>
-    </div>
-    <div class="setting-card">
-        <label>Default Ticket Name Format</label>
-        <input type="text" value="ticket-{username}">
-    </div>
-    """
+    content = """<h1>General</h1>
+    <div class="setting-card"><label>Support Team Roles</label><input type="text" value="Admin, Staff, Moderator"></div>
+    <div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Ticket Claiming</label></div>
+    <div class="setting-card"><label>Default Ticket Prefix</label><input type="text" value="ticket-"></div>"""
     return base_template(content)
 
 @app.route("/settings/category")
 def settings_category():
-    content = """
-    <h1>Category</h1>
-    <div class="setting-card">
-        <label>Open Tickets Category ID</label>
-        <input type="text" placeholder="Paste Category ID">
-    </div>
-    <div class="setting-card">
-        <label>Closed Tickets Category ID</label>
-        <input type="text" placeholder="Paste Category ID">
-    </div>
-    """
+    content = """<h1>Category</h1>
+    <div class="setting-card"><label>Open Tickets Category ID</label><input type="text" placeholder="Category ID"></div>
+    <div class="setting-card"><label>Closed Tickets Category ID</label><input type="text" placeholder="Category ID"></div>"""
     return base_template(content)
 
 @app.route("/settings/ticket")
 def settings_ticket():
-    content = """
-    <h1>Ticket</h1>
-    <div class="setting-card">
-        <label>Welcome Message</label>
-        <textarea style="height:130px;">👋 {user} Welcome to your ticket! Staff will be here soon.</textarea>
-    </div>
-    <div class="setting-card">
-        <label>Auto Close After Inactivity (hours)</label>
-        <input type="number" value="48">
-    </div>
-    """
+    content = """<h1>Ticket</h1>
+    <div class="setting-card"><label>Welcome Message</label><textarea style="height:120px;">👋 Welcome to your ticket! Staff will be with you shortly.</textarea></div>
+    <div class="setting-card"><label>Auto Close After (hours)</label><input type="number" value="48"></div>"""
+    return base_template(content)
+
+@app.route("/settings/panel")
+def settings_panel():
+    content = """<h1>Panel</h1>
+    <div class="setting-card"><label>Panel Name</label><input type="text" value="Support"></div>
+    <div class="setting-card"><label>Panel Description</label><input type="text" value="Click to open a ticket"></div>"""
     return base_template(content)
 
 @app.route("/settings/buttons")
 def settings_buttons():
-    content = """
-    <h1>Buttons</h1>
-    <div class="setting-card">
-        <label>Button Text</label>
-        <input type="text" value="Create Ticket">
-    </div>
-    <div class="setting-card">
-        <label>Button Color</label>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <div style="background:#00f0ff; width:55px; height:55px; border-radius:12px; cursor:pointer; border:3px solid #fff;"></div>
-            <div style="background:#c026d3; width:55px; height:55px; border-radius:12px; cursor:pointer;"></div>
-            <div style="background:#ff0088; width:55px; height:55px; border-radius:12px; cursor:pointer;"></div>
-            <div style="background:#00ff88; width:55px; height:55px; border-radius:12px; cursor:pointer;"></div>
+    content = """<h1>Buttons</h1>
+    <div class="setting-card"><label>Button Text</label><input type="text" value="Create Ticket"></div>
+    <div class="setting-card"><label>Button Color</label>
+        <div style="display:flex; gap:15px; flex-wrap:wrap;">
+            <div style="background:#00f0ff;width:60px;height:60px;border-radius:12px;cursor:pointer;border:3px solid white;"></div>
+            <div style="background:#c026d3;width:60px;height:60px;border-radius:12px;cursor:pointer;"></div>
+            <div style="background:#ff0088;width:60px;height:60px;border-radius:12px;cursor:pointer;"></div>
         </div>
-    </div>
-    """
+    </div>"""
+    return base_template(content)
+
+@app.route("/settings/commandstyle")
+def settings_commandstyle():
+    content = """<h1>Command Style</h1>
+    <div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Slash Commands</label></div>"""
+    return base_template(content)
+
+@app.route("/settings/dropdownstyle")
+def settings_dropdownstyle():
+    content = """<h1>Dropdown Style</h1>
+    <div class="setting-card"><label><input type="checkbox" class="toggle" checked> Use Dropdown Menu</label></div>"""
     return base_template(content)
 
 @app.route("/settings/forms")
 def settings_forms():
-    content = """
-    <h1>Forms</h1>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle" checked> Enable Custom Forms</label>
-    </div>
-    <div class="setting-card">
-        <label>Form Fields</label>
-        <p style="color:#888;">(You can add questions like Reason, Priority, etc.)</p>
-    </div>
-    """
+    content = """<h1>Forms</h1>
+    <div class="setting-card"><label><input type="checkbox" class="toggle" checked> Enable Custom Forms</label></div>"""
     return base_template(content)
 
 @app.route("/settings/transcripts")
 def settings_transcripts():
-    content = """
-    <h1>Transcripts</h1>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle" checked> Save Transcripts</label>
-    </div>
-    <div class="setting-card">
-        <label>Transcript Log Channel ID</label>
-        <input type="text" placeholder="Channel ID">
-    </div>
-    """
+    content = """<h1>Transcripts</h1>
+    <div class="setting-card"><label><input type="checkbox" class="toggle" checked> Save Transcripts</label></div>
+    <div class="setting-card"><label>Transcript Channel ID</label><input type="text"></div>"""
     return base_template(content)
 
 @app.route("/settings/logging")
 def settings_logging():
-    content = """
-    <h1>Logging</h1>
-    <div class="setting-card">
-        <label>Log Channel ID</label>
-        <input type="text" placeholder="Channel ID">
-    </div>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle" checked> Log Ticket Created</label><br>
-        <label><input type="checkbox" class="toggle" checked> Log Ticket Closed</label><br>
-        <label><input type="checkbox" class="toggle"> Log Ticket Claimed</label>
-    </div>
-    """
+    content = """<h1>Logging</h1>
+    <div class="setting-card"><label>Log Channel ID</label><input type="text"></div>
+    <div class="setting-card"><label><input type="checkbox" class="toggle" checked> Log Ticket Events</label></div>"""
     return base_template(content)
 
 @app.route("/settings/automation")
 def settings_automation():
-    content = """
-    <h1>Automation</h1>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle"> Auto Close Inactive Tickets</label>
-    </div>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle"> Send Welcome DM to User</label>
-    </div>
-    <div class="setting-card">
-        <label><input type="checkbox" class="toggle"> Add Reaction Buttons</label>
-    </div>
-    """
+    content = """<h1>Automation</h1>
+    <div class="setting-card"><label><input type="checkbox" class="toggle"> Auto Close Inactive Tickets</label></div>
+    <div class="setting-card"><label><input type="checkbox" class="toggle"> Send Welcome DM</label></div>"""
     return base_template(content)
 
 if __name__ == "__main__":
