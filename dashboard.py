@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, render_template_string
 import sqlite3
-import os
 
 app = Flask(__name__, static_folder='static')
 
@@ -21,10 +20,10 @@ conn.commit()
 
 def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     back_button = '''
-        <div style="text-align:center; margin:15px 0 30px 0;">
+        <div style="text-align:center; margin:20px 0;">
             <button onclick="window.location='/dashboard'" 
-                    style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:16px 40px; 
-                           border:none; border-radius:12px; cursor:pointer; font-size:18px; font-weight:bold;">
+                    style="background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:14px 36px; 
+                           border:none; border-radius:12px; cursor:pointer; font-size:17px; font-weight:bold;">
                 ← Back to Dashboard
             </button>
         </div>
@@ -38,30 +37,19 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
         <style>
             body {{ background:#0a0a14; color:#e0e0ff; font-family:Segoe UI,sans-serif; margin:0; padding:20px; }}
             h1 {{ color:#00f0ff; text-align:center; margin:0; }}
-            .header {{ text-align:center; margin-bottom:25px; }}
+            .header {{ text-align:center; margin-bottom:30px; }}
             .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; }}
-            .logo {{ 
-                height:90px; 
-                border-radius:16px; 
-                box-shadow: 0 0 30px rgba(0, 240, 255, 0.7), 
-                            0 0 50px rgba(192, 38, 211, 0.5);
-                transition: all 0.3s ease;
-            }}
-            .logo:hover {{ 
-                height:98px; 
-                box-shadow: 0 0 40px rgba(0, 240, 255, 0.9), 
-                            0 0 60px rgba(192, 38, 211, 0.7);
-            }}
-            .header-buttons {{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; align-items:center; }}
+            .logo {{ height:80px; border-radius:16px; }}
             .btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; padding:12px 24px; font-size:16px; border:none; border-radius:12px; cursor:pointer; }}
             .btn.invite {{ background:linear-gradient(45deg,#00ff88,#00f0ff); }}
-            .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(0,240,255,0.3); }}
-            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
-            .card {{ background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; }}
-            .card:hover {{ transform:scale(1.03); border-color:#c026d3; }}
-            input, select {{ padding:12px; margin:8px 0; border-radius:10px; width:100%; background:#16213e; color:white; border:1px solid #334155; }}
-            button {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; font-weight:bold; cursor:pointer; padding:14px; }}
-            label {{ display:block; margin:20px 0 8px 0; font-weight:600; }}
+            .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
+            .grid {{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; max-width:1200px; margin:auto; }}
+            .card {{ 
+                background:#1a1a2e; border-radius:16px; padding:25px; border:1px solid #00f0ff33; 
+                cursor:pointer; transition:0.3s; text-align:center;
+            }}
+            .card:hover {{ transform:scale(1.04); border-color:#c026d3; }}
+            .card h2 {{ margin:0 0 10px 0; color:#00f0ff; }}
         </style>
     </head>
     <body>
@@ -70,7 +58,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
                 <img src="/static/TicketZick.png" class="logo" alt="Ticket Zick">
                 <h1>Ticket Zick Dashboard</h1>
             </div>
-            <div class="header-buttons">
+            <div style="margin-top:15px;">
                 <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot+applications.commands&permissions=8" target="_blank">
                     <button class="btn invite">Invite Ticket Zick</button>
                 </a>
@@ -82,6 +70,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True):
     </html>
     """
 
+# ====================== MAIN DASHBOARD ======================
 @app.route("/")
 @app.route("/dashboard")
 def dashboard():
@@ -90,8 +79,8 @@ def dashboard():
     options = ''.join([f'<option value="{p[0]}">{p[1]} {p[2]}</option>' for p in panels])
 
     content = f"""
-    <div style="text-align:center; margin:30px 0;">
-        <div style="display:flex; justify-content:center; gap:10px; align-items:center; max-width:600px; margin:auto;">
+    <div style="text-align:center; margin:30px 0 40px;">
+        <div style="display:flex; justify-content:center; gap:12px; align-items:center; max-width:650px; margin:auto;">
             <select onchange="if(this.value) window.location='/edit-panel/'+this.value" 
                     style="padding:14px; font-size:18px; background:#16213e; color:white; border:2px solid #00f0ff; border-radius:12px; flex:1;">
                 <option value="">-- Select a Panel to Edit --</option>
@@ -101,33 +90,67 @@ def dashboard():
         </div>
     </div>
 
-    <div style="text-align:center; margin:30px 0 15px; color:#00f0ff; font-size:22px;">General Ticket Options</div>
+    <h2 style="text-align:center; color:#00f0ff; margin:40px 0 20px;">General Ticket Options</h2>
     <div class="grid">
-        <div class="card"><h2>General</h2><p>Support team and general items</p></div>
-        <div class="card"><h2>Category</h2><p>Category options for opened/closed tickets</p></div>
-        <div class="card"><h2>Ticket</h2><p>General ticket options</p></div>
-        <div class="card"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
+        <div class="card" onclick="window.location='/settings/general'"><h2>General</h2><p>Support team and general items</p></div>
+        <div class="card" onclick="window.location='/settings/category'"><h2>Category</h2><p>Category options for opened/closed tickets</p></div>
+        <div class="card" onclick="window.location='/settings/ticket'"><h2>Ticket</h2><p>General ticket options</p></div>
+        <div class="card" onclick="window.location='/settings/buttons'"><h2>Buttons</h2><p>Button text, colours & emojis</p></div>
     </div>
 
-    <div style="text-align:center; margin:40px 0 15px; color:#00f0ff; font-size:22px;">Advanced Settings</div>
+    <h2 style="text-align:center; color:#00f0ff; margin:50px 0 20px;">Advanced Settings</h2>
     <div class="grid">
-        <div class="card"><h2>Forms</h2><p>Form options</p></div>
-        <div class="card"><h2>Transcripts</h2><p>Transcript settings</p></div>
-        <div class="card"><h2>Logging</h2><p>Server logging options</p></div>
-        <div class="card"><h2>Automation</h2><p>Automation options</p></div>
+        <div class="card" onclick="window.location='/settings/forms'"><h2>Forms</h2><p>Form options</p></div>
+        <div class="card" onclick="window.location='/settings/transcripts'"><h2>Transcripts</h2><p>Transcript settings</p></div>
+        <div class="card" onclick="window.location='/settings/logging'"><h2>Logging</h2><p>Server logging options</p></div>
+        <div class="card" onclick="window.location='/settings/automation'"><h2>Automation</h2><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
 
-# ====================== CREATE + EDIT PANEL ROUTES ======================
-@app.route("/create-panel")
-def create_panel():
-    # ... (same as before)
-    content = """<h1>Create New Ticket Panel</h1> ... (your existing form)"""
-    return base_template(content, show_back=True)
+# ====================== PLACEHOLDER SETTINGS PAGES ======================
+@app.route("/settings/general")
+def settings_general():
+    content = "<h1>General Settings</h1><p>Support team roles, ticket claiming, etc. will go here.</p>"
+    return base_template(content)
 
-# Add your full create-panel, save-panel, edit-panel, update-panel, delete-panel routes here
-# If you lost them, tell me and I'll send the complete version with everything.
+@app.route("/settings/category")
+def settings_category():
+    content = "<h1>Category Settings</h1><p>Opened / Closed category configuration.</p>"
+    return base_template(content)
+
+@app.route("/settings/ticket")
+def settings_ticket():
+    content = "<h1>Ticket Settings</h1><p>Default ticket name, welcome message, etc.</p>"
+    return base_template(content)
+
+@app.route("/settings/buttons")
+def settings_buttons():
+    content = "<h1>Buttons & Appearance</h1><p>Button text, colours, emojis — this will link to your panel editor later.</p>"
+    return base_template(content)
+
+@app.route("/settings/forms")
+def settings_forms():
+    content = "<h1>Forms</h1><p>Custom form fields for ticket creation.</p>"
+    return base_template(content)
+
+@app.route("/settings/transcripts")
+def settings_transcripts():
+    content = "<h1>Transcripts</h1><p>Transcript saving, channel, format.</p>"
+    return base_template(content)
+
+@app.route("/settings/logging")
+def settings_logging():
+    content = "<h1>Logging</h1><p>Log channel and events to track.</p>"
+    return base_template(content)
+
+@app.route("/settings/automation")
+def settings_automation():
+    content = "<h1>Automation</h1><p>Auto close, auto delete, welcome DMs, etc.</p>"
+    return base_template(content)
+
+# Keep your existing /create-panel, /edit-panel, /save-panel etc. routes below
+# (If they are missing, let me know and I'll send the full version with everything)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
