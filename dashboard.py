@@ -46,7 +46,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             
             .setting-card {{ 
                 background:#16213e; 
-                padding:32px 40px; 
+                padding:32px 45px; 
                 border-radius:16px; 
                 margin:18px 0; 
                 border:1px solid #00f0ff22; 
@@ -56,22 +56,22 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin: 16px 0;
-                padding: 8px 0;
-                min-height: 48px;
+                margin: 18px 0;
+                min-height: 52px;
             }}
             .toggle-row label {{
-                flex: 1 1 auto;
+                flex: 1;
                 font-size: 17px;
                 color: #a0a0ff;
                 font-weight: 600;
-                line-height: 1.45;
-                padding-right: 30px;
-                word-wrap: break-word;
+                line-height: 1.4;
+                padding-right: 40px;
+                white-space: normal;
+                word-break: normal;
             }}
             .toggle {{ 
                 accent-color: #00f0ff; 
-                transform: scale(1.65); 
+                transform: scale(1.7); 
                 cursor: pointer;
                 flex-shrink: 0;
             }}
