@@ -43,6 +43,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .panel-area {{ display:flex; justify-content:center; align-items:center; gap:12px; margin:30px 0; }}
             .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; width:380px; }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
+            .invite-btn {{ background:linear-gradient(45deg,#5865F2,#7289da); color:white; padding:12px 28px; border:none; border-radius:12px; font-size:16px; font-weight:bold; margin-left:20px; }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             
@@ -171,6 +172,7 @@ def dashboard():
             <option value="" selected>-- Select a Panel to Edit --</option>
         </select>
         <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
+        <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
@@ -196,7 +198,6 @@ def dashboard():
 
 @app.route("/settings/general")
 def settings_general():
-    # ... (same clean General menu we had yesterday)
     content = """
     <h1>General</h1>
     
@@ -215,8 +216,54 @@ def settings_general():
         <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
 
-    <!-- Other sections same as before... -->
-    <!-- (I'm keeping it short for now so it deploys fast) -->
+    <div class="setting-card">
+        <h2>Default Ticket Name</h2>
+        <label>Ticket Channel Name Format 
+            <span class="tooltip">ℹ️
+                <span class="tooltiptext">
+                    Available placeholders:<br>
+                    • {user} → User's name<br>
+                    • {mention} → @User mention<br>
+                    • {server} → Server name<br>
+                    • {ticket} → Ticket number<br>
+                    • {username} → Full username
+                </span>
+            </span>
+        </label>
+        <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="toggle-row">
+            <label>Mention Support Team when ticket opens</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="toggle-row">
+            <label>Allow users to view their own ticket history</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="toggle-row">
+            <label>Delete ticket channel when closed</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="toggle-row">
+            <label>Send transcript when ticket is closed</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        </div>
+    </div>
 
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
     """
