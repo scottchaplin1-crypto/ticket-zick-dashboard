@@ -201,4 +201,87 @@ def dashboard():
             </button>
             <div class="action-btns">
                 <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
-                <button class="
+                <button class="update-btn" onclick="showToast('✅ Existing Panel Updated!')">Update Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
+        <div onclick="window.location='/settings/general'" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;">
+            <h3>General</h3><p>Support team and general items</p>
+        </div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Category</h3><p>Category options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Ticket</h3><p>General ticket options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Panel</h3><p>Panel and button setup</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
+    </div>
+
+    <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Command Style</h3><p>Slash command settings</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Forms</h3><p>Form options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Transcripts</h3><p>Transcript settings</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Logging</h3><p>Server logging options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Automation</h3><p>Automation options</p></div>
+    </div>
+    """
+    return base_template(content, show_back=False)
+
+@app.route("/settings/general")
+def settings_general():
+    content = """
+    <h1>General</h1>
+    
+    <div class="setting-card">
+        <h2>Support Team</h2>
+        <label>Support Team Roles</label>
+        <input type="text" value="Admin, Staff, Moderator, Helper" placeholder="Comma separated roles" onchange="markChanged()">
+    </div>
+
+    <div class="setting-card">
+        <h2>Ticket Claiming</h2>
+        <div class="toggle-row">
+            <label>Enable Ticket Claiming</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Default Ticket Name</h2>
+        <label>Ticket Channel Name Format</label>
+        <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
+    </div>
+
+    <div class="setting-card">
+        <h2>Permissions</h2>
+        <div class="toggle-row">
+            <label>Mention Support Team when ticket opens</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="toggle-row">
+            <label>Delete ticket channel when closed</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <div class="setting-card">
+        <h2>Other Options</h2>
+        <div class="toggle-row">
+            <label>Send transcript when ticket is closed</label>
+            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
+        </div>
+    </div>
+
+    <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
+    """
+    return base_template(content, show_back=True, current_panel="Main Support Panel")
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
