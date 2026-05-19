@@ -47,8 +47,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 justify-content: center; 
                 gap: 30px; 
                 margin: 25px 0 45px; 
+                max-width: 1280px; 
+                margin-left: auto; 
+                margin-right: auto;
                 flex-wrap: wrap;
-                position: relative;
             }}
             .center-section {{ 
                 display: flex; 
@@ -74,15 +76,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 border:none; 
                 cursor:pointer; 
                 box-shadow: 0 0 30px rgba(0,240,255,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }}
             
             .right-section {{ 
-                position: absolute; 
-                right: 0; 
                 display: flex; 
                 flex-direction: column; 
-                align-items: flex-end; 
-                gap: 8px; 
+                align-items: center; 
+                gap: 10px; 
             }}
             
             button {{ 
@@ -101,7 +104,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 cursor: pointer;
             }}
             .invite-btn img {{ 
-                height: 58px; 
+                height: 62px; 
                 border-radius: 12px; 
                 transition: all 0.3s ease;
             }}
@@ -112,7 +115,19 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
             .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
-            button:hover {{ transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,240,255,0.4); }}
+            button:hover {{ transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,240,255,0.5); }}
+            
+            .menu-card {{ 
+                background:#16213e; 
+                padding:25px; 
+                border-radius:12px; 
+                cursor:pointer; 
+                transition: all 0.3s ease;
+            }}
+            .menu-card:hover {{ 
+                transform: translateY(-6px); 
+                box-shadow: 0 12px 30px rgba(0,240,255,0.4); 
+            }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             .toggle-row {{ display: flex; align-items: center; justify-content: space-between; margin: 18px 0; min-height: 52px; }}
@@ -211,23 +226,23 @@ def dashboard():
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
-        <div onclick="window.location='/settings/general'" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;">
+        <div class="menu-card" onclick="window.location='/settings/general'">
             <h3>General</h3><p>Support team and general items</p>
         </div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Category</h3><p>Category options</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Ticket</h3><p>General ticket options</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Panel</h3><p>Panel and button setup</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
+        <div class="menu-card"><h3>Category</h3><p>Category options</p></div>
+        <div class="menu-card"><h3>Ticket</h3><p>General ticket options</p></div>
+        <div class="menu-card"><h3>Panel</h3><p>Panel and button setup</p></div>
+        <div class="menu-card"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Command Style</h3><p>Slash command settings</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Forms</h3><p>Form options</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Transcripts</h3><p>Transcript settings</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Logging</h3><p>Server logging options</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Automation</h3><p>Automation options</p></div>
+        <div class="menu-card"><h3>Command Style</h3><p>Slash command settings</p></div>
+        <div class="menu-card"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
+        <div class="menu-card"><h3>Forms</h3><p>Form options</p></div>
+        <div class="menu-card"><h3>Transcripts</h3><p>Transcript settings</p></div>
+        <div class="menu-card"><h3>Logging</h3><p>Server logging options</p></div>
+        <div class="menu-card"><h3>Automation</h3><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
