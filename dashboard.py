@@ -44,19 +44,29 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .top-bar {{ 
                 display: flex; 
                 justify-content: space-between; 
-                align-items: center; 
+                align-items: flex-start; 
                 margin: 20px 0 40px; 
-                flex-wrap: wrap; 
-                gap: 15px;
+                gap: 20px;
             }}
             
-            .panel-area {{ display:flex; align-items:center; gap:12px; }}
+            .left-section {{ display:flex; align-items:center; gap:12px; }}
             .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; min-width:360px; }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
             
-            .action-btns button {{
+            .right-section {{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 12px;
+            }}
+            
+            .action-btns {{
+                display: flex;
+                gap: 12px;
+            }}
+            
+            button {{
                 padding:14px 28px;
-                margin-left:12px;
                 border:none;
                 border-radius:12px;
                 font-size:16px;
@@ -171,6 +181,12 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 formChanged = false; 
                 document.getElementById('saveBtn').classList.remove('active');
             }}
+            function showToast(message) {{
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.style.visibility = 'visible';
+                setTimeout(() => {{ toast.style.visibility = 'hidden'; toast.textContent = '✅ Changes Saved!'; }}, 4000);
+            }}
             function handleBack() {{
                 if (formChanged) {{ 
                     document.getElementById('unsavedModal').style.display = 'block'; 
@@ -191,17 +207,20 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
 def dashboard():
     content = """
     <div class="top-bar">
-        <div class="panel-area">
+        <div class="left-section">
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
             </select>
             <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
         </div>
         
-        <div class="action-btns">
+        <div class="right-section">
             <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
-            <button class="send-btn" onclick="alert('✅ Ticket Panel Sent to Discord Channel!')">Send Panel</button>
-            <button class="update-btn" onclick="alert('✅ Existing Ticket Panel Updated in Discord!')">Update Panel</button>
+            
+            <div class="action-btns">
+                <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
+                <button class="update-btn" onclick="showToast('✅ Existing Panel Updated in Discord!')">Update Panel</button>
+            </div>
         </div>
     </div>
 
