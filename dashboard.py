@@ -43,8 +43,8 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             
             .top-bar {{ 
                 display: flex; 
-                justify-content: space-between; 
                 align-items: center; 
+                justify-content: space-between; 
                 margin: 25px 0 45px; 
                 max-width: 1200px; 
                 margin-left: auto; 
@@ -75,10 +75,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 font-size:32px; 
                 border:none; 
                 cursor:pointer; 
-                display:flex; 
-                align-items:center; 
-                justify-content:center;
-                box-shadow: 0 0 20px rgba(0,240,255,0.5);
+                box-shadow: 0 0 25px rgba(0,240,255,0.6);
             }}
             
             .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
@@ -91,7 +88,8 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 font-size:16px; 
                 font-weight:bold; 
                 cursor:pointer; 
-                transition: all 0.3s;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             }}
             .invite-btn {{ 
                 background:linear-gradient(45deg,#5865F2,#7289da); 
@@ -108,7 +106,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             button:hover {{ 
                 transform: translateY(-4px); 
-                box-shadow: 0 10px 25px rgba(0,240,255,0.4); 
+                box-shadow: 0 12px 30px rgba(0,240,255,0.5); 
             }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
