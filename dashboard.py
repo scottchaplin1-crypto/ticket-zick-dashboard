@@ -76,20 +76,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display:flex; 
                 align-items:center; 
                 justify-content:center;
-                box-shadow: 0 4px 15px rgba(0,240,255,0.4);
             }}
             
-            .right-section {{
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 12px;
-            }}
-            
-            .action-btns {{
-                display: flex;
-                gap: 12px;
-            }}
+            .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
+            .action-btns {{ display: flex; gap: 12px; }}
             
             button {{
                 padding:14px 32px;
@@ -98,74 +88,24 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 font-size:16px;
                 font-weight:bold;
                 cursor:pointer;
-                transition: all 0.3s;
             }}
             .invite-btn {{ background:linear-gradient(45deg,#5865F2,#7289da); color:white; }}
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
             .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
             
-            button:hover {{ transform: translateY(-2px); }}
-            
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             
-            .toggle-row {{
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin: 18px 0;
-                min-height: 52px;
-            }}
-            .toggle-row label {{
-                flex: 1;
-                font-size: 17px;
-                color: #a0a0ff;
-                font-weight: 600;
-                line-height: 1.45;
-                padding-right: 60px;
-            }}
-            .toggle {{ 
-                accent-color: #00f0ff; 
-                transform: scale(1.7); 
-                cursor: pointer;
-                flex-shrink: 0;
-            }}
-
-            input, select, textarea {{ 
-                background:#0f0f1a; 
-                color:#e0e0ff; 
-                border:2px solid #334155; 
-                border-radius:10px; 
-                padding:12px 18px; 
-                width:100%; 
-                font-size:16px; 
-                margin-top:8px; 
-                box-sizing:border-box; 
-            }}
+            .toggle-row {{ display: flex; align-items: center; justify-content: space-between; margin: 18px 0; min-height: 52px; }}
+            .toggle-row label {{ flex: 1; font-size: 17px; color: #a0a0ff; font-weight: 600; line-height: 1.45; padding-right: 60px; }}
+            .toggle {{ accent-color: #00f0ff; transform: scale(1.7); cursor: pointer; flex-shrink: 0; }}
             
-            .save-btn {{ 
-                background:#334155; 
-                color:white; 
-                padding:14px 40px; 
-                border:none; 
-                border-radius:12px; 
-                font-size:17px; 
-                font-weight:bold; 
-                cursor:not-allowed; 
-                margin:40px auto; 
-                display:block; 
-            }}
+            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 18px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
+            
+            .save-btn {{ background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; font-size:17px; font-weight:bold; cursor:not-allowed; margin:40px auto; display:block; }}
             .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
             
-            /* Create Panel Modal */
-            #createPanelModal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; }}
-            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:480px; margin:80px auto; border:2px solid #00f0ff; }}
-            
             .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
-            .modal-content-small {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
-            
-            .modal button {{ padding:14px 32px; margin:10px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; }}
-            
-            .toast {{ visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:3000; }}
+            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
         </style>
     </head>
     <body>
@@ -179,82 +119,17 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
-        <!-- Create Panel Modal -->
-        <div id="createPanelModal">
-            <div class="modal-content">
-                <h2 style="color:#00f0ff; margin-top:0;">Create Panel</h2>
-                <p style="color:#888; margin-bottom:25px;">A panel is where users go to make tickets. Panels are very customizable and allow for flexible ticket systems.</p>
-                
-                <label style="display:block; margin:15px 0 8px; color:#a0a0ff;">Panel Name</label>
-                <input type="text" id="newPanelName" value="New Panel (1)" style="width:100%; padding:14px; font-size:17px;" />
-                
-                <div style="margin-top:30px; text-align:center;">
-                    <button onclick="createNewPanel()" style="background:#00ff88; color:black; padding:14px 40px; font-size:17px;">Create</button>
-                    <button onclick="closeCreateModal()" style="background:#334155; color:white; padding:14px 40px; font-size:17px; margin-left:12px;">Cancel</button>
-                </div>
-            </div>
+        <div id="toast" style="visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:2000;">
+            ✅ Changes Saved!
         </div>
-
-        <div id="unsavedModal" class="modal">
-            <div class="modal-content-small">
-                <h2>You have unsaved changes</h2>
-                <p style="margin:20px 0 30px;">What would you like to do?</p>
-                <button onclick="saveAndExit()" style="background:#00ff88; color:black;">Save and Return</button>
-                <button onclick="discardAndExit()" style="background:#ff4444; color:white;">Discard Changes</button>
-                <button onclick="closeModal()" style="background:#334155; color:white;">Cancel (Stay Here)</button>
-            </div>
-        </div>
-
-        <div id="toast" class="toast"></div>
 
         <script>
-            let formChanged = false;
-            function markChanged() {{ 
-                formChanged = true; 
-                document.getElementById('saveBtn').classList.add('active'); 
-            }}
-            function saveChanges() {{ 
-                showToast('✅ Changes Saved!');
-                formChanged = false; 
-                document.getElementById('saveBtn').classList.remove('active');
-            }}
             function showToast(message) {{
                 const toast = document.getElementById('toast');
                 toast.textContent = message;
                 toast.style.visibility = 'visible';
-                setTimeout(() => {{ toast.style.visibility = 'hidden'; }}, 4000);
+                setTimeout(() => toast.style.visibility = 'hidden', 4000);
             }}
-            function handleBack() {{
-                if (formChanged) {{ 
-                    document.getElementById('unsavedModal').style.display = 'block'; 
-                }} else {{ 
-                    window.location = '/dashboard'; 
-                }}
-            }}
-            function saveAndExit() {{ saveChanges(); window.location = '/dashboard'; }}
-            function discardAndExit() {{ window.location = '/dashboard'; }}
-            function closeModal() {{ document.getElementById('unsavedModal').style.display = 'none'; }}
-
-            // Create Panel Modal
-            function openCreatePanel() {{
-                document.getElementById('createPanelModal').style.display = 'block';
-                document.getElementById('newPanelName').focus();
-            }}
-            function closeCreateModal() {{
-                document.getElementById('createPanelModal').style.display = 'none';
-            }}
-            function createNewPanel() {{
-                const name = document.getElementById('newPanelName').value.trim() || "New Panel";
-                showToast(`✅ Panel "${name}" Created!`);
-                closeCreateModal();
-                // TODO: Later we will actually create and save the panel
-            }}
-
-            // Make + button work
-            document.addEventListener('DOMContentLoaded', function() {{
-                const addBtn = document.querySelector('.add-btn');
-                if (addBtn) addBtn.onclick = openCreatePanel;
-            }});
         </script>
     </body>
     </html>
@@ -269,15 +144,14 @@ def dashboard():
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
             </select>
-            <button class="add-btn" title="Create New Panel">+</button>
+            <button class="add-btn" onclick="alert('Create New Panel - Coming Soon!')">+</button>
         </div>
         
         <div class="right-section">
             <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
-            
             <div class="action-btns">
-                <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
-                <button class="update-btn" onclick="showToast('✅ Existing Panel Updated in Discord!')">Update Panel</button>
+                <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent!')">Send Panel</button>
+                <button class="update-btn" onclick="showToast('✅ Panel Updated!')">Update Panel</button>
             </div>
         </div>
     </div>
@@ -307,72 +181,8 @@ def dashboard():
 def settings_general():
     content = """
     <h1>General</h1>
-    
-    <div class="setting-card">
-        <h2>Support Team</h2>
-        <label>Support Team Roles</label>
-        <input type="text" value="Admin, Staff, Moderator, Helper" placeholder="Comma separated roles" onchange="markChanged()">
-    </div>
-
-    <div class="setting-card">
-        <h2>Ticket Claiming</h2>
-        <div class="toggle-row">
-            <label>Enable Ticket Claiming</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-        <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
-    </div>
-
-    <div class="setting-card">
-        <h2>Default Ticket Name</h2>
-        <label>Ticket Channel Name Format 
-            <span class="tooltip">ℹ️
-                <span class="tooltiptext">
-                    Available placeholders:<br>
-                    • {user} → User's name<br>
-                    • {mention} → @User mention<br>
-                    • {server} → Server name<br>
-                    • {ticket} → Ticket number<br>
-                    • {username} → Full username
-                </span>
-            </span>
-        </label>
-        <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
-    </div>
-
-    <div class="setting-card">
-        <h2>Permissions</h2>
-        <div class="toggle-row">
-            <label>Mention Support Team when ticket opens</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Permissions</h2>
-        <div class="toggle-row">
-            <label>Allow users to view their own ticket history</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Other Options</h2>
-        <div class="toggle-row">
-            <label>Delete ticket channel when closed</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Other Options</h2>
-        <div class="toggle-row">
-            <label>Send transcript when ticket is closed</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
+    <p style="color:#888; text-align:center;">General settings loaded successfully.</p>
+    <button onclick="showToast('✅ Changes Saved!')" style="margin:30px auto; display:block; padding:14px 40px;">Test Save</button>
     """
     return base_template(content, show_back=True, current_panel="Main Support Panel")
 
