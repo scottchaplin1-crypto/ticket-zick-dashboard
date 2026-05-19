@@ -45,18 +45,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
-                gap: 30px; 
-                margin: 25px 0 45px; 
-                max-width: 1250px; 
+                gap: 25px; 
+                margin: 30px 0 50px; 
+                max-width: 1300px; 
                 margin-left: auto; 
                 margin-right: auto;
-                position: relative;
             }}
-            .center-section {{ 
-                display: flex; 
-                align-items: center; 
-                gap: 12px; 
-            }}
+            .center-section {{ display: flex; align-items: center; gap: 12px; }}
             .panel-selector {{ 
                 background:#16213e; 
                 border:2px solid #334155; 
@@ -69,18 +64,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .add-btn {{ 
                 background:linear-gradient(45deg,#00f0ff,#c026d3); 
                 color:black; 
-                width:58px; 
-                height:58px; 
+                width:60px; 
+                height:60px; 
                 border-radius:50%; 
-                font-size:32px; 
+                font-size:34px; 
                 border:none; 
                 cursor:pointer; 
-                box-shadow: 0 0 25px rgba(0,240,255,0.6);
+                box-shadow: 0 0 25px rgba(0,240,255,0.7);
             }}
             
             .right-section {{ 
-                position: absolute; 
-                right: 0; 
                 display: flex; 
                 flex-direction: column; 
                 align-items: flex-end; 
@@ -96,12 +89,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 font-weight:bold; 
                 cursor:pointer; 
                 transition: all 0.3s;
-                min-width: 160px;
-            }}
-            .invite-btn {{ 
-                background:linear-gradient(45deg,#5865F2,#7289da); 
-                color:white; 
-                min-width: 200px;
+                min-width: 170px;
             }}
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
             .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
@@ -195,7 +183,9 @@ def dashboard():
         </div>
         
         <div class="right-section">
-            <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
+            <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8" target="_blank">
+                <img src="/static/TicketZick.jpg" style="height:58px; border-radius:12px; cursor:pointer; box-shadow:0 0 20px rgba(0,240,255,0.4);" alt="Invite Ticket Zick">
+            </a>
             <div class="action-btns">
                 <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
                 <button class="update-btn" onclick="showToast('✅ Existing Panel Updated!')">Update Panel</button>
