@@ -46,7 +46,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 align-items: center; 
                 justify-content: space-between; 
                 margin: 25px 0 45px; 
-                max-width: 1200px; 
+                max-width: 1250px; 
                 margin-left: auto; 
                 margin-right: auto;
             }}
@@ -64,7 +64,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 padding:14px 20px; 
                 border-radius:12px; 
                 font-size:17px; 
-                min-width:380px; 
+                min-width:420px; 
             }}
             .add-btn {{ 
                 background:linear-gradient(45deg,#00f0ff,#c026d3); 
@@ -98,13 +98,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 cursor: pointer;
             }}
             .invite-btn img {{ 
-                height: 58px; 
+                height: 62px; 
                 border-radius: 12px; 
                 transition: all 0.3s ease;
             }}
             .invite-btn:hover img {{ 
-                filter: drop-shadow(0 0 20px #00f0ff) brightness(1.2); 
-                transform: scale(1.05);
+                filter: drop-shadow(0 0 25px #00f0ff) brightness(1.15); 
+                transform: scale(1.04);
             }}
             
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
@@ -224,64 +224,4 @@ def dashboard():
         <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Forms</h3><p>Form options</p></div>
         <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Transcripts</h3><p>Transcript settings</p></div>
         <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Logging</h3><p>Server logging options</p></div>
-        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Automation</h3><p>Automation options</p></div>
-    </div>
-    """
-    return base_template(content, show_back=False)
-
-@app.route("/settings/general")
-def settings_general():
-    content = """
-    <h1>General</h1>
-    
-    <div class="setting-card">
-        <h2>Support Team</h2>
-        <label>Support Team Roles</label>
-        <input type="text" value="Admin, Staff, Moderator, Helper" placeholder="Comma separated roles" onchange="markChanged()">
-    </div>
-
-    <div class="setting-card">
-        <h2>Ticket Claiming</h2>
-        <div class="toggle-row">
-            <label>Enable Ticket Claiming</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Default Ticket Name</h2>
-        <label>Ticket Channel Name Format</label>
-        <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
-    </div>
-
-    <div class="setting-card">
-        <h2>Permissions</h2>
-        <div class="toggle-row">
-            <label>Mention Support Team when ticket opens</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Other Options</h2>
-        <div class="toggle-row">
-            <label>Delete ticket channel when closed</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Other Options</h2>
-        <div class="toggle-row">
-            <label>Send transcript when ticket is closed</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
-    """
-    return base_template(content, show_back=True, current_panel="Main Support Panel")
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Automation</h3><p
