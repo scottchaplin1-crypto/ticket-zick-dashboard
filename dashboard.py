@@ -46,14 +46,14 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 align-items: center; 
                 justify-content: space-between; 
                 margin: 25px 0 45px; 
-                max-width: 1250px; 
+                max-width: 1280px; 
                 margin-left: auto; 
                 margin-right: auto;
             }}
             .center-section {{ 
                 display: flex; 
                 align-items: center; 
-                gap: 12px; 
+                gap: 14px; 
                 flex: 1; 
                 justify-content: center;
             }}
@@ -69,13 +69,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .add-btn {{ 
                 background:linear-gradient(45deg,#00f0ff,#c026d3); 
                 color:black; 
-                width:58px; 
-                height:58px; 
+                width:64px; 
+                height:64px; 
                 border-radius:50%; 
-                font-size:32px; 
+                font-size:34px; 
                 border:none; 
                 cursor:pointer; 
-                box-shadow: 0 0 25px rgba(0,240,255,0.6);
+                box-shadow: 0 0 30px rgba(0,240,255,0.7);
+                display:flex;
+                align-items:center;
+                justify-content:center;
             }}
             
             .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
@@ -98,13 +101,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 cursor: pointer;
             }}
             .invite-btn img {{ 
-                height: 62px; 
+                height: 68px; 
                 border-radius: 12px; 
                 transition: all 0.3s ease;
             }}
             .invite-btn:hover img {{ 
-                filter: drop-shadow(0 0 25px #00f0ff) brightness(1.15); 
-                transform: scale(1.04);
+                filter: drop-shadow(0 0 28px #00f0ff) brightness(1.2); 
+                transform: scale(1.05);
             }}
             
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
