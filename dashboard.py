@@ -73,12 +73,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 box-shadow: 0 0 25px rgba(0,240,255,0.7);
             }}
             
-            .right-section {{ 
-                display: flex; 
-                flex-direction: column; 
-                align-items: flex-end; 
-                gap: 12px; 
-            }}
+            .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
             .action-btns {{ display: flex; gap: 12px; }}
             
             button {{ 
@@ -93,10 +88,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
             .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
-            button:hover {{ 
-                transform: translateY(-4px); 
-                box-shadow: 0 10px 30px rgba(0,240,255,0.5); 
-            }}
+            button:hover {{ transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,240,255,0.5); }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             .toggle-row {{ display: flex; align-items: center; justify-content: space-between; margin: 18px 0; min-height: 52px; }}
@@ -138,10 +130,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
 
         <script>
             let formChanged = false;
-            function markChanged() {{ 
-                formChanged = true; 
-                document.getElementById('saveBtn').classList.add('active'); 
-            }}
+            function markChanged() {{ formChanged = true; document.getElementById('saveBtn').classList.add('active'); }}
             function saveChanges() {{ 
                 showToast('✅ Changes Saved!');
                 formChanged = false;
@@ -184,7 +173,7 @@ def dashboard():
         
         <div class="right-section">
             <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8" target="_blank">
-                <img src="/static/TicketZick.jpg" style="height:58px; border-radius:12px; cursor:pointer; box-shadow:0 0 20px rgba(0,240,255,0.4);" alt="Invite Ticket Zick">
+                <img src="/static/TicketZick.jpg" style="height:58px; border-radius:12px; cursor:pointer; box-shadow:0 0 20px rgba(0,240,255,0.5);" alt="Invite Ticket Zick">
             </a>
             <div class="action-btns">
                 <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
