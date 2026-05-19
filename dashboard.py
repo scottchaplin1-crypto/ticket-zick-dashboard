@@ -59,16 +59,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .add-btn {{ 
                 background:linear-gradient(45deg,#00f0ff,#c026d3); 
                 color:black; 
-                width:62px; 
-                height:62px; 
+                width:62px; height:62px; 
                 border-radius:50%; 
                 font-size:34px; 
                 border:none; 
                 cursor:pointer; 
                 box-shadow: 0 0 25px rgba(0,240,255,0.7);
-                display:flex; 
-                align-items:center; 
-                justify-content:center;
+                display:flex; align-items:center; justify-content:center;
             }}
             
             .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
