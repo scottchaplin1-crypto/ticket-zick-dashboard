@@ -41,29 +41,84 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; }}
             .logo {{ height:85px; border-radius:16px; }}
             
-            .top-bar {{ display: flex; justify-content: space-between; align-items: center; margin: 25px 0 45px; gap: 20px; }}
-            .center-section {{ display: flex; align-items: center; gap: 12px; margin: 0 auto; }}
-            .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; min-width:380px; }}
-            .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:58px; height:58px; border-radius:50%; font-size:32px; border:none; cursor:pointer; }}
+            .top-bar {{ 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                margin: 25px 0 45px; 
+                max-width: 1200px; 
+                margin-left: auto; 
+                margin-right: auto;
+            }}
+            
+            .center-section {{ 
+                display: flex; 
+                align-items: center; 
+                gap: 12px; 
+                flex: 1; 
+                justify-content: center;
+            }}
+            .panel-selector {{ 
+                background:#16213e; 
+                border:2px solid #334155; 
+                color:#e0e0ff; 
+                padding:14px 20px; 
+                border-radius:12px; 
+                font-size:17px; 
+                min-width:380px; 
+            }}
+            .add-btn {{ 
+                background:linear-gradient(45deg,#00f0ff,#c026d3); 
+                color:black; 
+                width:58px; 
+                height:58px; 
+                border-radius:50%; 
+                font-size:32px; 
+                border:none; 
+                cursor:pointer; 
+                display:flex; 
+                align-items:center; 
+                justify-content:center;
+            }}
             
             .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
-            button {{ padding:14px 32px; border:none; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; }}
-            .invite-btn {{ background:linear-gradient(45deg,#5865F2,#7289da); color:white; }}
-            .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
-            .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
+            .action-btns {{ display: flex; gap: 12px; }}
+            
+            button {{ 
+                padding:14px 32px; 
+                border:none; 
+                border-radius:12px; 
+                font-size:16px; 
+                font-weight:bold; 
+                cursor:pointer; 
+                transition: all 0.3s;
+            }}
+            .invite-btn {{ 
+                background:linear-gradient(45deg,#5865F2,#7289da); 
+                color:white; 
+                padding:16px 28px; 
+            }}
+            .send-btn {{ 
+                background:linear-gradient(45deg,#00ff88,#00cc66); 
+                color:black; 
+            }}
+            .update-btn {{ 
+                background:linear-gradient(45deg,#ffaa00,#ff8800); 
+                color:black; 
+            }}
+            button:hover {{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,240,255,0.3); }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             .toggle-row {{ display: flex; align-items: center; justify-content: space-between; margin: 18px 0; min-height: 52px; }}
             .toggle-row label {{ flex: 1; font-size: 17px; color: #a0a0ff; font-weight: 600; line-height: 1.45; padding-right: 60px; }}
             .toggle {{ accent-color: #00f0ff; transform: scale(1.7); cursor: pointer; flex-shrink: 0; }}
             
-            input, select, textarea {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 18px; width:100%; font-size:16px; margin-top:8px; box-sizing:border-box; }}
-            
-            .save-btn {{ background:#334155; color:white; padding:14px 40px; border:none; border-radius:12px; font-size:17px; font-weight:bold; cursor:not-allowed; margin:40px auto; display:block; }}
-            .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
+            input {{ background:#0f0f1a; color:#e0e0ff; border:2px solid #334155; border-radius:10px; padding:12px 18px; width:100%; font-size:16px; margin-top:8px; }}
             
             .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; }}
             .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:480px; margin:80px auto; }}
+            
+            #toast {{ visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; z-index:3000; }}
         </style>
     </head>
     <body>
@@ -77,6 +132,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
+        <!-- Create Panel Modal -->
         <div id="createPanelModal" class="modal">
             <div class="modal-content">
                 <h2 style="color:#00f0ff;">Create New Panel</h2>
@@ -89,18 +145,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             </div>
         </div>
 
-        <div id="toast" style="visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; z-index:3000;">
-            ✅ Changes Saved!
-        </div>
+        <div id="toast">✅ Changes Saved!</div>
 
         <script>
             let formChanged = false;
-            function markChanged() {{ formChanged = true; document.getElementById('saveBtn').classList.add('active'); }}
+            function markChanged() {{ 
+                formChanged = true; 
+                document.getElementById('saveBtn').classList.add('active'); 
+            }}
             function saveChanges() {{ 
-                const toast = document.getElementById('toast');
-                toast.textContent = '✅ Changes Saved!';
-                toast.style.visibility = 'visible';
-                setTimeout(() => toast.style.visibility = 'hidden', 4000);
+                showToast('✅ Changes Saved!');
                 formChanged = false;
                 document.getElementById('saveBtn').classList.remove('active');
             }}
@@ -116,7 +170,14 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 showToast('✅ New Panel Created!');
                 closeCreateModal();
             }}
-            function handleBack() {{ window.location = '/dashboard'; }}
+            function handleBack() {{
+                if (formChanged) {{
+                    if (confirm("You have unsaved changes!\\n\\nSave changes before leaving?")) {{
+                        saveChanges();
+                    }}
+                }}
+                window.location = '/dashboard';
+            }}
         </script>
     </body>
     </html>
@@ -144,14 +205,14 @@ def dashboard():
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
-    <div class="grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
-        <div class="card" onclick="window.location='/settings/general'" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
+        <div onclick="window.location='/settings/general'" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;">
             <h3>General</h3><p>Support team and general items</p>
         </div>
-        <div class="card" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Category</h3><p>Category options</p></div>
-        <div class="card" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Ticket</h3><p>General ticket options</p></div>
-        <div class="card" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Panel</h3><p>Panel and button setup</p></div>
-        <div class="card" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Category</h3><p>Category options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Ticket</h3><p>General ticket options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Panel</h3><p>Panel and button setup</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
     </div>
     """
     return base_template(content, show_back=False)
@@ -173,23 +234,11 @@ def settings_general():
             <label>Enable Ticket Claiming</label>
             <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
         </div>
-        <p style="color:#888; margin-top:8px;">Users with support roles can claim tickets</p>
     </div>
 
     <div class="setting-card">
         <h2>Default Ticket Name</h2>
-        <label>Ticket Channel Name Format 
-            <span class="tooltip">ℹ️
-                <span class="tooltiptext">
-                    Available placeholders:<br>
-                    • {user} → User's name<br>
-                    • {mention} → @User mention<br>
-                    • {server} → Server name<br>
-                    • {ticket} → Ticket number<br>
-                    • {username} → Full username
-                </span>
-            </span>
-        </label>
+        <label>Ticket Channel Name Format</label>
         <input type="text" value="ticket-{username}" style="font-family: monospace;" onchange="markChanged()">
     </div>
 
@@ -197,14 +246,6 @@ def settings_general():
         <h2>Permissions</h2>
         <div class="toggle-row">
             <label>Mention Support Team when ticket opens</label>
-            <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
-        </div>
-    </div>
-
-    <div class="setting-card">
-        <h2>Permissions</h2>
-        <div class="toggle-row">
-            <label>Allow users to view their own ticket history</label>
             <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
         </div>
     </div>
