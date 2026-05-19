@@ -50,13 +50,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             
             .center-section {{ 
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
                 display: flex; 
                 align-items: center; 
                 gap: 12px; 
-                z-index: 10;
+                margin: 0 auto;
             }}
             .panel-selector {{ 
                 background:#16213e; 
@@ -159,19 +156,16 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             .save-btn.active {{ background:linear-gradient(45deg,#00ff88,#00f0ff); color:black; cursor:pointer; }}
             
+            /* Create Panel Modal */
+            #createPanelModal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; }}
+            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:480px; margin:80px auto; border:2px solid #00f0ff; }}
+            
             .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; }}
-            .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
+            .modal-content-small {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:420px; margin:120px auto; text-align:center; border:2px solid #00f0ff; }}
+            
             .modal button {{ padding:14px 32px; margin:10px; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; }}
             
-            .tooltip {{ position:relative; display:inline-block; margin-left:8px; cursor:help; color:#00f0ff; }}
-            .tooltip .tooltiptext {{ visibility:hidden; background:#16213e; color:#e0e0ff; text-align:left; border-radius:8px; padding:12px; position:absolute; z-index:1; bottom:125%; left:50%; transform:translateX(-50%); width:280px; box-shadow:0 0 15px rgba(0,240,255,0.3); }}
-            .tooltip:hover .tooltiptext {{ visibility:visible; }}
-            
-            .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; max-width: 1150px; margin: 30px auto; }}
-            .card {{ background: linear-gradient(145deg, #16213e, #0f1629); border-radius:16px; padding:28px 20px; text-align:center; border:1px solid #00f0ff33; cursor:pointer; transition:0.3s; box-shadow:0 4px 15px rgba(0,0,0,0.4); }}
-            .card:hover {{ transform:scale(1.06); border-color:#c026d3; box-shadow:0 0 25px rgba(192,38,211,0.5); }}
-            .card h3 {{ margin:0 0 8px 0; color:#00f0ff; }}
-            .card p {{ margin:0; color:#888; font-size:14px; }}
+            .toast {{ visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:3000; }}
         </style>
     </head>
     <body>
@@ -185,8 +179,24 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
-        <div id="unsavedModal" class="modal">
+        <!-- Create Panel Modal -->
+        <div id="createPanelModal">
             <div class="modal-content">
+                <h2 style="color:#00f0ff; margin-top:0;">Create Panel</h2>
+                <p style="color:#888; margin-bottom:25px;">A panel is where users go to make tickets. Panels are very customizable and allow for flexible ticket systems.</p>
+                
+                <label style="display:block; margin:15px 0 8px; color:#a0a0ff;">Panel Name</label>
+                <input type="text" id="newPanelName" value="New Panel (1)" style="width:100%; padding:14px; font-size:17px;" />
+                
+                <div style="margin-top:30px; text-align:center;">
+                    <button onclick="createNewPanel()" style="background:#00ff88; color:black; padding:14px 40px; font-size:17px;">Create</button>
+                    <button onclick="closeCreateModal()" style="background:#334155; color:white; padding:14px 40px; font-size:17px; margin-left:12px;">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="unsavedModal" class="modal">
+            <div class="modal-content-small">
                 <h2>You have unsaved changes</h2>
                 <p style="margin:20px 0 30px;">What would you like to do?</p>
                 <button onclick="saveAndExit()" style="background:#00ff88; color:black;">Save and Return</button>
@@ -195,9 +205,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             </div>
         </div>
 
-        <div id="toast" style="visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; box-shadow:0 4px 20px rgba(0,255,136,0.4); z-index:2000;">
-            ✅ Changes Saved!
-        </div>
+        <div id="toast" class="toast"></div>
 
         <script>
             let formChanged = false;
@@ -206,9 +214,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 document.getElementById('saveBtn').classList.add('active'); 
             }}
             function saveChanges() {{ 
-                const toast = document.getElementById('toast'); 
-                toast.style.visibility = 'visible';
-                setTimeout(() => {{ toast.style.visibility = 'hidden'; }}, 4000);
+                showToast('✅ Changes Saved!');
                 formChanged = false; 
                 document.getElementById('saveBtn').classList.remove('active');
             }}
@@ -216,7 +222,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 const toast = document.getElementById('toast');
                 toast.textContent = message;
                 toast.style.visibility = 'visible';
-                setTimeout(() => {{ toast.style.visibility = 'hidden'; toast.textContent = '✅ Changes Saved!'; }}, 4000);
+                setTimeout(() => {{ toast.style.visibility = 'hidden'; }}, 4000);
             }}
             function handleBack() {{
                 if (formChanged) {{ 
@@ -228,6 +234,27 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             function saveAndExit() {{ saveChanges(); window.location = '/dashboard'; }}
             function discardAndExit() {{ window.location = '/dashboard'; }}
             function closeModal() {{ document.getElementById('unsavedModal').style.display = 'none'; }}
+
+            // Create Panel Modal
+            function openCreatePanel() {{
+                document.getElementById('createPanelModal').style.display = 'block';
+                document.getElementById('newPanelName').focus();
+            }}
+            function closeCreateModal() {{
+                document.getElementById('createPanelModal').style.display = 'none';
+            }}
+            function createNewPanel() {{
+                const name = document.getElementById('newPanelName').value.trim() || "New Panel";
+                showToast(`✅ Panel "${name}" Created!`);
+                closeCreateModal();
+                // TODO: Later we will actually create and save the panel
+            }}
+
+            // Make + button work
+            document.addEventListener('DOMContentLoaded', function() {{
+                const addBtn = document.querySelector('.add-btn');
+                if (addBtn) addBtn.onclick = openCreatePanel;
+            }});
         </script>
     </body>
     </html>
@@ -242,7 +269,7 @@ def dashboard():
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
             </select>
-            <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
+            <button class="add-btn" title="Create New Panel">+</button>
         </div>
         
         <div class="right-section">
