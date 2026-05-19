@@ -50,10 +50,13 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             
             .center-section {{ 
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
                 display: flex; 
                 align-items: center; 
                 gap: 12px; 
-                margin: 0 auto;
+                z-index: 10;
             }}
             .panel-selector {{ 
                 background:#16213e; 
@@ -235,7 +238,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
 def dashboard():
     content = """
     <div class="top-bar">
-        <!-- Centered Panel Selector -->
         <div class="center-section">
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
@@ -243,7 +245,6 @@ def dashboard():
             <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
         </div>
         
-        <!-- Right side buttons -->
         <div class="right-section">
             <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
             
