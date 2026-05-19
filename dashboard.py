@@ -235,7 +235,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
 def dashboard():
     content = """
     <div class="top-bar">
-        <!-- Centered Section -->
+        <!-- Centered Panel Selector -->
         <div class="center-section">
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
@@ -243,7 +243,7 @@ def dashboard():
             <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
         </div>
         
-        <!-- Right side -->
+        <!-- Right side buttons -->
         <div class="right-section">
             <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
             
@@ -275,7 +275,6 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
-# Keep the General route exactly as before
 @app.route("/settings/general")
 def settings_general():
     content = """
