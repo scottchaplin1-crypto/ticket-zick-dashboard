@@ -39,45 +39,34 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             h1, h2 {{ color:#00f0ff; }}
             .header {{ text-align:center; margin-bottom:30px; }}
             .header-content {{ display:flex; align-items:center; justify-content:center; gap:20px; }}
-            .logo {{ height:90px; border-radius:16px; }}
+            .logo {{ height:85px; border-radius:16px; }}
             
             .top-bar {{ 
                 display: flex; 
                 justify-content: space-between; 
                 align-items: center; 
-                margin-bottom: 30px; 
+                margin: 20px 0 40px; 
                 flex-wrap: wrap; 
                 gap: 15px;
             }}
             
             .panel-area {{ display:flex; align-items:center; gap:12px; }}
-            .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; width:380px; }}
+            .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; min-width:360px; }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
             
-            .invite-btn {{ 
-                background:linear-gradient(45deg,#5865F2,#7289da); 
-                color:white; 
-                padding:14px 32px; 
-                border:none; 
-                border-radius:12px; 
-                font-size:16px; 
-                font-weight:bold; 
-                cursor:pointer; 
-                box-shadow: 0 4px 15px rgba(88,101,242,0.4);
+            .action-btns button {{
+                padding:14px 28px;
+                margin-left:12px;
+                border:none;
+                border-radius:12px;
+                font-size:16px;
+                font-weight:bold;
+                cursor:pointer;
+                transition:0.3s;
             }}
-            .invite-btn:hover {{ transform: translateY(-2px); box-shadow: 0 6px 20px rgba(88,101,242,0.6); }}
-
-            .update-btn {{ 
-                background:linear-gradient(45deg,#00ff88,#00cc66); 
-                color:black; 
-                padding:14px 32px; 
-                border:none; 
-                border-radius:12px; 
-                font-size:17px; 
-                font-weight:bold; 
-                cursor:pointer; 
-                margin-left:15px;
-            }}
+            .invite-btn {{ background:linear-gradient(45deg,#5865F2,#7289da); color:white; }}
+            .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
+            .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             
@@ -208,7 +197,12 @@ def dashboard():
             </select>
             <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
         </div>
-        <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
+        
+        <div class="action-btns">
+            <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
+            <button class="send-btn" onclick="alert('✅ Ticket Panel Sent to Discord Channel!')">Send Panel</button>
+            <button class="update-btn" onclick="alert('✅ Existing Ticket Panel Updated in Discord!')">Update Panel</button>
+        </div>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
@@ -299,13 +293,6 @@ def settings_general():
             <label>Send transcript when ticket is closed</label>
             <div style="flex-shrink:0;"><input type="checkbox" class="toggle" checked onchange="markChanged()"></div>
         </div>
-    </div>
-
-    <div style="text-align:center; margin:40px 0 20px;">
-        <button onclick="alert('✅ Panel Updated in Discord! (This will be connected soon)')" 
-                style="background:linear-gradient(45deg,#00ff88,#00cc66); color:black; padding:16px 40px; border:none; border-radius:12px; font-size:18px; font-weight:bold; cursor:pointer;">
-            Update Panel in Discord
-        </button>
     </div>
 
     <button id="saveBtn" class="save-btn" onclick="saveChanges()">Save Changes</button>
