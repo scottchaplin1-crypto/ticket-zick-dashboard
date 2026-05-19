@@ -71,6 +71,18 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
             .action-btns {{ display: flex; gap: 12px; }}
             
+            .invite-img {{ 
+                height: 68px; 
+                border-radius:12px; 
+                cursor:pointer; 
+                box-shadow:0 0 20px rgba(0,240,255,0.4); 
+                transition: all 0.3s;
+            }}
+            .invite-img:hover {{ 
+                box-shadow:0 0 35px rgba(0,240,255,0.8); 
+                transform: translateY(-3px); 
+            }}
+            
             button {{ 
                 padding:16px 32px; border:none; border-radius:12px; 
                 font-size:16px; font-weight:bold; cursor:pointer; 
@@ -163,7 +175,7 @@ def dashboard():
         
         <div class="right-section">
             <a href="https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8" target="_blank">
-                <img src="/static/TicketZickButton.png" style="height:62px; border-radius:12px; cursor:pointer; box-shadow:0 0 25px rgba(0,240,255,0.5);" alt="Invite Ticket Zick">
+                <img src="/static/TicketZickButton.png" class="invite-img" alt="Invite Ticket Zick">
             </a>
             <div class="action-btns">
                 <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
