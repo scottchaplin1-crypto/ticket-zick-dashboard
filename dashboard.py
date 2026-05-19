@@ -44,13 +44,18 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .top-bar {{ 
                 display: flex; 
                 justify-content: space-between; 
-                align-items: flex-start; 
-                margin: 20px 0 40px; 
+                align-items: center; 
+                margin: 25px 0 45px; 
                 gap: 20px;
             }}
             
-            .left-section {{ display:flex; align-items:center; gap:12px; }}
-            .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; min-width:360px; }}
+            .center-section {{ 
+                display: flex; 
+                align-items: center; 
+                gap: 12px; 
+                margin: 0 auto;
+            }}
+            .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; min-width:380px; }}
             .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
             
             .right-section {{
@@ -66,17 +71,19 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             
             button {{
-                padding:14px 28px;
+                padding:14px 32px;
                 border:none;
                 border-radius:12px;
                 font-size:16px;
                 font-weight:bold;
                 cursor:pointer;
-                transition:0.3s;
+                transition: all 0.3s;
             }}
             .invite-btn {{ background:linear-gradient(45deg,#5865F2,#7289da); color:white; }}
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
             .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
+            
+            button:hover {{ transform: translateY(-2px); }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             
@@ -207,13 +214,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
 def dashboard():
     content = """
     <div class="top-bar">
-        <div class="left-section">
+        <!-- Centered Panel Selector -->
+        <div class="center-section">
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
             </select>
             <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
         </div>
         
+        <!-- Right side buttons -->
         <div class="right-section">
             <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
             
