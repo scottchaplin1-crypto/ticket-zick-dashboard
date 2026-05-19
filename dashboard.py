@@ -45,12 +45,12 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
-                gap: 30px; 
+                gap: 40px; 
                 margin: 25px 0 45px; 
-                max-width: 1280px; 
+                max-width: 1300px; 
                 margin-left: auto; 
                 margin-right: auto;
-                flex-wrap: wrap;
+                position: relative;
             }}
             .center-section {{ 
                 display: flex; 
@@ -104,13 +104,15 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 cursor: pointer;
             }}
             .invite-btn img {{ 
-                height: 62px; 
+                height: 58px; 
+                width: 380px;   /* Made much wider */
                 border-radius: 12px; 
                 transition: all 0.3s ease;
+                object-fit: cover;
             }}
             .invite-btn:hover img {{ 
                 filter: drop-shadow(0 0 28px #00f0ff) brightness(1.2); 
-                transform: scale(1.05);
+                transform: scale(1.03);
             }}
             
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
