@@ -45,16 +45,17 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
-                gap: 40px; 
-                margin: 30px 0 50px; 
-                max-width: 1300px; 
+                gap: 30px; 
+                margin: 25px 0 45px; 
+                max-width: 1250px; 
                 margin-left: auto; 
                 margin-right: auto;
+                position: relative;
             }}
             .center-section {{ 
                 display: flex; 
                 align-items: center; 
-                gap: 14px; 
+                gap: 12px; 
             }}
             .panel-selector {{ 
                 background:#16213e; 
@@ -63,29 +64,29 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 padding:14px 20px; 
                 border-radius:12px; 
                 font-size:17px; 
-                min-width:420px; 
+                min-width:380px; 
             }}
             .add-btn {{ 
                 background:linear-gradient(45deg,#00f0ff,#c026d3); 
                 color:black; 
-                width:64px; 
-                height:64px; 
+                width:58px; 
+                height:58px; 
                 border-radius:50%; 
-                font-size:34px; 
+                font-size:32px; 
                 border:none; 
                 cursor:pointer; 
-                box-shadow: 0 0 30px rgba(0,240,255,0.7);
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                box-shadow: 0 0 25px rgba(0,240,255,0.6);
             }}
             
             .right-section {{ 
+                position: absolute; 
+                right: 0; 
                 display: flex; 
                 flex-direction: column; 
-                align-items: center; 
-                gap: 10px; 
+                align-items: flex-end; 
+                gap: 12px; 
             }}
+            .action-btns {{ display: flex; gap: 12px; }}
             
             button {{ 
                 padding:16px 32px; 
@@ -94,39 +95,19 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 font-size:16px; 
                 font-weight:bold; 
                 cursor:pointer; 
-                transition: all 0.3s ease;
+                transition: all 0.3s;
+                min-width: 160px;
             }}
             .invite-btn {{ 
-                background: transparent; 
-                padding: 0; 
-                border: none; 
-                cursor: pointer;
+                background:linear-gradient(45deg,#5865F2,#7289da); 
+                color:white; 
+                min-width: 200px;
             }}
-            .invite-btn img {{ 
-                height: 58px; 
-                width: 380px; 
-                border-radius: 12px; 
-                transition: all 0.3s ease;
-            }}
-            .invite-btn:hover img {{ 
-                filter: drop-shadow(0 0 28px #00f0ff) brightness(1.2); 
-                transform: scale(1.03);
-            }}
-            
             .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
             .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
-            button:hover {{ transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,240,255,0.5); }}
-            
-            .menu-card {{ 
-                background:#16213e; 
-                padding:25px; 
-                border-radius:12px; 
-                cursor:pointer; 
-                transition: all 0.3s ease;
-            }}
-            .menu-card:hover {{ 
-                transform: translateY(-6px); 
-                box-shadow: 0 12px 30px rgba(0,240,255,0.4); 
+            button:hover {{ 
+                transform: translateY(-4px); 
+                box-shadow: 0 10px 30px rgba(0,240,255,0.5); 
             }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
@@ -214,9 +195,7 @@ def dashboard():
         </div>
         
         <div class="right-section">
-            <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">
-                <img src="/static/TicketZickButton.png" alt="Invite Ticket Zick">
-            </button>
+            <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
             <div class="action-btns">
                 <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
                 <button class="update-btn" onclick="showToast('✅ Existing Panel Updated!')">Update Panel</button>
@@ -226,23 +205,23 @@ def dashboard():
 
     <h2 style="color:#c026d3; text-align:center; margin:40px 0 20px;">General Ticket Options</h2>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
-        <div class="menu-card" onclick="window.location='/settings/general'">
+        <div onclick="window.location='/settings/general'" style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;">
             <h3>General</h3><p>Support team and general items</p>
         </div>
-        <div class="menu-card"><h3>Category</h3><p>Category options</p></div>
-        <div class="menu-card"><h3>Ticket</h3><p>General ticket options</p></div>
-        <div class="menu-card"><h3>Panel</h3><p>Panel and button setup</p></div>
-        <div class="menu-card"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Category</h3><p>Category options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Ticket</h3><p>General ticket options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Panel</h3><p>Panel and button setup</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
     </div>
 
     <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
-        <div class="menu-card"><h3>Command Style</h3><p>Slash command settings</p></div>
-        <div class="menu-card"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
-        <div class="menu-card"><h3>Forms</h3><p>Form options</p></div>
-        <div class="menu-card"><h3>Transcripts</h3><p>Transcript settings</p></div>
-        <div class="menu-card"><h3>Logging</h3><p>Server logging options</p></div>
-        <div class="menu-card"><h3>Automation</h3><p>Automation options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Command Style</h3><p>Slash command settings</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Forms</h3><p>Form options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Transcripts</h3><p>Transcript settings</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Logging</h3><p>Server logging options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Automation</h3><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
