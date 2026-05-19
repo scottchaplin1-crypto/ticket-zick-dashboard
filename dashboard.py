@@ -92,22 +92,24 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             }}
             .invite-btn {{ 
-                background:linear-gradient(45deg,#5865F2,#7289da); 
-                color:white; 
-                padding:16px 28px; 
+                background: transparent; 
+                padding: 0; 
+                border: none; 
+                cursor: pointer;
             }}
-            .send-btn {{ 
-                background:linear-gradient(45deg,#00ff88,#00cc66); 
-                color:black; 
+            .invite-btn img {{ 
+                height: 58px; 
+                border-radius: 12px; 
+                transition: all 0.3s ease;
             }}
-            .update-btn {{ 
-                background:linear-gradient(45deg,#ffaa00,#ff8800); 
-                color:black; 
+            .invite-btn:hover img {{ 
+                filter: drop-shadow(0 0 20px #00f0ff) brightness(1.2); 
+                transform: scale(1.05);
             }}
-            button:hover {{ 
-                transform: translateY(-4px); 
-                box-shadow: 0 12px 30px rgba(0,240,255,0.5); 
-            }}
+            
+            .send-btn {{ background:linear-gradient(45deg,#00ff88,#00cc66); color:black; }}
+            .update-btn {{ background:linear-gradient(45deg,#ffaa00,#ff8800); color:black; }}
+            button:hover {{ transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,240,255,0.5); }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             .toggle-row {{ display: flex; align-items: center; justify-content: space-between; margin: 18px 0; min-height: 52px; }}
@@ -194,7 +196,9 @@ def dashboard():
         </div>
         
         <div class="right-section">
-            <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
+            <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">
+                <img src="/static/TicketZickButton.png" alt="Invite Ticket Zick">
+            </button>
             <div class="action-btns">
                 <button class="send-btn" onclick="showToast('✅ Ticket Panel Sent to Discord!')">Send Panel</button>
                 <button class="update-btn" onclick="showToast('✅ Existing Panel Updated!')">Update Panel</button>
