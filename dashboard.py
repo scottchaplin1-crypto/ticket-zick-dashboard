@@ -50,7 +50,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 margin-left: auto; 
                 margin-right: auto;
             }}
-            
             .center-section {{ 
                 display: flex; 
                 align-items: center; 
@@ -79,13 +78,14 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 display:flex; 
                 align-items:center; 
                 justify-content:center;
+                box-shadow: 0 0 20px rgba(0,240,255,0.5);
             }}
             
             .right-section {{ display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }}
             .action-btns {{ display: flex; gap: 12px; }}
             
             button {{ 
-                padding:14px 32px; 
+                padding:16px 32px; 
                 border:none; 
                 border-radius:12px; 
                 font-size:16px; 
@@ -106,7 +106,10 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 background:linear-gradient(45deg,#ffaa00,#ff8800); 
                 color:black; 
             }}
-            button:hover {{ transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,240,255,0.3); }}
+            button:hover {{ 
+                transform: translateY(-4px); 
+                box-shadow: 0 10px 25px rgba(0,240,255,0.4); 
+            }}
             
             .setting-card {{ background:#16213e; padding:32px 45px; border-radius:16px; margin:18px 0; border:1px solid #00f0ff22; }}
             .toggle-row {{ display: flex; align-items: center; justify-content: space-between; margin: 18px 0; min-height: 52px; }}
@@ -118,7 +121,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .modal {{ display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; }}
             .modal-content {{ background:#1a1a2e; padding:35px; border-radius:16px; width:90%; max-width:480px; margin:80px auto; }}
             
-            #toast {{ visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; z-index:3000; }}
+            #toast {{ visibility:hidden; position:fixed; top:20px; right:20px; background:#00ff88; color:black; padding:16px 24px; border-radius:12px; font-weight:bold; z-index:3000; box-shadow:0 0 20px #00ff88; }}
         </style>
     </head>
     <body>
@@ -132,7 +135,6 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
         {panel_header}
         {content}
 
-        <!-- Create Panel Modal -->
         <div id="createPanelModal" class="modal">
             <div class="modal-content">
                 <h2 style="color:#00f0ff;">Create New Panel</h2>
@@ -172,9 +174,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             }}
             function handleBack() {{
                 if (formChanged) {{
-                    if (confirm("You have unsaved changes!\\n\\nSave changes before leaving?")) {{
-                        saveChanges();
-                    }}
+                    if (confirm("You have unsaved changes!\\n\\nSave before leaving?")) saveChanges();
                 }}
                 window.location = '/dashboard';
             }}
@@ -213,6 +213,16 @@ def dashboard():
         <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Ticket</h3><p>General ticket options</p></div>
         <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Panel</h3><p>Panel and button setup</p></div>
         <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Buttons</h3><p>Button text, colours & emojis</p></div>
+    </div>
+
+    <h2 style="color:#c026d3; text-align:center; margin:50px 0 20px;">Advanced Settings</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:20px; max-width:1100px; margin:0 auto;">
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Command Style</h3><p>Slash command settings</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Dropdown Style</h3><p>Dropdown menu options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Forms</h3><p>Form options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Transcripts</h3><p>Transcript settings</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Logging</h3><p>Server logging options</p></div>
+        <div style="background:#16213e; padding:25px; border-radius:12px; cursor:pointer;"><h3>Automation</h3><p>Automation options</p></div>
     </div>
     """
     return base_template(content, show_back=False)
