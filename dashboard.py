@@ -72,14 +72,14 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
             .action-btns {{ display: flex; gap: 12px; }}
             
             .invite-img {{ 
-                height: 68px; 
+                height: 72px; 
                 border-radius:12px; 
                 cursor:pointer; 
                 box-shadow:0 0 20px rgba(0,240,255,0.4); 
                 transition: all 0.3s;
             }}
             .invite-img:hover {{ 
-                box-shadow:0 0 35px rgba(0,240,255,0.8); 
+                box-shadow:0 0 35px rgba(0,240,255,0.9); 
                 transform: translateY(-3px); 
             }}
             
