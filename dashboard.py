@@ -55,8 +55,29 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
                 gap: 12px; 
                 margin: 0 auto;
             }}
-            .panel-selector {{ background:#16213e; border:2px solid #334155; color:#e0e0ff; padding:14px 20px; border-radius:12px; font-size:17px; min-width:380px; }}
-            .add-btn {{ background:linear-gradient(45deg,#00f0ff,#c026d3); color:black; width:52px; height:52px; border-radius:50%; font-size:28px; border:none; cursor:pointer; }}
+            .panel-selector {{ 
+                background:#16213e; 
+                border:2px solid #334155; 
+                color:#e0e0ff; 
+                padding:14px 20px; 
+                border-radius:12px; 
+                font-size:17px; 
+                min-width:380px; 
+            }}
+            .add-btn {{ 
+                background:linear-gradient(45deg,#00f0ff,#c026d3); 
+                color:black; 
+                width:58px; 
+                height:58px; 
+                border-radius:50%; 
+                font-size:32px; 
+                border:none; 
+                cursor:pointer; 
+                display:flex; 
+                align-items:center; 
+                justify-content:center;
+                box-shadow: 0 4px 15px rgba(0,240,255,0.4);
+            }}
             
             .right-section {{
                 display: flex;
@@ -214,7 +235,7 @@ def base_template(content, title="Ticket Zick Dashboard", show_back=True, curren
 def dashboard():
     content = """
     <div class="top-bar">
-        <!-- Centered Panel Selector -->
+        <!-- Centered Section -->
         <div class="center-section">
             <select class="panel-selector" onchange="if(this.value) window.location = '/settings/general'">
                 <option value="" selected>-- Select a Panel to Edit --</option>
@@ -222,7 +243,7 @@ def dashboard():
             <button class="add-btn" onclick="alert('New Panel Creator Coming Soon!')" title="Create New Panel">+</button>
         </div>
         
-        <!-- Right side buttons -->
+        <!-- Right side -->
         <div class="right-section">
             <button class="invite-btn" onclick="window.open('https://discord.com/oauth2/authorize?client_id=1504522333208051872&scope=bot&permissions=8', '_blank')">Invite Ticket Zick</button>
             
@@ -254,6 +275,7 @@ def dashboard():
     """
     return base_template(content, show_back=False)
 
+# Keep the General route exactly as before
 @app.route("/settings/general")
 def settings_general():
     content = """
